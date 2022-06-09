@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,33 +12,35 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 export const NavBar = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [visibleElement, setVisibleEvent] = useState(null);
+  const [visibleElementMobile, setVisibleElementMobile] = useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(visibleElement);
+  const isMobileMenuOpen = Boolean(visibleElementMobile);
 
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setVisibleEvent(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+    setVisibleElementMobile(null);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setVisibleEvent(null);
     handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    visibleElementMobile(event.currentTarget);
   };
 
   const menuId = "primary-search-account-menu";
+  const mobileMenuId = "primary-search-account-menu-mobile";
+
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={visibleElement}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
@@ -51,15 +54,14 @@ export const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Sign in</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Register</MenuItem>
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
-      anchorEl={mobileMoreAnchorEl}
+      anchorEl={visibleElementMobile}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
@@ -90,7 +92,7 @@ export const NavBar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -99,7 +101,7 @@ export const NavBar = () => {
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon size="large" />
           </IconButton>
           <Typography
             variant="h6"
