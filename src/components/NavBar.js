@@ -11,6 +11,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
+import { Link } from "react-router-dom";
+
 export const NavBar = () => {
   const [visibleElement, setVisibleEvent] = useState(null);
   const [visibleElementMobile, setVisibleElementMobile] = useState(null);
@@ -54,8 +56,8 @@ export const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Sign in</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Register</MenuItem>
+     <MenuItem component={Link} to={'/login'}>Sign in</MenuItem>
+     <MenuItem component={Link} to={'/register'}>Register</MenuItem>
     </Menu>
   );
 

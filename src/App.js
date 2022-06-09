@@ -1,11 +1,15 @@
 import logo from "./logo.svg";
+import React from 'react';
 import "./App.css";
 import { NavBar } from "./components/NavBar";
 import { Login } from "./components/Login";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import ReactDOM from 'react-dom/client';
 
-function App() {
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+const App = () => {
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
@@ -18,7 +22,6 @@ function App() {
 
       <div className="App">
         <NavBar />
-        <Login />
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -36,6 +39,17 @@ function App() {
       </div>
     </ThemeProvider>
   );
-}
+};
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+    <Routes>
+    <Route path="/login" element={<Login />} />
+    </Routes>
+    <App />
+  </BrowserRouter>
+  </React.StrictMode>
+);
+
