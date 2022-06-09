@@ -4,7 +4,9 @@ import Typography from '@mui/joy/Typography';
 import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { login } from "../api/user";
 
 // dummy component used to force dark mode for this component
 // useColorScheme must be used within a CssVarsProvider
@@ -17,6 +19,12 @@ const Mode = () => {
 };
 
 export const Login = () => {
+    const [emailValue, setEmailValue] = useState(null);
+    const [passwordValue, setPasswordValue] = useState(null);
+
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
     return (
         <CssVarsProvider>
             <Mode />
@@ -40,18 +48,36 @@ export const Login = () => {
                 <TextField
                     name="email"
                     type="email"
-                    placeholder="johndoe@email.com"
+                    placeholder="sample@gmail.com"
                     label="Email"
+                    error={emailError}
+                    helperText={emailError}
+                    onChange={(e) => setEmailValue(e.target.value)}
                 />
                 <TextField
                     name="password"
                     type="password"
                     placeholder="password"
                     label="Password"
+                    error={passwordError}
+                    helperText={passwordError}
+                    onChange={(e) => setPasswordValue(e.target.value)}
                 />
                 <Button
                     sx={{
                         mt: 1,
+                    }}
+                    onClick={() => {
+                        if (!emailValue) setEmailError("Email field cannot be empty");
+                        if (!passwordValue) setPasswordError("Password field cannot be empty");
+
+                        // case: subsequent error requests but one of the fields is corrected
+                        if (emailValue) setEmailError("");
+                        if (passwordValue) setPasswordValue("");
+
+                        if (emailValue && passwordValue) {
+                            login(emailValue, passwordValue).then((res) => {console.log("pederme" + res.data.response)})
+                        }
                     }}
                 >
                     Log in
