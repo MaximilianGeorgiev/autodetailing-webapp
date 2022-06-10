@@ -37,6 +37,41 @@ export const Login = () => {
 
     const [submitError, setSubmitError] = useState({ error: false, message: "" });
 
+    const processLoginForm = () => {
+        if (!emailValue) setEmailError("Email field cannot be empty");
+        if (!passwordValue) setPasswordError("Password field cannot be empty");
+
+        // case: subsequent error requests but one of the fields is corrected
+        if (emailValue) setEmailError("");
+        if (passwordValue) setPasswordError("");
+
+        if (emailValue && passwordValue) {
+            login(emailValue, passwordValue).then((res) => {
+                if (res.data.status === "failed") {
+                    if (res.data.reason === "user not found") {
+                        setSubmitError({ error: true, message: "No user was found with the provided credentials. Please try again." });
+                    } else setSubmitError({ error: true, message: "Login failed." });
+
+                    return;
+                } else if (res.data.status === "success") {
+                    // set access token as a cookie (secure), httpOnly: only server can access cookie
+                    // 15 minutes access token, 20 minutes refresh token
+                    setCookie("accessToken", res.data.accessToken, { maxAge: 900, httpOnly: false });
+                    setCookie("refreshToken", res.data.refreshToken, { maxAge: 1200, httpOnly: false });
+
+                    setCookie("user_fullname", res.data.user[0].user_fullname);
+                    setCookie("user_username", res.data.user[0].user_username);
+                    setCookie("user_id", res.data.user[0].user_username);
+                    setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
+                    setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
+
+                    // redirect to home page
+                    navigate('/');
+                }
+            })
+        }
+    };
+
     return (
         <CssVarsProvider>
             <Mode />
@@ -87,50 +122,17 @@ export const Login = () => {
                     sx={{
                         mt: 1,
                     }}
-                    onClick={() => {
-                        if (!emailValue) setEmailError("Email field cannot be empty");
-                        if (!passwordValue) setPasswordError("Password field cannot be empty");
-
-                        // case: subsequent error requests but one of the fields is corrected
-                        if (emailValue) setEmailError("");
-                        if (passwordValue) setPasswordError("");
-
-                        if (emailValue && passwordValue) {
-                            login(emailValue, passwordValue).then((res) => {
-                                if (res.data.status === "failed") {
-                                    if (res.data.reason === "user not found") {
-                                        setSubmitError({ error: true, message: "No user was found with the provided credentials. Please try again." });
-                                    } else setSubmitError({ error: true, message: "Login failed." });
-
-                                    return;
-                                } else if (res.data.status === "success") {
-                                    // set access token as a cookie (secure), httpOnly: only server can access cookie
-                                    // 15 minutes access token, 20 minutes refresh token
-                                    setCookie("accessToken", res.data.accessToken, { maxAge: 900, httpOnly: false });
-                                    setCookie("refreshToken", res.data.refreshToken, { maxAge: 1200, httpOnly: false });
-
-                                    setCookie("user_fullname", res.data.user[0].user_fullname);
-                                    setCookie("user_username", res.data.user[0].user_username);
-                                    setCookie("user_id", res.data.user[0].user_username);
-                                    setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
-                                    setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
-
-                                    // redirect to home page
-                                    navigate('/');
-                                }
-                            })
-                        }
-                    }}
+                    onClick={() => processLoginForm()}
                 >
-                    Log in
-                </Button>
-                <Typography
-                    endDecorator={<Link href="/sign-up">Sign up</Link>}
-                    fontSize="sm"
-                    sx={{ alignSelf: 'center' }}>
-                    Don't have an account?
-                </Typography>
-            </Sheet>
-        </CssVarsProvider>
+                Log in
+            </Button>
+            <Typography
+                endDecorator={<Link href="/sign-up">Sign up</Link>}
+                fontSize="sm"
+                sx={{ alignSelf: 'center' }}>
+                Don't have an account?
+            </Typography>
+        </Sheet>
+        </CssVarsProvider >
     );
 };
