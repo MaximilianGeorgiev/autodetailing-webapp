@@ -16,10 +16,10 @@ export const login = (email, password) => {
                 return status <= 422;
             }
         })
-        .then((res) => resolve(res))
-        .catch((err) => {
-            reject(err);
-        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
     });
 };
 
@@ -36,9 +36,27 @@ export const register = (userInfo) => {
                 return status <= 422;
             }
         })
-        .then((res) => resolve(res))
-        .catch((err) => {
-            reject(err);
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
+
+export const checkUserExists = (userInfo) => {
+    if (!userInfo) return;
+    if (!userInfo?.email) return;
+    if (!userInfo?.username) return;
+
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + "/user/check/" + userInfo.email + "/" + userInfo.username, {
+            validateStatus: function (status) {
+                return status <= 422;
+            }
         })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            });
     });
 };

@@ -10,11 +10,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { useState } from 'react';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { register } from "../api/user";
+import { register, checkUserExists } from "../api/user";
 
 export const Register = () => {
     const darkTheme = createTheme({
@@ -35,6 +38,16 @@ export const Register = () => {
         let updatedState = { ...inputValues };
         let formIsValid = true; // prevent api call if there are errors
 
+        if (updatedState.password.value !== updatedState.newPassword.value) {
+            updatedState["password"] = { ...updatedState.password.value, error: true, errorMsg: 'Passwords do not match.' };
+            updatedState["newPassword"] = { ...updatedState.newPassword.value, error: true, errorMsg: 'Passwords do not match.' };
+            return !formIsValid;
+        } else {
+            // scenario: previous button click they didn't match, now they match
+            updatedState["password"] = { ...updatedState.password.value, error: false, errorMsg: '' };
+            updatedState["newPassword"] = { ...updatedState.newPassword.value, error: false, errorMsg: '' };
+        }
+
         for (const [key, value] of Object.entries(inputValues)) {
             if (key === "address" || key === "phone") continue; // skip non-mandatory fields
 
@@ -53,18 +66,46 @@ export const Register = () => {
         return formIsValid;
     };
 
-    const submitForm = () => {
+    const submitForm = async () => {
         // take the "value" properties only, omit error and errorMsg for API call
         let payload = { email: {}, password: {}, newPassword: {}, username: {}, fullname: {} };
 
         for (const [key, value] of Object.entries(inputValues))
             payload[key] = value.value;
 
-        register(payload);
+        let userExists = false;
+
+        await checkUserExists({ email: payload.email, username: payload.username }).then((res) => {
+            if (res.data?.status !== "success")
+                setSubmitErrors({ error: true, errorMsg: "A database error has occured" });
+
+            if (res.data?.status === "success" && res.data?.result === "user exists") userExists = true;
+        });
+
+        if (userExists) {
+            setSubmitErrors({ error: true, errorMsg: "User with provided credentials already exists." });
+            return false; // submitForm not successful
+        }
+
+        register(payload).then((res) => {
+            if (res.data?.status === "failed")
+                setSubmitErrors({ error: true, errorMsg: "A database error has occured." });
+
+            else setSubmitErrors({ error: false, errorMsg: "" });
+        });
+
+        return true;
     };
 
     return (
         <ThemeProvider theme={darkTheme}>
+                <Stack sx={{ width: '100%', height: '20%', marginTop: 8 }} spacing={2}>
+                    <Alert severity="error">
+                        {submitErrors.errorMsg ? submitErrors.errorMsg : ""}
+                    </Alert>
+                </Stack>
+            
+
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -75,6 +116,7 @@ export const Register = () => {
                         alignItems: 'center',
                     }}
                 >
+
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -93,7 +135,7 @@ export const Register = () => {
                                     label="E-mail address"
                                     autoFocus
                                     error={inputValues['email']?.error ? inputValues['email'].error : false}
-                                    helperText={inputValues['email']?.errorMsg ? inputValues['email'].errorMsg: ""}
+                                    helperText={inputValues['email']?.errorMsg ? inputValues['email'].errorMsg : ""}
                                     onChange={(e) => {
                                         setInputValues((prevInputValues) => ({
                                             ...prevInputValues, email: { ...prevInputValues.email, value: e.target.value }
@@ -128,7 +170,7 @@ export const Register = () => {
                                     id="password"
                                     autoComplete="new-password"
                                     error={inputValues['password']?.error ? inputValues['password'].error : false}
-                                    helperText={inputValues['password']?.errorMsg ? inputValues['password'].errorMsg: ""}
+                                    helperText={inputValues['password']?.errorMsg ? inputValues['password'].errorMsg : ""}
                                     onChange={(e) => {
                                         setInputValues((prevInputValues) => ({
                                             ...prevInputValues, password: { ...prevInputValues.password, value: e.target.value }
@@ -146,7 +188,7 @@ export const Register = () => {
                                     id="repeatPassword"
                                     autoComplete="new-password"
                                     error={inputValues['newPassword']?.error ? inputValues['newPassword'].error : false}
-                                    helperText={inputValues['newPassword']?.errorMsg ? inputValues['newPassword'].errorMsg: ""}
+                                    helperText={inputValues['newPassword']?.errorMsg ? inputValues['newPassword'].errorMsg : ""}
                                     onChange={(e) => {
                                         setInputValues((prevInputValues) => ({
                                             ...prevInputValues, newPassword: { ...prevInputValues.newPassword, value: e.target.value }
@@ -163,7 +205,7 @@ export const Register = () => {
                                     id="fullname"
                                     autoComplete="fullname"
                                     error={inputValues['fullname']?.error ? inputValues['fullname'].error : false}
-                                    helperText={inputValues['fullname']?.errorMsg ? inputValues['fullname'].errorMsg: ""}
+                                    helperText={inputValues['fullname']?.errorMsg ? inputValues['fullname'].errorMsg : ""}
                                     onChange={(e) => {
                                         setInputValues((prevInputValues) => ({
                                             ...prevInputValues, fullname: { ...prevInputValues.fullname, value: e.target.value }
@@ -210,8 +252,7 @@ export const Register = () => {
                             sx={{ mt: 3, mb: 2 }}
                             onClick={() => {
                                 if (validateForm() === true) {
-                                    submitForm();
-                                    navigate('/');
+                                    if (submitForm() === true) navigate('/'); // success case
                                 }
                             }}
                         >
