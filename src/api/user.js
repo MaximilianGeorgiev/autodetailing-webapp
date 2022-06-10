@@ -9,11 +9,11 @@ export const login = (email, password) => {
     const payload = { email: email, password: password };
 
     return new Promise((resolve, reject) => {
-        axios.post(API_URL + "/user/login", {
+        axios.post(API_URL + "/user/login", payload, {
             validateStatus: function (status) {
-                return status > 422;
+                return status <= 422;
             }
-        }, payload)
+        })
         .then((res) => resolve(res))
         .catch((err) => {
             console.log("BOKLUK" + err);
