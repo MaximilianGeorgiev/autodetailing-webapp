@@ -151,8 +151,6 @@ export const Register = () => {
           errorMsg: "A database error has occured",
         });
 
-      console.log("status" + res.data?.status);
-      console.log("status2" + res.data?.result);
       if (res.data?.status === "success" && res.data?.result === "user exists")
         userExists = true;
     });
@@ -162,11 +160,9 @@ export const Register = () => {
         error: true,
         errorMsg: "User with provided credentials already exists.",
       });
-      console.log("returnss");
       return false; // submitForm not successful
     }
 
-    console.log("aaa" + JSON.stringify(payload));
     register(payload).then((res) => {
       if (res.data?.status === "failed")
         setSubmitErrors({
