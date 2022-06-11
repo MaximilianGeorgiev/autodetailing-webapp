@@ -1,52 +1,72 @@
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import TextField from '@mui/joy/TextField';
-import Button from '@mui/joy/Button';
-import Link from '@mui/joy/Link';
-import { useEffect, useState } from 'react';
+
+import { useState } from 'react';
 
 import { useCookies } from "react-cookie";
-
-import { useTheme } from '@mui/material/styles';
 
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
-// dummy component used to force dark mode for this component
-// useColorScheme must be used within a CssVarsProvider
-const Mode = () => {
-    const { mode, setMode } = useColorScheme();
 
-    useEffect(() => {
-        setMode('dark');
-    }, []);
-};
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 export const Login = () => {
-    const theme = useTheme();
     const navigate = useNavigate();
 
-    const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
+    const darkTheme = createTheme({
+        palette: {
+            mode: "dark",
+        },
+    });
 
-    const [emailValue, setEmailValue] = useState(null);
-    const [passwordValue, setPasswordValue] = useState(null);
+    const [cookies, setCookie, removeCookie] = useCookies(['']);
 
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+    const [inputValues, setInputValues] = useState({
+        email: { value: "", error: false, errorMsg: "" },
+        password: { value: "", error: false, errorMsg: "" }
+    });
 
     const [submitError, setSubmitError] = useState({ error: false, message: "" });
 
     const processLoginForm = () => {
-        if (!emailValue) setEmailError("Email field cannot be empty");
-        if (!passwordValue) setPasswordError("Password field cannot be empty");
+        let updatedState = { ...inputValues };
+
+        if (!inputValues?.email?.value) updatedState.email = {
+            value: updatedState.email.value,
+            error: true,
+            errorMsg: "Email field cannot be empty.",
+        };
+        if (!inputValues?.password?.value) updatedState.password = {
+            value: updatedState.password.value,
+            error: true,
+            errorMsg: "Password field cannot be empty.",
+        };
 
         // case: subsequent error requests but one of the fields is corrected
-        if (emailValue) setEmailError("");
-        if (passwordValue) setPasswordError("");
+        if (inputValues?.email?.value) updatedState.email = {
+            value: updatedState.email.value,
+            error: false,
+            errorMsg: "",
+        };
+        if (inputValues?.password?.value) updatedState.email = {
+            value: updatedState.password.value,
+            error: false,
+            errorMsg: "",
+        };
 
-        if (emailValue && passwordValue) {
-            login(emailValue, passwordValue).then((res) => {
+        if (inputValues?.email?.value && inputValues?.password?.value) {
+            login(inputValues.email.value, inputValues.password.value).then((res) => {
                 if (res.data.status === "failed") {
                     if (res.data.reason === "user not found") {
                         setSubmitError({ error: true, message: "No user was found with the provided credentials. Please try again." });
@@ -70,69 +90,106 @@ export const Login = () => {
                 }
             })
         }
+
+        setInputValues(updatedState);
     };
 
     return (
-        <CssVarsProvider>
-            <Mode />
-            <Sheet
-                variant="outlined"
-                sx={{
-                    maxWidth: 400,
-                    mx: 'auto',
-                    my: 4,
-                    py: 3,
-                    px: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    borderRadius: 'sm',
-                    boxShadow: 'md',
-                }}>
-                <Typography level="h4" component="h1">
-                    <b>Welcome!</b>
-                </Typography>
-
-                {submitError.error === true && <Typography>{submitError.message}</Typography>}
-                <TextField
-                    name="email"
-                    type="email"
-                    placeholder="sample@gmail.com"
-                    label="Email"
-                    error={emailError}
-                    helperText={emailError}
-                    onChange={(e) => {
-                        setEmailValue(e.target.value);
-                        setEmailError("");
-                    }}
-                />
-                <TextField
-                    name="password"
-                    type="password"
-                    placeholder="password"
-                    label="Password"
-                    error={passwordError}
-                    helperText={passwordError}
-                    onChange={(e) => {
-                        setPasswordValue(e.target.value);
-                        setPasswordError("");
-                    }}
-                />
-                <Button
+        <ThemeProvider theme={darkTheme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
                     sx={{
-                        mt: 1,
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     }}
-                    onClick={() => processLoginForm()}
                 >
-                    Log in
-                </Button>
-                <Typography
-                    endDecorator={<Link href="/sign-up">Sign up</Link>}
-                    fontSize="sm"
-                    sx={{ alignSelf: 'center' }}>
-                    Don't have an account?
-                </Typography>
-            </Sheet>
-        </CssVarsProvider >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box noValidate sx={{ mt: 1 }}>
+                        {submitError.error === true && <Typography>{submitError.message}</Typography>}
+                        <TextField
+                            name="email"
+                            type="email"
+                            placeholder="sample@gmail.com"
+                            label="Email"
+                            margin="normal"
+                            fullWidth
+                            error={
+                                inputValues["email"]?.error
+                                    ? inputValues["email"].error
+                                    : false
+                            }
+                            helperText={
+                                inputValues["email"]?.errorMsg
+                                    ? inputValues["email"].errorMsg
+                                    : ""
+                            }
+                            onChange={(e) => {
+                                setInputValues((prevInputValues) => ({
+                                    ...prevInputValues,
+                                    email: {
+                                        ...prevInputValues.email,
+                                        value: e.target.value,
+                                    },
+                                }));
+                            }}
+                        />
+                        <TextField
+                            name="password"
+                            type="password"
+                            placeholder="password"
+                            label="Password"
+                            fullWidth
+                            error={
+                                inputValues["password"]?.error
+                                    ? inputValues["password"].error
+                                    : false
+                            }
+                            helperText={
+                                inputValues["password"]?.errorMsg
+                                    ? inputValues["password"].errorMsg
+                                    : ""
+                            }
+                            onChange={(e) => {
+                                setInputValues((prevInputValues) => ({
+                                    ...prevInputValues,
+                                    password: {
+                                        ...prevInputValues.password,
+                                        value: e.target.value,
+                                    },
+                                }));
+                            }}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            onClick={() => processLoginForm()}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box> </Container>
+        </ThemeProvider>
     );
 };
