@@ -61,7 +61,7 @@ export const Login = () => {
 
                     setCookie("user_fullname", res.data.user[0].user_fullname);
                     setCookie("user_username", res.data.user[0].user_username);
-                    setCookie("user_id", res.data.user[0].user_username);
+                    setCookie("user_id", res.data.user[0].user_id);
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
 
@@ -124,15 +124,15 @@ export const Login = () => {
                     }}
                     onClick={() => processLoginForm()}
                 >
-                Log in
-            </Button>
-            <Typography
-                endDecorator={<Link href="/sign-up">Sign up</Link>}
-                fontSize="sm"
-                sx={{ alignSelf: 'center' }}>
-                Don't have an account?
-            </Typography>
-        </Sheet>
+                    Log in
+                </Button>
+                <Typography
+                    endDecorator={<Link href="/sign-up">Sign up</Link>}
+                    fontSize="sm"
+                    sx={{ alignSelf: 'center' }}>
+                    Don't have an account?
+                </Typography>
+            </Sheet>
         </CssVarsProvider >
     );
 };

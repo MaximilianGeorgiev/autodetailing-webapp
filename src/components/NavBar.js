@@ -12,8 +12,21 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
+import { useEffect } from "react";
 
 export const NavBar = () => {
+  const [cookies] = useCookies(['']);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (cookies["user_id"] !== "undefined") setIsLoggedIn(true)
+    else setIsLoggedIn(false)
+
+  }, []);
+
   const [visibleElement, setVisibleEvent] = useState(null);
   const [visibleElementMobile, setVisibleElementMobile] = useState(null);
 
@@ -56,8 +69,17 @@ export const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-     <MenuItem component={Link} to={'/login'}>Sign in</MenuItem>
-     <MenuItem component={Link} to={'/register'}>Register</MenuItem>
+      {isLoggedIn === true ? (
+        <>
+          <MenuItem component={Link} to={'/login'}>Profile</MenuItem>
+          <MenuItem component={Link} to={'/orders'}>My orders</MenuItem>
+          <MenuItem component={Link} to={'/reservations'}>My reservations</MenuItem>
+          <MenuItem component={Link} to={'/logout'}>Logout</MenuItem></>)
+        : (
+          <>
+            <MenuItem component={Link} to={'/login'}>Sign in</MenuItem>
+            <MenuItem component={Link} to={'/register'}>Register</MenuItem></>)
+      }
     </Menu>
   );
 
