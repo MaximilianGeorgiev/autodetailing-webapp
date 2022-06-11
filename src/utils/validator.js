@@ -1,18 +1,46 @@
 export const validateEmail = (email) => {
     if (!email || email === "") return false;
     if (!email.includes("@")) return false;
-    if (email.split(".").length - 1 < 2) return false; // does not contain at least two dots
+    if (email.split(".").length < 2) return false; // does not contain at least two dots
 
-    //foo@gmail.com
-    const name = email.split("@")[0];
+    // foo@gmail.com
     const domainPart = email.split("@")[1]; // gmail.com
-    const domainHost = domainPart.split(".")[0] // gmail
-    const domainEnd = domainPart.split(".")[1]; // com
+    const endPart = domainPart.split(".");
 
-    if (name.length < 2) return false;
-    if (!domainPart.includes(".")) return false;
-    if (domainHost.length < 2) return false;
-    if (domain.length < 2) return false;
+    if (endPart.length < 2) return false; // dots should be after @
+    if (endPart[0] === "" || endPart[1] === "") return false; // scenario: @abv. 
+
+    const domainName = email.split(".")[0]; // gmail
+    const endName = email.split(".")[1];
+
+    return true;
+};
+
+export const validateUsername = (username) => {
+    if (!username || username === "") return false;
+    if (username.length < 5 || username.length > 20) return false;
+
+    return true;
+};
+
+export const validatePassword = (password) => {
+    if (!password || password === "") return false;
+    if (password.length < 8 || password.length > 20) return false;
+
+    if (/^\d+$/.test(password)) return false; // digit only password
+    if (/^[a-z]+$/.test(password)) return false; // lower case text only
+    if (/^[A-Z]+$/.test(password)) return false; // upper case text only
+
+    // valid: mix of upper and lower cases and chars, with length not less than 8 and not greater than 20
+    return true;
+};
+
+export const validatePhone = (phone) => {
+    if (!phone || phone === "") return false;
+
+    if ((!phone.startsWith("+359")) && (!phone.startsWith("0"))) return false;
+    if (phone.length !== 13 && phone.length !== 10) return false;
+    if (/^\+?\d+$/.test(phone)) return true; // may start with +; not numbers only
 
     return true;
 };
