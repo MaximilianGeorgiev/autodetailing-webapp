@@ -44,3 +44,11 @@ export const validatePhone = (phone) => {
 
     return true;
 };
+
+export const validatePrice = (price) => {
+    if (!price || price <= 0) return false;
+    if (/[a-z]/.test(price)) return false;
+    if (/[A-Z]/.test(price)) return false;
+
+    return true;
+};
