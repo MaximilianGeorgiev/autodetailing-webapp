@@ -11,6 +11,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
+import { SideBar } from "./SideBar.js";
+
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -29,6 +31,8 @@ export const NavBar = () => {
 
   const [visibleElement, setVisibleEvent] = useState(null);
   const [visibleElementMobile, setVisibleElementMobile] = useState(null);
+  const [sideBarVisible, setSideBarVisible] = useState(false);
+
 
   const isMenuOpen = Boolean(visibleElement);
   const isMobileMenuOpen = Boolean(visibleElementMobile);
@@ -116,6 +120,7 @@ export const NavBar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      {sideBarVisible && (<SideBar close={setSideBarVisible} />)}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton
@@ -124,6 +129,7 @@ export const NavBar = () => {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={() => setSideBarVisible((visible) => !visible)}
           >
             <MenuIcon size="large" />
           </IconButton>
@@ -135,6 +141,9 @@ export const NavBar = () => {
           >
             MUI
           </Typography>
+
+
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
