@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
-
-import { useCookies } from "react-cookie";
-
-import { login } from "../../api/user";
 import { useNavigate } from "react-router-dom";
 import { validatePrice } from "../../utils/validator";
-
-
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -24,6 +18,8 @@ import FormControl from '@mui/material/FormControl';
 
 import { getAllCategories } from "../../api/category";
 import { createService } from "../../api/service";
+
+import { getCookieByName } from "../../utils/cookies";
 
 export const CreateService = () => {
     const darkTheme = createTheme({
@@ -54,6 +50,11 @@ export const CreateService = () => {
 
     useEffect(() => {
         // don't permit non moderator and non admin users to access this page (redirect)
+        const userRoles = getCookieByName("user_roles");
+        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+            navigate("/");
+            return;
+        }
 
         // get available categories
         getAllCategories().then((res) => {
@@ -194,6 +195,7 @@ export const CreateService = () => {
                             multiline
                             rows={3}
                             maxRows={5}
+                            margin="normal"
                             error={
                                 inputValues["description"]?.error
                                     ? inputValues["description"].error
@@ -219,6 +221,7 @@ export const CreateService = () => {
                             placeholder="Price"
                             label="Price"
                             fullWidth
+                            margin="normal"
                             error={
                                 inputValues["price"]?.error
                                     ? inputValues["price"].error
@@ -249,7 +252,9 @@ export const CreateService = () => {
                                     ? inputValues["selectedCategory"].errorMsg
                                     : ""
                             }
-                            fullWidth>
+                            fullWidth
+                            margin="normal"
+                        >
                             <InputLabel id="demo-simple-select-label">Category</InputLabel>
                             <Select
                                 label="Category"

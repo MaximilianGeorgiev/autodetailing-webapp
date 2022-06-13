@@ -24,6 +24,7 @@ import FormControl from '@mui/material/FormControl';
 
 import { getAllCategories } from "../../api/category";
 import { createProduct } from "../../api/product";
+import { getCookieByName } from "../../utils/cookies";
 
 export const CreateProduct = () => {
     const darkTheme = createTheme({
@@ -54,7 +55,11 @@ export const CreateProduct = () => {
 
     useEffect(() => {
         // don't permit non moderator and non admin users to access this page (redirect)
-
+        const userRoles = getCookieByName("user_roles");
+        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+            navigate("/");
+            return;
+        }
         // get available categories
         getAllCategories().then((res) => {
             let categories = [];
@@ -191,6 +196,7 @@ export const CreateProduct = () => {
                             placeholder="Description"
                             label="Description"
                             fullWidth
+                            margin="normal"
                             multiline
                             rows={3}
                             maxRows={5}
@@ -218,6 +224,7 @@ export const CreateProduct = () => {
                             type="text"
                             placeholder="Price"
                             label="Price"
+                            margin="normal"
                             fullWidth
                             error={
                                 inputValues["price"]?.error
@@ -249,7 +256,8 @@ export const CreateProduct = () => {
                                     ? inputValues["selectedCategory"].errorMsg
                                     : ""
                             }
-                            fullWidth>
+                            fullWidth
+                            margin="normal">
                             <InputLabel id="demo-simple-select-label">Category</InputLabel>
                             <Select
                                 label="Category"
