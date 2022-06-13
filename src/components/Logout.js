@@ -12,9 +12,11 @@ export const Logout = () => {
         if (cookies["user_username"]) removeCookie("user_username");
         if (cookies["user_phone"]) removeCookie("user_phone");
         if (cookies["user_address"]) removeCookie("user_address");
+        if (cookies["user_roles"]) removeCookie("user_roles");
 
         if (cookies["accessToken"]) removeCookie("accessToken");
         if (cookies["refreshToken"]) removeCookie("refreshToken");
+
         navigate("/");
     }, []);
 };

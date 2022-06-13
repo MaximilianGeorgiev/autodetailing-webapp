@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCookieByName } from "../utils/cookies";
 
 const API_URL = "http://localhost:3030";
 
@@ -53,6 +54,25 @@ export const checkUserExists = (userInfo) => {
             validateStatus: function (status) {
                 return status <= 422;
             }
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
+
+export const getLoggedUserRoles = (userId) => {
+    if (!userId || userId < 0) return [];
+
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + "/user/roles/" + userId, {
+            validateStatus: function (status) {
+                return status <= 422;
+            },
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken")
+            },
         })
             .then((res) => resolve(res))
             .catch((err) => {

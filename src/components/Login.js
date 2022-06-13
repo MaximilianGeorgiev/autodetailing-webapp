@@ -20,6 +20,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { getLoggedUserRoles } from "../api/user";
+
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -84,6 +86,14 @@ export const Login = () => {
                     setCookie("user_id", res.data.user[0].user_id);
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
+
+                    getLoggedUserRoles(res.data.user[0].user_id).then((res) => {
+                        let roles = [];
+                        for (const role of res.data.payload)
+                            roles.push(role.role_name);
+
+                        setCookie("user_roles", roles);
+                    });
 
                     // redirect to home page
                     navigate('/');
@@ -176,13 +186,13 @@ export const Login = () => {
                         >
                             Sign In
                         </Button>
-                       
-                            <Grid container justifyContent="flex-end">
-                                <Link href="/register" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        
+
+                        <Grid container justifyContent="flex-end">
+                            <Link href="/register" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
+                        </Grid>
+
                     </Box>
                 </Box> </Container>
         </ThemeProvider>
