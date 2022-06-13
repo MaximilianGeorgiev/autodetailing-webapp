@@ -62,7 +62,7 @@ export const Login = () => {
             error: false,
             errorMsg: "",
         };
-        if (inputValues?.password?.value) updatedState.email = {
+        if (inputValues?.password?.value) updatedState.password = {
             value: updatedState.password.value,
             error: false,
             errorMsg: "",

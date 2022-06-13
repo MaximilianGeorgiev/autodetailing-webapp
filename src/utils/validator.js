@@ -52,3 +52,19 @@ export const validatePrice = (price) => {
 
     return true;
 };
+
+export const validateDates = (dateOne, dateTwo) => {
+    if (dateOne === null) return false;
+    if (dateTwo === null) return false;
+
+    const castDateOne = new Date(dateOne);
+    const castDateTwo = new Date(dateTwo);
+
+    if (castDateOne.getYear() > 2300 || castDateTwo.getYear() > 2300) return false;
+    if (castDateOne.getMonth() > 12 || castDateTwo.getMonth() > 12) return false;
+    if (castDateOne.getDay() > 31 || castDateTwo.getMonth() > 31) return false;
+
+    if (castDateOne >= castDateTwo) return false;
+
+    return true;
+};

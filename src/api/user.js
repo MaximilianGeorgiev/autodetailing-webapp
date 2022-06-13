@@ -6,7 +6,7 @@ const API_URL = "http://localhost:3030";
 export const login = (email, password) => {
     if (!email || email === "") return;
     if (!password || password === "") return;
-
+    
     const payload = { email: email, password: password };
 
     // overriding the default axios behaviour to throw for statuses 400, 500 so they can be handled
