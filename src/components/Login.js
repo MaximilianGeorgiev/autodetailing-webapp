@@ -20,7 +20,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { getLoggedUserRoles } from "../api/user";
+import { getLoggedUserRoles, addRole } from "../api/user";
+import { getRoleByName } from "../api/role";
 
 
 export const Login = () => {
@@ -87,10 +88,29 @@ export const Login = () => {
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
 
-                    getLoggedUserRoles(res.data.user[0].user_id).then((res) => {
+                    getLoggedUserRoles(res.data.user[0].user_id).then((userRoles) => {
                         let roles = [];
-                        for (const role of res.data.payload)
+                        for (const role of userRoles.data.payload)
                             roles.push(role.role_name);
+
+                        // if this is the user's first login (after registration) they will get an "end_user" role
+                        // 1. Get the ID from the database
+                        // 2. Assign it to the user
+                        if (roles.length === 0) {
+                            getRoleByName("End User").then((roleName) => {
+                                if (roleName.data?.status === "failed") {
+                                    // handle error
+                                } else {
+                                    const roleId = roleName.data.payload[0].role_id;
+                                    const payload = { user_id: res.data.user[0].user_id, role_id: roleId };
+
+                                    addRole(payload).then((secondRoleRes) => {
+                                        // Handle errors
+                                        // Alert user for success
+                                    });
+                                }
+                            });
+                        }
 
                         setCookie("user_roles", roles);
                     });

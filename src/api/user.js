@@ -80,3 +80,23 @@ export const getLoggedUserRoles = (userId) => {
             });
     });
 };
+
+export const addRole = (userInfo) => {
+    if (!userInfo?.user_id || userInfo?.user_id === "") return;
+    if (!userInfo?.role_id || userInfo?.role_id === "") return;
+
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + "/user/role/add", userInfo, {
+            validateStatus: function (status) {
+                return status <= 422;
+            },
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken")
+            },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
