@@ -3,6 +3,16 @@ import { getCookieByName } from "../utils/cookies";
 
 const API_URL = "http://localhost:3030";
 
+export const getAllProducts = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + "/product")
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
+
 export const createProduct = (title, description, price, category_id) => {
     if (!title || title === "") return;
     if (!description || description === "") return;

@@ -10,6 +10,7 @@ import { Logout } from "./components/Logout";
 import { Register } from "./components/Register";
 import { CreateProduct } from "./components/create/CreateProduct";
 import { CreateService } from "./components/create/CreateService";
+import { CreatePromotion } from "./components/create/CreatePromotion";
 
 import { App } from "./App";
 
@@ -26,6 +27,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/products/create" element={<CreateProduct />} />
         <Route path="/services/create" element={<CreateService />} />
+        <Route path="/promotions/create" element={<CreatePromotion />} />
       </Routes>
       <App />
     </BrowserRouter>
