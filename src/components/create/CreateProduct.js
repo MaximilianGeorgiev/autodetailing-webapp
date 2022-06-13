@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import { useCookies } from "react-cookie";
 
-import { login } from "../api/user";
+import { login } from "../../api/user";
 import { useNavigate } from "react-router-dom";
-import { validatePrice } from "../utils/validator";
+import { validatePrice } from "../../utils/validator";
 
 
 import * as React from 'react';
@@ -22,8 +22,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 
-import { getAllCategories } from "../api/category";
-import { createProduct } from "../api/product";
+import { getAllCategories } from "../../api/category";
+import { createProduct } from "../../api/product";
 
 export const CreateProduct = () => {
     const darkTheme = createTheme({
