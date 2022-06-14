@@ -10,11 +10,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { Notification } from "./Notification";
 
 import { register, checkUserExists } from "../api/user";
 import { validateUsername, validatePhone, validateEmail, validatePassword } from "../utils/validator";
@@ -47,7 +47,7 @@ export const Register = () => {
         address: { value: "", error: false, errorMsg: "" }
     });
 
-    const [submitErrors, setSubmitErrors] = useState({});
+    const [submitError, setSubmitError] = useState({});
 
     /* Due to the complex logic behind validation it is described as:
         1. All text fields will be iterated through and if there are any blank fields that mandatory 
@@ -63,7 +63,7 @@ export const Register = () => {
         Only after all of the conditions are met and the form is free of errors, only then can it be submitted and an API call made.
     */
 
-    const validateForm = () => {
+    const validateRegisterForm = () => {
         let updatedState = { ...inputValues };
         let formIsValid = true; // prevent api call if there are errors
 
@@ -274,7 +274,7 @@ export const Register = () => {
             username: payload.username,
         }).then((res) => {
             if (res.data?.status !== "success")
-                setSubmitErrors({
+                setSubmitError({
                     error: true,
                     errorMsg: "A database error has occured",
                 });
@@ -284,7 +284,7 @@ export const Register = () => {
         });
 
         if (userExists) {
-            setSubmitErrors({
+            setSubmitError({
                 error: true,
                 errorMsg: "User with provided credentials already exists.",
             });
@@ -293,11 +293,11 @@ export const Register = () => {
 
         register(payload).then((res) => {
             if (res.data?.status === "failed")
-                setSubmitErrors({
+                setSubmitError({
                     error: true,
                     errorMsg: "A database error has occured.",
                 });
-            else setSubmitErrors({ error: false, errorMsg: "" });
+            else setSubmitError({ error: false, errorMsg: "" });
         });
 
         return true;
@@ -305,13 +305,13 @@ export const Register = () => {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            {submitErrors.error === true && (
-                <Stack sx={{ width: "100%", height: "20%", marginTop: 8 }} spacing={2}>
-                    <Alert severity="error">
-                        {submitErrors.errorMsg ? submitErrors.errorMsg : ""}
-                    </Alert>
-                </Stack>
-            )}
+            {submitError.error &&
+                <Notification
+                    severity="error"
+                    message={submitError.errorMsg}
+                    posX="center"
+                    posY="bottom"
+                />}
 
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -498,7 +498,6 @@ export const Register = () => {
                                     }}
                                 />
                             </Grid>
-
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
@@ -534,11 +533,11 @@ export const Register = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             onClick={() => {
-                                const validationPassed = validateForm();
+                                const validationPassed = validateRegisterForm();
 
                                 if (validationPassed) {
                                     submitForm().then((status) => {
-                                        if (status) navigate("/");
+                                        if (status) navigate("/", { state: { "success": "true", "message": "Registration successful." } });
                                     });
                                 }
                             }}
@@ -547,7 +546,7 @@ export const Register = () => {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

@@ -234,9 +234,9 @@ export const Login = () => {
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
-
                     </Box>
-                </Box> </Container>
+                </Box> 
+            </Container>
         </ThemeProvider>
     );
 };
