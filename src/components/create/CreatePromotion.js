@@ -21,7 +21,8 @@ import { getAllServices } from "../../api/service";
 import { createPromotion } from "../../api/promotion";
 
 import { getCookieByName } from "../../utils/cookies";
-import { validateDates } from "../../utils/validator";
+import { validateDates }  from "../../utils/validator";
+import { clientHasLoginCookies } from "../../utils/cookies";
 
 import { SelectableButtonGroup } from "../SelectableButtonGroup";
 
@@ -72,6 +73,10 @@ export const CreatePromotion = () => {
   };
 
   useEffect(() => {
+    // don't allow non logged in users to access this page
+    const hasCookies = clientHasLoginCookies();
+    if (hasCookies) navigate("/");
+
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
