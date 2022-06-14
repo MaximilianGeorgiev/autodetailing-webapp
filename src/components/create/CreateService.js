@@ -58,12 +58,12 @@ export const CreateService = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (hasCookies) navigate("/");
+    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/");
+      navigate("/", {state: {"event": "loggedIn"}});
       return;
     }
 
@@ -161,9 +161,7 @@ export const CreateService = () => {
       ).then((res) => {
 
         // Upload pictures to the server
-        console.log("ei" + JSON.stringify(uploadedPictures));
         uploadPictures(uploadedPictures).then((uploadRes) => {
-            console.log("responsaa" + JSON.stringify(uploadRes));
         });
 
         navigate("/", {

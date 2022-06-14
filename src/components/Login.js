@@ -34,7 +34,7 @@ export const Login = () => {
         // logged in users shouldn't access login page
         const hasCookies = clientHasLoginCookies();
 
-        if (hasCookies) navigate("/");
+        if (hasCookies) navigate("/", {state: {"event": "loggedIn"}});
     }, []);
 
     const darkTheme = createTheme({
@@ -132,7 +132,7 @@ export const Login = () => {
                     });
 
                     // redirect to home page with notification
-                    navigate('/', { state: { "success": "true", "message": "Login successful." } });
+                    navigate('/', { state: { "success": "true", "message": "Login successful.", "event": "loggedIn"} });
                 }
             })
         }

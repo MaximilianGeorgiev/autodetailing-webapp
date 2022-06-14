@@ -17,17 +17,20 @@ import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const NavBar = () => {
   const [cookies] = useCookies(['']);
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (cookies["user_id"] !== "undefined") setIsLoggedIn(true)
-    else setIsLoggedIn(false)
+   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
+  Via the useLocation react-router hook information sent from the previous page can be accessed */
+  const location = useLocation();
 
-  }, []);
+  useEffect(() => {
+   if (location.state?.event === "loggedOut") setIsLoggedIn(false);
+   else if (location.state?.event === "loggedIn") setIsLoggedIn(true);
+  }, [location.state?.event]);
 
   const [visibleElement, setVisibleEvent] = useState(null);
   const [visibleElementMobile, setVisibleElementMobile] = useState(null);
