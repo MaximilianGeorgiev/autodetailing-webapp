@@ -13,11 +13,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register, checkUserExists } from "../api/user";
 import { validateUsername, validatePhone, validateEmail, validatePassword } from "../utils/validator";
+import { clientHasLoginCookies } from "../utils/cookies";
 
 export const Register = () => {
     const darkTheme = createTheme({
@@ -27,6 +28,13 @@ export const Register = () => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // logged in users shouldn't access register page
+        const hasCookies = clientHasLoginCookies();
+
+        if (hasCookies) navigate("/");
+    }, []);
 
     // state: {field1: {value: "", error: bool, errorMsg: ""}, field2: {...}}
     const [inputValues, setInputValues] = useState({

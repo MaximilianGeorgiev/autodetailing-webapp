@@ -1,11 +1,9 @@
 
-import { useState } from 'react';
-
-import { useCookies } from "react-cookie";
+import { useState, useEffect } from 'react';
 
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
-
+import { useCookies } from "react-cookie";
 
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
@@ -25,17 +23,25 @@ import { Notification } from "./Notification";
 import { getLoggedUserRoles, addRole } from "../api/user";
 import { getRoleByName } from "../api/role";
 
+import { clientHasLoginCookies } from "../utils/cookies";
+
 
 export const Login = () => {
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(['']);
+    
+    useEffect(() => {
+        // logged in users shouldn't access login page
+        const hasCookies = clientHasLoginCookies();
+
+        if (hasCookies) navigate("/");
+    }, []);
 
     const darkTheme = createTheme({
         palette: {
             mode: "dark",
         },
     });
-
-    const [cookies, setCookie, removeCookie] = useCookies(['']);
 
     const [inputValues, setInputValues] = useState({
         email: { value: "", error: false, errorMsg: "" },
