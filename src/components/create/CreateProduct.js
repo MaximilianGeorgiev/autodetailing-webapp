@@ -138,7 +138,7 @@ export const CreateProduct = () => {
             && inputValues?.selectedCategory?.value
             && validatePrice(inputValues.price.value)) {
             createProduct(inputValues.title.value, inputValues.description.value, inputValues.price.value, inputValues.selectedCategory.value).then((res) => {
-                navigate("/");
+                navigate("/", { state: { "success": "true", "message": "Product created successfully." } });
             })
         }
 

@@ -134,7 +134,7 @@ export const CreateService = () => {
             && inputValues?.selectedCategory?.value
             && validatePrice(inputValues.price.value)) {
             createService(inputValues.title.value, inputValues.description.value, inputValues.price.value, inputValues.selectedCategory.value).then((res) => {
-                navigate("/");
+                navigate("/", { state: { "success": "true", "message": "Service created successfully." } });
             })
         }
 
