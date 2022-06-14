@@ -20,6 +20,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { Notification } from "./Notification";
+
 import { getLoggedUserRoles, addRole } from "../api/user";
 import { getRoleByName } from "../api/role";
 
@@ -62,18 +64,20 @@ export const Login = () => {
             error: false,
             errorMsg: "",
         };
-        if (inputValues?.password?.value) updatedState.email = {
+        if (inputValues?.password?.value) updatedState.password = {
             value: updatedState.password.value,
             error: false,
             errorMsg: "",
         };
 
         if (inputValues?.email?.value && inputValues?.password?.value) {
+            setSubmitError({ error: false, message: "" }); // remove old errors
+
             login(inputValues.email.value, inputValues.password.value).then((res) => {
                 if (res.data.status === "failed") {
                     if (res.data.reason === "user not found") {
                         setSubmitError({ error: true, message: "No user was found with the provided credentials. Please try again." });
-                    } else setSubmitError({ error: true, message: "Login failed." });
+                    } else setSubmitError({ error: true, message: "The provided password is incorrect." });
 
                     return;
                 } else if (res.data.status === "success") {
@@ -88,8 +92,9 @@ export const Login = () => {
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
 
+                    let roles = [];
+
                     getLoggedUserRoles(res.data.user[0].user_id).then((userRoles) => {
-                        let roles = [];
                         for (const role of userRoles.data.payload)
                             roles.push(role.role_name);
 
@@ -99,24 +104,29 @@ export const Login = () => {
                         if (roles.length === 0) {
                             getRoleByName("End User").then((roleName) => {
                                 if (roleName.data?.status === "failed") {
-                                    // handle error
+                                    setSubmitError({ error: true, message: "A database error has occured." });
+                                    return;
                                 } else {
                                     const roleId = roleName.data.payload[0].role_id;
                                     const payload = { user_id: res.data.user[0].user_id, role_id: roleId };
 
                                     addRole(payload).then((secondRoleRes) => {
                                         // Handle errors
-                                        // Alert user for success
+                                        if (secondRoleRes.data?.status === "failed") {
+                                            setSubmitError({ error: true, message: "A database error has occured." });
+                                            return;
+                                        }
+
+                                        roles.push("End User"); // UserRole table is populated and we can assign it to the client side cookie
+                                        setCookie("user_roles", roles);
                                     });
                                 }
                             });
                         }
-
-                        setCookie("user_roles", roles);
                     });
 
-                    // redirect to home page
-                    navigate('/');
+                    // redirect to home page with notification
+                    navigate('/', { state: { "success": "true", "message": "Login successful." } });
                 }
             })
         }
@@ -143,7 +153,13 @@ export const Login = () => {
                         Sign in
                     </Typography>
                     <Box noValidate sx={{ mt: 1 }}>
-                        {submitError.error === true && <Typography>{submitError.message}</Typography>}
+                        {submitError.error &&
+                            <Notification
+                                severity="error"
+                                message={submitError.message}
+                                posX="center"
+                                posY="bottom"
+                            />}
                         <TextField
                             name="email"
                             type="email"
