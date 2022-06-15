@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
 
-import { useCookies } from "react-cookie";
-
-import { login } from "../../api/user";
 import { useNavigate } from "react-router-dom";
 import { validatePrice } from "../../utils/validator";
 
@@ -25,6 +22,8 @@ import { getAllCategories } from "../../api/category";
 import { createProduct } from "../../api/product";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
+import { handlePictureUpload } from "../../api/picture";
+
 export const CreateProduct = () => {
   const darkTheme = createTheme({
     palette: {
@@ -35,6 +34,7 @@ export const CreateProduct = () => {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]); // dropdown options
+  const [uploadedPictures, setUploadedPictures] = useState();
 
   const [inputValues, setInputValues] = useState({
     title: { value: "", error: false, errorMsg: "" },
@@ -59,14 +59,17 @@ export const CreateProduct = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
+    if (!hasCookies) navigate("/", { state: { "event": "loggedOut" } });
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
+
+    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/", {state: {"event": "loggedIn"}});
+      navigate("/", { state: { "event": "loggedIn" } });
       return;
-    }
+    }*/
+
     // get available categories
     getAllCategories().then((res) => {
       let categories = [];
@@ -150,6 +153,8 @@ export const CreateProduct = () => {
       inputValues?.title?.value &&
       inputValues?.description?.value &&
       inputValues?.selectedCategory?.value &&
+      uploadedPictures !== null &&
+      uploadedPictures.length !== 0 &&
       validatePrice(inputValues.price.value)
     ) {
       createProduct(
@@ -158,9 +163,18 @@ export const CreateProduct = () => {
         inputValues.price.value,
         inputValues.selectedCategory.value
       ).then((res) => {
-        navigate("/", {
+        const productId = res.data?.product?.product_id;
+
+        // Upload pictures to the server
+        const uploadSuccess = handlePictureUpload("product", productId, uploadedPictures);
+
+        if (uploadSuccess) navigate("/", {
           state: { success: "true", message: "Product created successfully." },
         });
+
+        else {
+          // display errors
+        }
       });
     }
 
@@ -292,6 +306,21 @@ export const CreateProduct = () => {
                 {populateDropDown()}
               </Select>
             </FormControl>
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              multiple
+              type="file"
+              onChange={(e) => {
+                setUploadedPictures(e.target.files)
+              }}
+            />
+            <label htmlFor="raised-button-file">
+              <Button variant="raised" component="span">
+                Upload
+              </Button>
+            </label>
             <Button
               type="submit"
               fullWidth

@@ -9,13 +9,13 @@ const API_URL = "http://localhost:3030";
          2. If it is successful it returns the file path
          3. We then insert into the "EntityPicture" table the file path with the corresponding service id
 */
-export const handlePictureUpload = (serviceId, pictures) => {
+export const handlePictureUpload = (entityType, id, pictures) => {
     uploadPictures(pictures).then((res) => {
         if (res.data?.status === "success") {
             const paths = res.data?.paths;
 
             for (let i = 0; i < paths.length; i++) {
-                insertPicPathToDatabase(serviceId, paths[i]).then((insertRes) => {
+                insertPicPathToDatabase(entityType, id, paths[i]).then((insertRes) => {
                     if (insertRes.data?.status === "failed") return false;
                 });
             }
@@ -47,14 +47,18 @@ const uploadPictures = (pictures) => {
     });
 };
 
-const insertPicPathToDatabase = (serviceId, path) => {
-    if (!serviceId || serviceId < 0 || isNaN(serviceId)) return;
+const insertPicPathToDatabase = (entityType, id, path) => {
+    if (!id || id < 0 || isNaN(id)) return;
     if (!path || path === "") return;
+    if (!entityType || (entityType !== "service" && entityType !== "product")) return;
 
-    const payload = { service_id: serviceId, picture_path: path };
+    let payload = { picture_path: path };
+
+    if (entityType === "service") payload = { ...payload, service_id: id }
+    else if (entityType === "product") payload = { ...payload, product_id: id }
 
     return new Promise((resolve, reject) => {
-        axios.post(API_URL + "/service/picture/add", payload, {
+        axios.post(API_URL + `/${entityType}/picture/add`, payload, {
             headers: {
                 Authorization: "Bearer " + getCookieByName("accessToken"),
             },
