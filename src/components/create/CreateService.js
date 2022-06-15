@@ -18,7 +18,7 @@ import FormControl from "@mui/material/FormControl";
 
 import { getAllCategories } from "../../api/category";
 import { createService } from "../../api/service";
-import { addPictures, uploadPictures } from "../../api/picture";
+import { handlePictureUpload } from "../../api/picture";
 
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
@@ -58,14 +58,16 @@ export const CreateService = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
+    if (!hasCookies) navigate("/", { state: { "event": "loggedOut" } });
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
+
+    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
       navigate("/", {state: {"event": "loggedIn"}});
       return;
-    }
+    }*/
 
     // get available categories
     getAllCategories().then((res) => {
@@ -150,7 +152,8 @@ export const CreateService = () => {
       inputValues?.title?.value &&
       inputValues?.description?.value &&
       inputValues?.selectedCategory?.value &&
-      uploadedPictures !== null && 
+      uploadedPictures !== null &&
+      uploadedPictures.length !== 0 &&
       validatePrice(inputValues.price.value)
     ) {
       createService(
@@ -159,14 +162,18 @@ export const CreateService = () => {
         inputValues.price.value,
         inputValues.selectedCategory.value
       ).then((res) => {
+        const serviceId = res.data?.service?.service_id;
 
         // Upload pictures to the server
-        uploadPictures(uploadedPictures).then((uploadRes) => {
-        });
+        const uploadSuccess = handlePictureUpload(serviceId, uploadedPictures);
 
-        navigate("/", {
+        if (uploadSuccess) navigate("/", {
           state: { success: "true", message: "Service created successfully." },
         });
+
+        else {
+          // display errors
+        }
       });
     }
 
@@ -299,15 +306,21 @@ export const CreateService = () => {
               </Select>
             </FormControl>
 
-            <Button variant="contained" component="label">
-              Upload File
-              <input
-                type="file"
-                multiple
-                onChange={(e) => {console.log("ei0" + JSON.stringify(e.target.files)); setUploadedPictures(e.target.files)} }
-                hidden
-              />
-            </Button>
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              multiple
+              type="file"
+              onChange={(e) => {
+                setUploadedPictures(e.target.files)
+              }}
+            />
+            <label htmlFor="raised-button-file">
+              <Button variant="raised" component="span">
+                Upload
+              </Button>
+            </label>
 
             <Button
               type="submit"
