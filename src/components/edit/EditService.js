@@ -12,11 +12,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import EditIcon from '@mui/icons-material/Edit';
 
 import { getAllCategories } from "../../api/category";
 import { updateService, getServiceById } from "../../api/service";
@@ -227,7 +227,7 @@ export const EditService = (props) => {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <AddBoxIcon />
+                        <EditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Edit service

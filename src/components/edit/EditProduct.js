@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import EditIcon from '@mui/icons-material/Edit';
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -85,7 +85,7 @@ export const EditProduct = (props) => {
 
         getProductById(id).then((res) => {
             if (res.data?.status === "failed") {
-                navigate(`/product/show/${id}`);
+                navigate(`/products/show/${id}`);
                 return;
             }
 
@@ -204,9 +204,9 @@ export const EditProduct = (props) => {
                 inputValues.price.value,
                 inputValues.category.value
             ).then((res) => {
-                if (res.data?.status === "success") navigate(`/product/show/${id}`,
+                if (res.data?.status === "success") navigate(`/products/show/${id}`,
                     { state: { success: "true", message: "Update successful." } });
-                else navigate(`/product/show/${id}`,
+                else navigate(`/products/show/${id}`,
                     { state: { success: "false", message: "Update failed." } });
             });
         }
@@ -227,7 +227,7 @@ export const EditProduct = (props) => {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <AddBoxIcon />
+                        <EditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Edit product
