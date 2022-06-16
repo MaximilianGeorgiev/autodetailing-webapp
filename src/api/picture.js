@@ -25,6 +25,31 @@ export const handlePictureUpload = (entityType, id, pictures) => {
     return true;
 };
 
+export const handlePictureDelete = (entityType, id, path) => {
+    if (!id || id < 0 || isNaN(id)) return;
+    if (!path || path === "") return;
+    if (!entityType || (entityType !== "service" && entityType !== "product")) return;
+
+    let payload = {picture_path: path};
+
+    if (entityType === "service") payload = { ...payload, service_id: id }
+    else if (entityType === "product") payload = { ...payload, product_id: id }
+
+    
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `/${entityType}/picture/remove`, payload, {
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken"),
+            },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+    
+};
+
 const uploadPictures = (pictures) => {
     if (!pictures) return;
     if (pictures.length <= 0) return;

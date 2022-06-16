@@ -73,3 +73,15 @@ export const updateService = (id, title, description, price, category_id) => {
             })
     });
 };
+
+export const getServicePicturePaths = (id) => {
+    if (!id || id < 0 || isNaN(id)) return;
+
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + `/service/pictures/${id}`)
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
