@@ -11,6 +11,7 @@ import { Register } from "./components/Register";
 import { CreateProduct } from "./components/create/CreateProduct";
 import { CreateService } from "./components/create/CreateService";
 import { CreatePromotion } from "./components/create/CreatePromotion";
+import { EditProduct } from "./components/edit/EditProduct";
 
 import { App } from "./App";
 
@@ -28,6 +29,7 @@ root.render(
         <Route path="/products/create" element={<CreateProduct />} />
         <Route path="/services/create" element={<CreateService />} />
         <Route path="/promotions/create" element={<CreatePromotion />} />
+        <Route path="/products/edit/:id" element={<EditProduct />} />
       </Routes>
       <App />
     </BrowserRouter>

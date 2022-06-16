@@ -105,7 +105,7 @@ export const CreateProduct = () => {
 
     if (!inputValues?.selectedCategory?.value) {
       updatedState.selectedCategory = {
-        value: updatedState.description.value,
+        value: updatedState.category.value,
         error: true,
         errorMsg: "There is no category selected.",
       };
