@@ -13,6 +13,7 @@ import { CreateService } from "./components/create/CreateService";
 import { CreatePromotion } from "./components/create/CreatePromotion";
 import { EditProduct } from "./components/edit/EditProduct";
 import { EditService } from "./components/edit/EditService";
+import { EditPromotion } from "./components/edit/EditPromotion";
 
 import { App } from "./App";
 
@@ -32,6 +33,7 @@ root.render(
         <Route path="/promotions/create" element={<CreatePromotion />} />
         <Route path="/products/edit/:id" element={<EditProduct />} />
         <Route path="/services/edit/:id" element={<EditService />} />
+        <Route path="/promotions/edit/:id" element={<EditPromotion />} />
       </Routes>
       <App />
     </BrowserRouter>
