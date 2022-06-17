@@ -49,15 +49,13 @@ export const EditPromotion = (props) => {
   const populateDropDown = () => {
     let menuItems = [];
 
-    let entityId =
-      entityType === "service" ? "service.service_id" : "product.product_id";
-    let entityName =
-      entityType === "service"
-        ? "service.service_title"
-        : "product.product_title";
-
-    for (const entity of entities)
-      menuItems.push(<MenuItem value={entityId}>{entityName}</MenuItem>);
+    if (entityType === "service") {
+      for (const entity of entities)
+        menuItems.push(<MenuItem value={entity.service_id}>{entity.service_title}</ MenuItem>);
+    } else if (entityType === "product") {
+      for (const entity of entities)
+        menuItems.push(<MenuItem value={entity.product_id}>{entity.product_title}</ MenuItem>);
+    }
 
     return menuItems;
   };
@@ -240,17 +238,11 @@ export const EditPromotion = (props) => {
       inputValues?.dateFrom?.value &&
       inputValues?.dateTo?.value &&
       inputValues?.newPrice?.value &&
-      (inputValues?.service?.value || inputValues?.product?.value) && 
+      (inputValues?.service?.value || inputValues?.product?.value) &&
       validatePrice(inputValues.newPrice.value)
     ) {
-        console.log("laina1" + inputValues.dateFrom.value);
-        console.log("laina2" + inputValues.dateTo.value);
-        console.log("laina3" + inputValues.newPrice.value);
-        console.log("laina4" + inputValues.service?.value);
-        console.log("laina5" + inputValues.product?.value);
-
       let entity = entityType === "service" ? "service" : "product";
-      let entityValue = entityType === "service" ? "inputValues.service.value" : "inputValues.product.value";
+      let entityValue = entityType === "service" ? inputValues.service.value : inputValues.product.value;
       updatePromotion(
         id,
         inputValues.dateFrom.value,
@@ -289,7 +281,7 @@ export const EditPromotion = (props) => {
             <EditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit product
+            Edit promotion
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
@@ -357,6 +349,11 @@ export const EditPromotion = (props) => {
               label="Price"
               fullWidth
               margin="normal"
+              value={
+                inputValues["newPrice"]?.value
+                  ? inputValues["newPrice"].value
+                  : ""
+              }
               error={
                 inputValues["newPrice"]?.error
                   ? inputValues["newPrice"].error
@@ -376,7 +373,49 @@ export const EditPromotion = (props) => {
                 }));
               }}
             />
-
+            <FormControl
+              error={
+                inputValues[entityType]?.error
+                  ? inputValues[entityType].error
+                  : false
+              }
+              helperText={
+                inputValues[entityType]?.errorMsg
+                  ? inputValues[entityType].errorMsg
+                  : ""
+              }
+              fullWidth
+              margin="normal"
+            >
+              <InputLabel id="demo-simple-select-label">{entityType ? entityType[0].toUpperCase() + entityType.substring(1) : "Entity"}</InputLabel>
+              <Select
+                label={entityType ? entityType[0].toUpperCase() + entityType.substring(1) : "Entity"}
+                value={
+                  inputValues[entityType]?.value
+                    ? inputValues[entityType].value
+                    : ""
+                }
+                onChange={(e) => {
+                  if (entityType === "service") {
+                    setInputValues((prevInputValues) => ({
+                      ...prevInputValues,
+                      service: {
+                        value: e.target.value,
+                      }
+                    }));
+                  } else if (entityType === "product") {
+                    setInputValues((prevInputValues) => ({
+                      ...prevInputValues,
+                      product: {
+                        value: e.target.value,
+                      }
+                    }));
+                  }
+                }}
+              >
+                {populateDropDown()}
+              </Select>
+            </FormControl>
             <Button
               type="submit"
               fullWidth

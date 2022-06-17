@@ -68,18 +68,18 @@ export const updatePromotion = (
   if (!entity_id || entity_id < 0 || isNaN(entity_id)) return;
   if (!entity || entity === "") return;
 
-  let payload = {
-    updateData: {
-      promotion_from: dateFrom,
-      promotion_to: dateTo,
-      promotion_new_price: newPrice,
-    },
+  let updateData = {
+    promotion_from: dateFrom,
+    promotion_to: dateTo,
+    promotion_new_price: newPrice,
   };
 
   if (entity === "service")
-    payload = { ...payload.updateData, service_id: entity_id };
+    updateData = { ...updateData, service_id: entity_id };
   else if (entity === "product")
-    payload = { ...payload.updateData, product_id: entity_id };
+    updateData = { ...updateData, product_id: entity_id };
+
+  let payload = { updateData: updateData };
 
   return new Promise((resolve, reject) => {
     axios
