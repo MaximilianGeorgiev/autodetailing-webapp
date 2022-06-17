@@ -17,12 +17,16 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+
+import Image from 'material-ui-image';
 
 import { getAllCategories } from "../../api/category";
-import { updateProduct, getProductById } from "../../api/product";
+import { updateProduct, getProductById, getProductPicturePaths } from "../../api/product";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
-import { handlePictureUpload } from "../../api/picture";
+import { handlePictureUpload, handlePictureDelete } from "../../api/picture";
 
 import { useParams } from 'react-router';
 
@@ -38,6 +42,12 @@ export const EditProduct = (props) => {
 
     const [categories, setCategories] = useState([]); // dropdown options
     const [uploadedPictures, setUploadedPictures] = useState();
+
+    const [deletedPictures, setDeletedPictures] = useState([]);
+    const [additionalPictures, setAdditionalPictures] = useState([]); // to be uploaded during edit
+
+    // paths are fetched after rendering is done so they must be awaited
+    const [picturesLoaded, setPicturesLoaded] = useState(false);
 
     const [inputValues, setInputValues] = useState({
         title: { value: "", error: false, errorMsg: "" },
@@ -79,6 +89,17 @@ export const EditProduct = (props) => {
 
             res?.data?.payload.forEach((category) => categories.push(category));
             setCategories([...categories]);
+        });
+
+        // get all pictures that correspond to this product
+        getProductPicturePaths(id).then((res) => {
+            if (res.data?.status === "success") {
+                let paths = [];
+
+                res?.data?.payload.forEach((path) => paths.push(path.picture_path));
+                setUploadedPictures([...paths]);
+                setPicturesLoaded(true);
+            }
         });
 
         // prepopulate edit form
@@ -197,6 +218,16 @@ export const EditProduct = (props) => {
             inputValues?.price?.value &&
             validatePrice(inputValues.price.value)
         ) {
+            // remove any pictures if needed
+            if (deletedPictures.length !== 0) {
+                for (let i = 0; i < deletedPictures.length; i++)
+                    handlePictureDelete("product", id, deletedPictures[i]);
+            }
+
+            // add more pictures if needed
+            if (additionalPictures.length !== 0)
+                handlePictureUpload("product", id, additionalPictures);
+
             updateProduct(
                 id,
                 inputValues.title.value,
@@ -365,15 +396,28 @@ export const EditProduct = (props) => {
                             id="raised-button-file"
                             multiple
                             type="file"
-                            onChange={(e) => {
-                                setUploadedPictures(e.target.files)
-                            }}
+                            onChange={(e) =>
+                                setAdditionalPictures(e.target.files)}
                         />
                         <label htmlFor="raised-button-file">
                             <Button variant="raised" component="span">
                                 Upload
                             </Button>
                         </label>
+                        {picturesLoaded &&
+                            <ImageList sx={{ width: 450, height: 150 }} cols={3} rowHeight={164}>
+                                {uploadedPictures.map((path) => (
+                                    <Image
+                                        src={`${path}?w=164&h=164&fit=crop&auto=format`}
+                                        onClick={(e) => {
+                                            // prepare for deletion, remove from the displayed ones
+                                            const path = e.target.currentSrc.split("?")[0];
+                                            setDeletedPictures([...uploadedPictures.filter(p => p === path)]);
+                                            setUploadedPictures([...uploadedPictures.filter(p => p !== path)])
+                                        }}
+                                    />
+                                ))}
+                            </ImageList>}
                         <Button
                             type="submit"
                             fullWidth

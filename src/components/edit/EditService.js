@@ -20,7 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
-import Image from 'material-ui-image'
+import Image from 'material-ui-image';
 
 import { getAllCategories } from "../../api/category";
 import { updateService, getServiceById, getServicePicturePaths } from "../../api/service";
