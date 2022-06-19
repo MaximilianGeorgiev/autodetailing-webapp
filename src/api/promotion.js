@@ -97,3 +97,25 @@ export const updatePromotion = (
       });
   });
 };
+
+export const deletePromotion = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  console.log("kuro" + id);
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/promotion/delete/${id}`, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
