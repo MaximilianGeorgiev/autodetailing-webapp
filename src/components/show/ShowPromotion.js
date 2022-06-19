@@ -104,7 +104,7 @@ export const ShowPromotion = () => {
               : ""}
           </Typography>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Price:{" "}
+            Price:{" "} BGN
             {promotionInfo?.promotion_new_price
               ? promotionInfo.promotion_new_price
               : ""}
@@ -134,6 +134,7 @@ export const ShowPromotion = () => {
               color="secondary"
               component="span"
               startIcon={<LibraryBooksIcon />}
+              sx={{marginTop: 3}}
             >
               Book now
             </Button>
@@ -144,6 +145,7 @@ export const ShowPromotion = () => {
               color="secondary"
               component="span"
               startIcon={<AddShoppingCartIcon />}
+              sx={{marginTop: 3}}
             >
               Buy now
             </Button>

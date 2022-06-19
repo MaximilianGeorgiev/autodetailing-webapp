@@ -101,8 +101,6 @@ export const updatePromotion = (
 export const deletePromotion = (id) => {
   if (!id || id < 0 || isNaN(id)) return;
 
-  console.log("kuro" + id);
-
   return new Promise((resolve, reject) => {
     axios
       .get(API_URL + `/promotion/delete/${id}`, {
