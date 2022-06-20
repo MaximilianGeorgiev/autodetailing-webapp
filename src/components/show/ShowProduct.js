@@ -14,6 +14,8 @@ import {
   getProductPicturePaths,
   deleteProduct,
 } from "../../api/product";
+import { getCookieByName } from "../../utils/cookies";
+
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +31,7 @@ export const ShowProduct = () => {
   const [productInfo, setProductInfo] = useState();
   const [picturePaths, setPicturePaths] = useState({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   // paths are fetched after rendering is done so they must be awaited
   const [picturesLoaded, setPicturesLoaded] = useState(false);
@@ -43,6 +46,13 @@ export const ShowProduct = () => {
   });
 
   useEffect(() => {
+
+    // non admin and moderator users shouldn't see edit and delete buttons
+    const userRoles = getCookieByName("user_roles");
+
+    if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+      setHasPermission(true);
+
     getProductPicturePaths(id).then((res) => {
       if (res.data?.status === "success") {
         let paths = [];
@@ -110,12 +120,13 @@ export const ShowProduct = () => {
             color="secondary"
             component="span"
             startIcon={<AddShoppingCartIcon />}
-            sx={{marginTop: 3, margin: '0 auto', display: "flex"}}
-            style={{justifyContent: 'center'}}
+            sx={{ marginTop: 3, margin: '0 auto', display: "flex" }}
+            style={{ justifyContent: 'center' }}
 
           >
             Buy now
           </Button>
+          {hasPermission && 
           <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
             <Button
               sx={{}}
@@ -134,6 +145,7 @@ export const ShowProduct = () => {
               Delete
             </Button>
           </ButtonGroup>
+          }
           {showConfirmationDialog && (
             <ConfirmationDialog
               handleClose={() => setShowConfirmationDialog(false)}

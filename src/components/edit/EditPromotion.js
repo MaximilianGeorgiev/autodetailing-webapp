@@ -68,11 +68,10 @@ export const EditPromotion = (props) => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
 
-    /*
-        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-          navigate("/", { state: { "event": "loggedIn" } });
-          return;
-        }*/
+    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+      navigate("/", { state: { "event": "loggedIn" } });
+      return;
+    }
 
     // prepopulate edit form
     // a promotion can be either for a product or a service

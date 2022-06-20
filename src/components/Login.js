@@ -129,6 +129,7 @@ export const Login = () => {
                                 }
                             });
                         }
+                        setCookie("user_roles", roles);
                     });
 
                     // redirect to home page with notification
