@@ -75,3 +75,23 @@ export const getBlogPicturePaths = (id) => {
             })
     });
 };
+
+export const deleteBlog = (id) => {
+    if (!id || id < 0 || isNaN(id)) return;
+
+    return new Promise((resolve, reject) => {
+        axios
+            .get(API_URL + `/blog/delete/${id}`, {
+                headers: {
+                    Authorization: "Bearer " + getCookieByName("accessToken"),
+                },
+                validateStatus: function (status) {
+                    return status <= 422;
+                },
+            })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};

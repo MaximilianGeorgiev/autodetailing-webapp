@@ -19,6 +19,7 @@ import { EditBlog } from "./components/edit/EditBlog";
 import { ShowProduct } from "./components/show/ShowProduct";
 import { ShowService } from "./components/show/ShowService";
 import { ShowPromotion } from "./components/show/ShowPromotion";
+import { ShowBlog } from "./components/show/ShowBlog";
 
 import { App } from "./App";
 
@@ -44,6 +45,7 @@ root.render(
         <Route path="/products/show/:id" element={<ShowProduct />} />
         <Route path="/services/show/:id" element={<ShowService />} />
         <Route path="/promotions/show/:id" element={<ShowPromotion />} />
+        <Route path="/blogs/show/:id" element={<ShowBlog />} />
       </Routes>
       <App />
     </BrowserRouter>
