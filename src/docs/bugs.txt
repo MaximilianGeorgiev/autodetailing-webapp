@@ -4,4 +4,4 @@
 4. Picture server and localhost URLs hard coded
 5. Add restriction for 3 pictures per entity
 6. Notifications after redirect keep showing up on refresh
-7. 
+7. Entity edit allows only one picture delete at a time
