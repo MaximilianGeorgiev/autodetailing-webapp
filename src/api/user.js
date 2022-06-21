@@ -116,3 +116,24 @@ export const getUserById = (id) => {
             })
     });
 };
+
+export const updateUser = (id, formData) => {
+    if (!id || id < 0 || isNaN(id)) return;
+    if (!formData) return;
+
+    return new Promise((resolve, reject) => {
+        axios
+          .put(API_URL + `/user/${id}`, formData, {
+            headers: {
+              Authorization: "Bearer " + getCookieByName("accessToken"),
+            },
+            validateStatus: function (status) {
+              return status <= 422;
+            },
+          })
+          .then((res) => resolve(res))
+          .catch((err) => {
+            reject(err);
+          });
+      });
+};

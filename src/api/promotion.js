@@ -53,6 +53,19 @@ export const getPromotionById = (id) => {
   });
 };
 
+export const getPromotionByServiceId = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/promotion/service/${id}`)
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const updatePromotion = (
   id,
   dateFrom,

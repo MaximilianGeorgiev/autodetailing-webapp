@@ -122,6 +122,7 @@ export const ShowService = () => {
           {showReservation && (
             <Reservation
               handleClose={() => setShowReservation(false)}
+              service={serviceInfo}
             />
           )}
           <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
