@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { useLocation } from "react-router-dom";
 import { Notification } from "./components/Notification";
+import { EntityCards } from "./components/custom/EntityCards";
 
 export const App = () => {
   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
@@ -25,20 +26,6 @@ export const App = () => {
 
       <div className="App">
         <NavBar />
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
       </div>
 
       {location.state?.success === "true" && <Notification

@@ -63,10 +63,11 @@ export const CreateService = () => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
 
+    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
       navigate("/", {state: {"event": "loggedIn"}});
       return;
-    }
+    }*/
 
     // get available categories
     getAllCategories().then((res) => {

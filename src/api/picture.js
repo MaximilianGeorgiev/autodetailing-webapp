@@ -28,14 +28,14 @@ export const handlePictureUpload = (entityType, id, pictures) => {
 export const handlePictureDelete = (entityType, id, path) => {
     if (!id || id < 0 || isNaN(id)) return;
     if (!path || path === "") return;
-    if (!entityType || (entityType !== "service" && entityType !== "product")) return;
+    if (!entityType || (entityType !== "service" && entityType !== "product" && entityType !== "blog")) return;
 
-    let payload = {picture_path: path};
+    let payload = { picture_path: path };
 
-    if (entityType === "service") payload = { ...payload, service_id: id }
-    else if (entityType === "product") payload = { ...payload, product_id: id }
+    if (entityType === "service") payload = { ...payload, service_id: id };
+    else if (entityType === "product") payload = { ...payload, product_id: id };
+    else if (entityType === "blog") payload = { ...payload, blog_id: id };
 
-    
     return new Promise((resolve, reject) => {
         axios.post(API_URL + `/${entityType}/picture/remove`, payload, {
             headers: {
@@ -47,7 +47,7 @@ export const handlePictureDelete = (entityType, id, path) => {
                 reject(err);
             })
     });
-    
+
 };
 
 const uploadPictures = (pictures) => {
@@ -75,12 +75,13 @@ const uploadPictures = (pictures) => {
 const insertPicPathToDatabase = (entityType, id, path) => {
     if (!id || id < 0 || isNaN(id)) return;
     if (!path || path === "") return;
-    if (!entityType || (entityType !== "service" && entityType !== "product")) return;
+    if (!entityType || (entityType !== "service" && entityType !== "product" && entityType !== "blog")) return;
 
     let payload = { picture_path: path };
 
-    if (entityType === "service") payload = { ...payload, service_id: id }
-    else if (entityType === "product") payload = { ...payload, product_id: id }
+    if (entityType === "service") payload = { ...payload, service_id: id };
+    else if (entityType === "product") payload = { ...payload, product_id: id };
+    else if (entityType === "blog") payload = { ...payload, blog_id: id };
 
     return new Promise((resolve, reject) => {
         axios.post(API_URL + `/${entityType}/picture/add`, payload, {
