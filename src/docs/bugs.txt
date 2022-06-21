@@ -6,3 +6,4 @@
 6. Notifications after redirect keep showing up on refresh
 7. Entity edit allows only one picture delete at a time
 8. More than 3 pictures for blogs are scrollable, don't fit
+9. Deletion of entities with pictures (cascade)

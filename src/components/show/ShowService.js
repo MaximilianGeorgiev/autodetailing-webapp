@@ -18,7 +18,9 @@ import ImageList from "@mui/material/ImageList";
 import Image from "material-ui-image";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
+import { Reservation } from "../custom/Reservation";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,6 +33,7 @@ export const ShowService = () => {
   // paths are fetched after rendering is done so they must be awaited
   const [picturesLoaded, setPicturesLoaded] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [showReservation, setShowReservation] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -112,9 +115,15 @@ export const ShowService = () => {
             startIcon={<LibraryBooksIcon />}
             sx={{ marginTop: 3, margin: "0 auto", display: "flex" }}
             style={{ justifyContent: "center" }}
+            onClick={() => setShowReservation(true)}
           >
             Book now
           </Button>
+          {showReservation && (
+            <Reservation
+              handleClose={() => setShowReservation(false)}
+            />
+          )}
           <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
             <Button
               sx={{}}

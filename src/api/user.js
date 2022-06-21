@@ -100,3 +100,19 @@ export const addRole = (userInfo) => {
             });
     });
 };
+
+export const getUserById = (id) => {
+    if (!id || id < 0 || isNaN(id)) return;
+
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + `/user/id/${id}`, {
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken")
+            },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
