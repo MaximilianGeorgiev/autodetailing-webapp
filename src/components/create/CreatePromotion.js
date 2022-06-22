@@ -200,7 +200,7 @@ export const CreatePromotion = () => {
         inputValues.selectedEntity.value,
         categoryToggle ? "product" : "service"
       ).then((res) => {
-        navigate("/", { state: { "success": "true", "message": "Promotion created successfully." } });
+        navigate("/promotions/show/all", { state: { "success": "true", "message": "Promotion created successfully." } });
       });
     }
 

@@ -167,7 +167,7 @@ export const CreateProduct = () => {
         // Upload pictures to the server
         const uploadSuccess = handlePictureUpload("product", productId, uploadedPictures);
 
-        if (uploadSuccess) navigate("/", {
+        if (uploadSuccess) navigate("/products/show/all", {
           state: { success: "true", message: "Product created successfully." },
         });
 

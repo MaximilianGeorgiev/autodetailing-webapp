@@ -167,7 +167,7 @@ export const CreateService = () => {
         // Upload pictures to the server
         const uploadSuccess = handlePictureUpload("service", serviceId, uploadedPictures);
 
-        if (uploadSuccess) navigate("/", {
+        if (uploadSuccess) navigate("/services/show/all", {
           state: { success: "true", message: "Service created successfully." },
         });
 
