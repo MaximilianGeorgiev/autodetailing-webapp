@@ -17,6 +17,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 
 import { getAllCategories } from "../../api/category";
 import { createProduct } from "../../api/product";
@@ -316,8 +317,13 @@ export const CreateProduct = () => {
               }}
             />
             <label htmlFor="raised-button-file">
-              <Button variant="raised" component="span">
-                Upload
+            <Button
+                variant="outlined"
+                fullWidth
+                component="span"
+                startIcon={<PhotoCameraBackIcon />}
+              >
+                Upload pictures
               </Button>
             </label>
             <Button

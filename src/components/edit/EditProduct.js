@@ -12,423 +12,439 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-
-import Image from 'material-ui-image';
+import ImageList from "@mui/material/ImageList";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
+import Image from "material-ui-image";
 
 import { getAllCategories } from "../../api/category";
-import { updateProduct, getProductById, getProductPicturePaths } from "../../api/product";
+import {
+  updateProduct,
+  getProductById,
+  getProductPicturePaths,
+} from "../../api/product";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { handlePictureUpload, handlePictureDelete } from "../../api/picture";
 
-import { useParams } from 'react-router';
+import { useParams } from "react-router";
 
 export const EditProduct = (props) => {
-    const darkTheme = createTheme({
-        palette: {
-            mode: "dark",
-        },
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
+  const navigate = useNavigate();
+  const { id } = useParams(); // query param from url
+
+  const [categories, setCategories] = useState([]); // dropdown options
+  const [uploadedPictures, setUploadedPictures] = useState();
+
+  const [deletedPictures, setDeletedPictures] = useState([]);
+  const [additionalPictures, setAdditionalPictures] = useState([]); // to be uploaded during edit
+
+  // paths are fetched after rendering is done so they must be awaited
+  const [picturesLoaded, setPicturesLoaded] = useState(false);
+
+  const [inputValues, setInputValues] = useState({
+    title: { value: "", error: false, errorMsg: "" },
+    description: { value: "", error: false, errorMsg: "" },
+    category: { value: "", error: false, errorMsg: "" },
+    price: { value: "", error: false, errorMsg: "" },
+  });
+
+  const populateDropDown = () => {
+    let menuItems = [];
+
+    for (const category of categories)
+      menuItems.push(
+        <MenuItem value={category.category_id}>
+          {category.category_name}
+        </MenuItem>
+      );
+
+    return menuItems;
+  };
+
+  useEffect(() => {
+    // don't allow non logged in users to access this page
+    const hasCookies = clientHasLoginCookies();
+    if (!hasCookies) navigate("/", { state: { event: "loggedOut" } });
+
+    // don't permit non moderator and non admin users to access this page (redirect)
+    const userRoles = getCookieByName("user_roles");
+
+    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+      navigate("/", { state: { event: "loggedIn" } });
+      return;
+    }
+
+    // get available categories
+    getAllCategories().then((res) => {
+      let categories = [];
+
+      res?.data?.payload.forEach((category) => categories.push(category));
+      setCategories([...categories]);
     });
 
-    const navigate = useNavigate();
-    const { id } = useParams(); // query param from url
+    // get all pictures that correspond to this product
+    getProductPicturePaths(id).then((res) => {
+      if (res.data?.status === "success") {
+        let paths = [];
 
-    const [categories, setCategories] = useState([]); // dropdown options
-    const [uploadedPictures, setUploadedPictures] = useState();
-
-    const [deletedPictures, setDeletedPictures] = useState([]);
-    const [additionalPictures, setAdditionalPictures] = useState([]); // to be uploaded during edit
-
-    // paths are fetched after rendering is done so they must be awaited
-    const [picturesLoaded, setPicturesLoaded] = useState(false);
-
-    const [inputValues, setInputValues] = useState({
-        title: { value: "", error: false, errorMsg: "" },
-        description: { value: "", error: false, errorMsg: "" },
-        category: { value: "", error: false, errorMsg: "" },
-        price: { value: "", error: false, errorMsg: "" },
+        res?.data?.payload.forEach((path) => paths.push(path.picture_path));
+        setUploadedPictures([...paths]);
+        setPicturesLoaded(true);
+      }
     });
 
-    const populateDropDown = () => {
-        let menuItems = [];
+    // prepopulate edit form
 
-        for (const category of categories)
-            menuItems.push(
-                <MenuItem value={category.category_id}>
-                    {category.category_name}
-                </MenuItem>
-            );
+    getProductById(id).then((res) => {
+      if (res.data?.status === "failed") {
+        navigate(`/products/show/${id}`);
+        return;
+      }
 
-        return menuItems;
-    };
+      const product = res.data?.payload[0];
+      let updatedState = { ...inputValues };
 
-    useEffect(() => {
-        // don't allow non logged in users to access this page
-        const hasCookies = clientHasLoginCookies();
-        if (!hasCookies) navigate("/", { state: { "event": "loggedOut" } });
+      updatedState.title = {
+        value: product.product_title,
+        error: inputValues.title.error,
+        errorMsg: inputValues.title.errorMsg,
+      };
 
-        // don't permit non moderator and non admin users to access this page (redirect)
-        const userRoles = getCookieByName("user_roles");
+      updatedState.description = {
+        value: product.product_description,
+        error: inputValues.description.error,
+        errorMsg: inputValues.description.errorMsg,
+      };
 
-        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-          navigate("/", { state: { "event": "loggedIn" } });
-          return;
-        }
+      updatedState.price = {
+        value: product.product_price,
+        error: inputValues.price.error,
+        errorMsg: inputValues.price.errorMsg,
+      };
 
-        // get available categories
-        getAllCategories().then((res) => {
-            let categories = [];
+      updatedState.category = {
+        value: product.category_id,
+        error: inputValues.category.error,
+        errorMsg: inputValues.category.errorMsg,
+      };
 
-            res?.data?.payload.forEach((category) => categories.push(category));
-            setCategories([...categories]);
-        });
+      setInputValues(updatedState);
+    });
+  }, []);
 
-        // get all pictures that correspond to this product
-        getProductPicturePaths(id).then((res) => {
-            if (res.data?.status === "success") {
-                let paths = [];
+  const processProductEditForm = () => {
+    let updatedState = { ...inputValues };
 
-                res?.data?.payload.forEach((path) => paths.push(path.picture_path));
-                setUploadedPictures([...paths]);
-                setPicturesLoaded(true);
-            }
-        });
+    if (!inputValues?.title?.value)
+      updatedState.title = {
+        value: updatedState.title.value,
+        error: true,
+        errorMsg: "Product name field cannot be empty.",
+      };
 
-        // prepopulate edit form
+    if (!inputValues?.description?.value)
+      updatedState.description = {
+        value: updatedState.description.value,
+        error: true,
+        errorMsg: "Product description field cannot be empty.",
+      };
 
-        getProductById(id).then((res) => {
-            if (res.data?.status === "failed") {
-                navigate(`/products/show/${id}`);
-                return;
-            }
+    if (!inputValues?.price?.value)
+      updatedState.price = {
+        value: updatedState.price.value,
+        error: true,
+        errorMsg: "Price field cannot be empty.",
+      };
 
-            const product = res.data?.payload[0];
-            let updatedState = { ...inputValues };
+    if (!inputValues?.category?.value) {
+      updatedState.category = {
+        value: updatedState.category.value,
+        error: true,
+        errorMsg: "There is no category selected.",
+      };
+    }
 
-            updatedState.title = {
-                value: product.product_title,
-                error: inputValues.title.error,
-                errorMsg: inputValues.title.errorMsg
-            };
+    // case: subsequent error requests but one of the fields is corrected
+    if (inputValues?.title?.value)
+      updatedState.title = {
+        value: updatedState.title.value,
+        error: false,
+        errorMsg: "",
+      };
 
-            updatedState.description = {
-                value: product.product_description,
-                error: inputValues.description.error,
-                errorMsg: inputValues.description.errorMsg
-            };
+    if (inputValues?.description?.value)
+      updatedState.description = {
+        value: updatedState.description.value,
+        error: false,
+        errorMsg: "",
+      };
 
-            updatedState.price = {
-                value: product.product_price,
-                error: inputValues.price.error,
-                errorMsg: inputValues.price.errorMsg
-            };
+    if (inputValues?.price?.value) {
+      if (validatePrice(inputValues.price.value)) {
+        updatedState.price = {
+          value: updatedState.price.value,
+          error: false,
+          errorMsg: "",
+        };
+      } else {
+        updatedState.price = {
+          value: updatedState.price.value,
+          error: true,
+          errorMsg: "Price is not valid.",
+        };
+      }
+    }
 
-            updatedState.category = {
-                value: product.category_id,
-                error: inputValues.category.error,
-                errorMsg: inputValues.category.errorMsg
-            };
+    if (inputValues?.category?.value)
+      updatedState.category = {
+        value: updatedState.category.value,
+        error: false,
+        errorMsg: "",
+      };
 
-            setInputValues(updatedState);
-        });
-    }, []);
+    if (
+      inputValues?.title?.value &&
+      inputValues?.description?.value &&
+      inputValues?.category?.value &&
+      inputValues?.price?.value &&
+      validatePrice(inputValues.price.value)
+    ) {
+      // remove any pictures if needed
+      if (deletedPictures.length !== 0) {
+        for (let i = 0; i < deletedPictures.length; i++)
+          handlePictureDelete("product", id, deletedPictures[i]);
+      }
 
-    const processProductEditForm = () => {
-        let updatedState = { ...inputValues };
+      // add more pictures if needed
+      if (additionalPictures.length !== 0)
+        handlePictureUpload("product", id, additionalPictures);
 
-        if (!inputValues?.title?.value)
-            updatedState.title = {
-                value: updatedState.title.value,
-                error: true,
-                errorMsg: "Product name field cannot be empty.",
-            };
+      updateProduct(
+        id,
+        inputValues.title.value,
+        inputValues.description.value,
+        inputValues.price.value,
+        inputValues.category.value
+      ).then((res) => {
+        if (res.data?.status === "success")
+          navigate(`/products/show/${id}`, {
+            state: { success: "true", message: "Update successful." },
+          });
+        else
+          navigate(`/products/show/${id}`, {
+            state: { success: "false", message: "Update failed." },
+          });
+      });
+    }
 
-        if (!inputValues?.description?.value)
-            updatedState.description = {
-                value: updatedState.description.value,
-                error: true,
-                errorMsg: "Product description field cannot be empty.",
-            };
+    setInputValues(updatedState);
+  };
 
-        if (!inputValues?.price?.value)
-            updatedState.price = {
-                value: updatedState.price.value,
-                error: true,
-                errorMsg: "Price field cannot be empty.",
-            };
-
-        if (!inputValues?.category?.value) {
-            updatedState.category = {
-                value: updatedState.category.value,
-                error: true,
-                errorMsg: "There is no category selected.",
-            };
-        }
-
-        // case: subsequent error requests but one of the fields is corrected
-        if (inputValues?.title?.value)
-            updatedState.title = {
-                value: updatedState.title.value,
-                error: false,
-                errorMsg: "",
-            };
-
-        if (inputValues?.description?.value)
-            updatedState.description = {
-                value: updatedState.description.value,
-                error: false,
-                errorMsg: "",
-            };
-
-        if (inputValues?.price?.value) {
-            if (validatePrice(inputValues.price.value)) {
-                updatedState.price = {
-                    value: updatedState.price.value,
-                    error: false,
-                    errorMsg: "",
-                };
-            } else {
-                updatedState.price = {
-                    value: updatedState.price.value,
-                    error: true,
-                    errorMsg: "Price is not valid.",
-                };
-            }
-        }
-
-        if (inputValues?.category?.value)
-            updatedState.category = {
-                value: updatedState.category.value,
-                error: false,
-                errorMsg: "",
-            };
-
-        if (
-            inputValues?.title?.value &&
-            inputValues?.description?.value &&
-            inputValues?.category?.value &&
-            inputValues?.price?.value &&
-            validatePrice(inputValues.price.value)
-        ) {
-            // remove any pictures if needed
-            if (deletedPictures.length !== 0) {
-                for (let i = 0; i < deletedPictures.length; i++)
-                    handlePictureDelete("product", id, deletedPictures[i]);
-            }
-
-            // add more pictures if needed
-            if (additionalPictures.length !== 0)
-                handlePictureUpload("product", id, additionalPictures);
-
-            updateProduct(
-                id,
-                inputValues.title.value,
-                inputValues.description.value,
-                inputValues.price.value,
-                inputValues.category.value
-            ).then((res) => {
-                if (res.data?.status === "success") navigate(`/products/show/${id}`,
-                    { state: { success: "true", message: "Update successful." } });
-                else navigate(`/products/show/${id}`,
-                    { state: { success: "false", message: "Update failed." } });
-            });
-        }
-
-        setInputValues(updatedState);
-    };
-
-    return (
-        <ThemeProvider theme={darkTheme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <EditIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Edit product
+          </Typography>
+          <Box noValidate sx={{ mt: 1 }}>
+            <TextField
+              name="title"
+              type="text"
+              placeholder="Product name"
+              label="Product name"
+              margin="normal"
+              fullWidth
+              value={
+                inputValues["title"]?.value ? inputValues["title"].value : ""
+              }
+              error={
+                inputValues["title"]?.error ? inputValues["title"].error : false
+              }
+              helperText={
+                inputValues["title"]?.errorMsg
+                  ? inputValues["title"].errorMsg
+                  : ""
+              }
+              onChange={(e) => {
+                setInputValues((prevInputValues) => ({
+                  ...prevInputValues,
+                  title: {
+                    value: e.target.value,
+                  },
+                }));
+              }}
+            />
+            <TextField
+              name="description"
+              type="text"
+              placeholder="Description"
+              label="Description"
+              fullWidth
+              margin="normal"
+              multiline
+              rows={3}
+              maxRows={5}
+              value={
+                inputValues["description"]?.value
+                  ? inputValues["description"].value
+                  : ""
+              }
+              error={
+                inputValues["description"]?.error
+                  ? inputValues["description"].error
+                  : false
+              }
+              helperText={
+                inputValues["description"]?.errorMsg
+                  ? inputValues["description"].errorMsg
+                  : ""
+              }
+              onChange={(e) => {
+                setInputValues((prevInputValues) => ({
+                  ...prevInputValues,
+                  description: {
+                    value: e.target.value,
+                  },
+                }));
+              }}
+            />
+            <TextField
+              name="price"
+              type="text"
+              placeholder="Price"
+              label="Price"
+              margin="normal"
+              fullWidth
+              value={
+                inputValues["price"]?.value ? inputValues["price"].value : ""
+              }
+              error={
+                inputValues["price"]?.error ? inputValues["price"].error : false
+              }
+              helperText={
+                inputValues["price"]?.errorMsg
+                  ? inputValues["price"].errorMsg
+                  : ""
+              }
+              onChange={(e) => {
+                setInputValues((prevInputValues) => ({
+                  ...prevInputValues,
+                  price: {
+                    value: e.target.value,
+                  },
+                }));
+              }}
+            />
+            <FormControl
+              error={
+                inputValues["category"]?.error
+                  ? inputValues["category"].error
+                  : false
+              }
+              helperText={
+                inputValues["category"]?.errorMsg
+                  ? inputValues["category"].errorMsg
+                  : ""
+              }
+              fullWidth
+              margin="normal"
+            >
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                label="Category"
+                value={
+                  inputValues["category"]?.value
+                    ? inputValues["category"].value
+                    : ""
+                }
+                onChange={(e) => {
+                  setInputValues((prevInputValues) => ({
+                    ...prevInputValues,
+                    category: {
+                      value: e.target.value,
+                    },
+                  }));
+                }}
+              >
+                {populateDropDown()}
+              </Select>
+            </FormControl>
+            <input
+              accept="image/*"
+              style={{ display: "none" }}
+              id="raised-button-file"
+              multiple
+              type="file"
+              onChange={(e) => setAdditionalPictures(e.target.files)}
+            />
+            <label htmlFor="raised-button-file">
+              <Button
+                variant="outlined"
+                fullWidth
+                component="span"
+                startIcon={<PhotoCameraBackIcon />}
+              >
+                Upload pictures
+              </Button>
+            </label>
+            {picturesLoaded && (
+              <ImageList
+                sx={{ width: 450, height: 150 }}
+                cols={3}
+                rowHeight={164}
+              >
+                {uploadedPictures.map((path) => (
+                  <Image
+                    src={`${path}?w=164&h=164&fit=crop&auto=format`}
+                    onClick={(e) => {
+                      // prepare for deletion, remove from the displayed ones
+                      const path = e.target.currentSrc.split("?")[0];
+                      setDeletedPictures([
+                        ...uploadedPictures.filter((p) => p === path),
+                      ]);
+                      setUploadedPictures([
+                        ...uploadedPictures.filter((p) => p !== path),
+                      ]);
                     }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <EditIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Edit product
-                    </Typography>
-                    <Box noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            name="title"
-                            type="text"
-                            placeholder="Product name"
-                            label="Product name"
-                            margin="normal"
-                            fullWidth
-                            value={
-                                inputValues["title"]?.value
-                                    ? inputValues["title"].value
-                                    : ""
-                            }
-                            error={
-                                inputValues["title"]?.error ? inputValues["title"].error : false
-                            }
-                            helperText={
-                                inputValues["title"]?.errorMsg
-                                    ? inputValues["title"].errorMsg
-                                    : ""
-                            }
-                            onChange={(e) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    title: {
-                                        value: e.target.value,
-                                    },
-                                }));
-                            }}
-                        />
-                        <TextField
-                            name="description"
-                            type="text"
-                            placeholder="Description"
-                            label="Description"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={3}
-                            maxRows={5}
-                            value={
-                                inputValues["description"]?.value
-                                    ? inputValues["description"].value
-                                    : ""
-                            }
-                            error={
-                                inputValues["description"]?.error
-                                    ? inputValues["description"].error
-                                    : false
-                            }
-                            helperText={
-                                inputValues["description"]?.errorMsg
-                                    ? inputValues["description"].errorMsg
-                                    : ""
-                            }
-                            onChange={(e) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    description: {
-                                        value: e.target.value,
-                                    },
-                                }));
-                            }}
-                        />
-                        <TextField
-                            name="price"
-                            type="text"
-                            placeholder="Price"
-                            label="Price"
-                            margin="normal"
-                            fullWidth
-                            value={
-                                inputValues["price"]?.value
-                                    ? inputValues["price"].value
-                                    : ""
-                            }
-                            error={
-                                inputValues["price"]?.error ? inputValues["price"].error : false
-                            }
-                            helperText={
-                                inputValues["price"]?.errorMsg
-                                    ? inputValues["price"].errorMsg
-                                    : ""
-                            }
-                            onChange={(e) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    price: {
-                                        value: e.target.value,
-                                    },
-                                }));
-                            }}
-                        />
-                        <FormControl
-                            error={
-                                inputValues["category"]?.error
-                                    ? inputValues["category"].error
-                                    : false
-                            }
-                            helperText={
-                                inputValues["category"]?.errorMsg
-                                    ? inputValues["category"].errorMsg
-                                    : ""
-                            }
-                            fullWidth
-                            margin="normal"
-                        >
-                            <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                            <Select
-                                label="Category"
-                                value={
-                                    inputValues["category"]?.value
-                                        ? inputValues["category"].value
-                                        : ""
-                                }
-                                onChange={(e) => {
-                                    setInputValues((prevInputValues) => ({
-                                        ...prevInputValues,
-                                        category: {
-                                            value: e.target.value,
-                                        },
-                                    }));
-                                }}
-                            >
-                                {populateDropDown()}
-                            </Select>
-                        </FormControl>
-                        <input
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            id="raised-button-file"
-                            multiple
-                            type="file"
-                            onChange={(e) =>
-                                setAdditionalPictures(e.target.files)}
-                        />
-                        <label htmlFor="raised-button-file">
-                            <Button variant="raised" component="span">
-                                Upload
-                            </Button>
-                        </label>
-                        {picturesLoaded &&
-                            <ImageList sx={{ width: 450, height: 150 }} cols={3} rowHeight={164}>
-                                {uploadedPictures.map((path) => (
-                                    <Image
-                                        src={`${path}?w=164&h=164&fit=crop&auto=format`}
-                                        onClick={(e) => {
-                                            // prepare for deletion, remove from the displayed ones
-                                            const path = e.target.currentSrc.split("?")[0];
-                                            setDeletedPictures([...uploadedPictures.filter(p => p === path)]);
-                                            setUploadedPictures([...uploadedPictures.filter(p => p !== path)])
-                                        }}
-                                    />
-                                ))}
-                            </ImageList>}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={() => processProductEditForm()}
-                        >
-                            Edit product
-                        </Button>
-                    </Box>
-                </Box>
-            </Container>
-        </ThemeProvider>
-    );
+                  />
+                ))}
+              </ImageList>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => processProductEditForm()}
+            >
+              Edit product
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
 };

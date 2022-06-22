@@ -11,10 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 
 import { createBlog } from "../../api/blog";
 import { handlePictureUpload } from "../../api/picture";
@@ -195,8 +192,13 @@ export const CreateBlog = () => {
               }}
             />
             <label htmlFor="raised-button-file">
-              <Button variant="raised" component="span">
-                Upload
+            <Button
+                variant="outlined"
+                fullWidth
+                component="span"
+                startIcon={<PhotoCameraBackIcon />}
+              >
+                Upload pictures
               </Button>
             </label>
 

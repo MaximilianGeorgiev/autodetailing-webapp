@@ -14,6 +14,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormControl from "@mui/material/FormControl";
 
 import { getAllCategories } from "../../api/category";
@@ -58,7 +59,7 @@ export const CreateService = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", { state: { "event": "loggedOut" } });
+    if (!hasCookies) navigate("/", { state: { event: "loggedOut" } });
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
@@ -165,12 +166,19 @@ export const CreateService = () => {
         const serviceId = res.data?.service?.service_id;
 
         // Upload pictures to the server
-        const uploadSuccess = handlePictureUpload("service", serviceId, uploadedPictures);
+        const uploadSuccess = handlePictureUpload(
+          "service",
+          serviceId,
+          uploadedPictures
+        );
 
-        if (uploadSuccess) navigate("/services/show/all", {
-          state: { success: "true", message: "Service created successfully." },
-        });
-
+        if (uploadSuccess)
+          navigate("/services/show/all", {
+            state: {
+              success: "true",
+              message: "Service created successfully.",
+            },
+          });
         else {
           // display errors
         }
@@ -308,17 +316,22 @@ export const CreateService = () => {
 
             <input
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               id="raised-button-file"
               multiple
               type="file"
               onChange={(e) => {
-                setUploadedPictures(e.target.files)
+                setUploadedPictures(e.target.files);
               }}
             />
             <label htmlFor="raised-button-file">
-              <Button variant="raised" component="span">
-                Upload
+              <Button
+                variant="outlined"
+                fullWidth
+                component="span"
+                startIcon={<PhotoCameraBackIcon />}
+              >
+                Upload pictures
               </Button>
             </label>
 
