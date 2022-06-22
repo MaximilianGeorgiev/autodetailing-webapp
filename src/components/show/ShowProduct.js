@@ -15,6 +15,7 @@ import {
   deleteProduct,
 } from "../../api/product";
 import { getCookieByName } from "../../utils/cookies";
+import { Order } from "../custom/Order";
 
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ export const ShowProduct = () => {
   const [picturePaths, setPicturePaths] = useState({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [showOrder, setShowOrder] = useState(false);
 
   // paths are fetched after rendering is done so they must be awaited
   const [picturesLoaded, setPicturesLoaded] = useState(false);
@@ -122,10 +124,16 @@ export const ShowProduct = () => {
             startIcon={<AddShoppingCartIcon />}
             sx={{ marginTop: 3, margin: '0 auto', display: "flex" }}
             style={{ justifyContent: 'center' }}
-
+            onClick={() => setShowOrder(true)}
           >
             Buy now
           </Button>
+          {showOrder && (
+            <Order
+              handleClose={() => setShowOrder(false)}
+              product={productInfo}
+            />
+          )}
           {hasPermission && 
           <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
             <Button
