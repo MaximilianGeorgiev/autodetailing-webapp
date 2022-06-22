@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { getAllProducts, deleteProduct } from "../../api/product";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
 export const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -31,6 +32,17 @@ export const ProductTable = () => {
   });
 
   useEffect(() => {
+    // don't allow non logged in users to access this page
+    const hasCookies = clientHasLoginCookies();
+    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
+
+    // don't permit non moderator and non admin users to access this page (redirect)
+    const userRoles = getCookieByName("user_roles");
+    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+      navigate("/", {state: {"event": "loggedIn"}});
+      return;
+    }
+
     getAllProducts().then((res) => {
       if (res.data.status === "success") setProducts(res.data.payload); // category_name is present
     });
