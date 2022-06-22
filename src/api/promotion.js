@@ -3,6 +3,16 @@ import { getCookieByName } from "../utils/cookies";
 
 const API_URL = "http://localhost:3030";
 
+export const getAllPromotions = () => {
+  return new Promise((resolve, reject) => {
+      axios.get(API_URL + "/promotion")
+          .then((res) => resolve(res))
+          .catch((err) => {
+              reject(err);
+          })
+  });
+};
+
 export const createPromotion = (
   dateFrom,
   dateTo,

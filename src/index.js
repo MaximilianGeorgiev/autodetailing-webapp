@@ -22,6 +22,7 @@ import { ShowPromotion } from "./components/show/ShowPromotion";
 import { ShowBlog } from "./components/show/ShowBlog";
 import { ProductTable } from "./components/tables/ProductTable";
 import { ServiceTable } from "./components/tables/ServiceTable";
+import { PromotionTable } from "./components/tables/PromotionTable";
 
 import { App } from "./App";
 
@@ -50,6 +51,7 @@ root.render(
           <Route path="/blogs/show/:id" element={<ShowBlog />} />
           <Route path="/products/show/all" element={<ProductTable />} />
           <Route path="/services/show/all" element={<ServiceTable />} />
+          <Route path="/promotions/show/all" element={<PromotionTable />} />
         </Routes>
         <App />
       </BrowserRouter>

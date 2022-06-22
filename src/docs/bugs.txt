@@ -7,7 +7,7 @@
 7. Entity edit allows only one picture delete at a time
 8. More than 3 pictures for blogs are scrollable, don't fit
 9. Deletion of entities with pictures (cascade), active promotions, orders/reservations
-10. Allow guest reservations
+[DONE] 10. Allow guest reservations
 11. Disabled fields for reservations to be dynamic
 11. On profile update update cookies as well not just database
 
