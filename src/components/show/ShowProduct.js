@@ -77,7 +77,7 @@ export const ShowProduct = () => {
 
   const deleteButtonOnClick = () => {
     deleteProduct(id).then((res) => {
-      navigate("/products/show");
+      navigate("/products/show/all");
       setShowConfirmationDialog(false);
     });
   };
