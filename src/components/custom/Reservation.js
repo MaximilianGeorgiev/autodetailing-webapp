@@ -8,9 +8,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import { useState, useEffect } from "react";
-import { getUserById, updateUser } from "../../api/user";
+import { getUserById, updateUser, register } from "../../api/user";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
-import { validatePhone } from "../../utils/validator";
+import { validatePhone, validateEmail } from "../../utils/validator";
 import {
   addServiceToReservation,
   createReservation,
@@ -95,10 +95,31 @@ export const Reservation = (props) => {
         errorMsg: "A phone number is required.",
       };
 
+    if (!inputValues?.email?.value)
+      updatedState.email = {
+        value: updatedState.email.value,
+        error: true,
+        errorMsg: "An E-mail address is required.",
+      };
+
+    if (!inputValues?.fullname?.value)
+      updatedState.fullname = {
+        value: updatedState.fullname.value,
+        error: true,
+        errorMsg: "Full name is required.",
+      };
+
     // case: subsequent error requests but one of the fields is corrected
     if (inputValues?.date?.value)
       updatedState.date = {
         value: updatedState.date.value,
+        error: false,
+        errorMsg: "",
+      };
+
+    if (inputValues?.fullname?.value)
+      updatedState.fullname = {
+        value: updatedState.fullname.value,
         error: false,
         errorMsg: "",
       };
@@ -115,6 +136,21 @@ export const Reservation = (props) => {
           value: updatedState.phone.value,
           error: true,
           errorMsg: "The provided phone number is invalid.",
+        };
+    }
+
+    if (inputValues?.email?.value) {
+      if (validateEmail(updatedState.email.value))
+        updatedState.email = {
+          value: updatedState.email.value,
+          error: false,
+          errorMsg: "",
+        };
+      else
+        updatedState.email = {
+          value: updatedState.email.value,
+          error: true,
+          errorMsg: "The provided E-mail address is invalid.",
         };
     }
 
@@ -145,7 +181,7 @@ export const Reservation = (props) => {
               }
 
               // promotions are expired, set the standard price for a service
-              if (i == res.data.payload.length - 1)
+              if (i === res.data.payload.length - 1)
                 totalPrice = props.service.service_price;
             }
           }
@@ -153,33 +189,60 @@ export const Reservation = (props) => {
           let userId = getCookieByName("user_id");
 
           // If there is no user we need to create it (for reference) and use the new user id
-          if (userId === "undefined") {
+          // users that have isGuest boolean will not be able to login since they did not consent to a registration
+          // they are for reference only and we need their id
+          if (userId === "" || userId === "undefined") {
+            const payload = {
+              email: inputValues.email.value,
+              username: "guest",
+              password: "foobar",
+              fullname: inputValues.fullname.value,
+              isGuest: true,
+              phone: inputValues.phone.value,
+            };
+
+            register(payload).then((res) => {
+              userId = res.data.user[0].user_id;
+            });
           }
 
-          // 2. Create the reservation
-          createReservation(
-            getCookieByName("user_id"),
-            inputValues.date.value,
-            false,
-            totalPrice
-          ).then((reservationRes) => {
-            if (reservationRes.data?.status === "success") {
-              // 3. Since the db design allows for multiple services in one reservation (not implemented in webapp), we need to manually add the service to the newly created reservation
-              const reservationId =
-                reservationRes.data.reservation.reservation_id;
+          // await registration if needed
+          setTimeout(() => {
+            if (userId !== "") {
+              // 2. Create the reservation
+              createReservation(
+                userId,
+                inputValues.date.value,
+                false,
+                totalPrice
+              ).then((reservationRes) => {
+                if (reservationRes.data?.status === "success") {
+                  // 3. Since the db design allows for multiple services in one reservation (not implemented in webapp), we need to manually add the service to the newly created reservation
+                  const reservationId =
+                    reservationRes.data.reservation.reservation_id;
 
-              addServiceToReservation(
-                reservationId,
-                props.service.service_id
-              ).then((serviceRes) => {
-                if (serviceRes.data?.status === "success") {
-                  // 4. If the user had no phone number associated (its not mandatory) then update the user profile with the provided phone number
-                  const payload = {
-                    updateData: { user_phone: inputValues.phone.value },
-                  };
-                  updateUser(getCookieByName("user_id"), payload).then(
-                    (updateRes) => {
-                      if (updateRes.data?.status === "success") {
+                  addServiceToReservation(
+                    reservationId,
+                    props.service.service_id
+                  ).then((serviceRes) => {
+                    if (serviceRes.data?.status === "success") {
+                      // 4. If the user had no phone number associated (its not mandatory) then update the user profile with the provided phone number
+                      // only if user was logged in and not newly registered
+                      const hasCookies = clientHasLoginCookies();
+
+                      if (
+                        (getCookieByName("user_phone") === "undefined" ||
+                          getCookieByName("user_phone") === "") &&
+                        hasCookies
+                      ) {
+                        const payload = {
+                          updateData: { user_phone: inputValues.phone.value },
+                        };
+
+                        updateUser(getCookieByName("user_id"), payload);
+                      }
+
+                      if (serviceRes.data?.status === "success") {
                         navigate("/reservations", {
                           state: {
                             success: "true",
@@ -188,11 +251,11 @@ export const Reservation = (props) => {
                         });
                       }
                     }
-                  );
+                  });
                 }
               });
             }
-          });
+          }, 800);
         }
       });
     }
@@ -213,7 +276,6 @@ export const Reservation = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            disabled
             label="Email Address"
             type="email"
             variant="standard"
@@ -242,7 +304,6 @@ export const Reservation = (props) => {
             id="name"
             label="Full name"
             type="email"
-            disabled
             variant="standard"
             sx={{ marginRight: 25 }}
             value={inputValues["fullname"].value}
@@ -301,6 +362,7 @@ export const Reservation = (props) => {
             label="Appointment date"
             type="date"
             variant="standard"
+            sx={{ marginRight: 25 }}
             InputLabelProps={{
               shrink: true,
             }}

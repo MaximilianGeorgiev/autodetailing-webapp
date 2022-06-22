@@ -9,3 +9,8 @@
 9. Deletion of entities with pictures (cascade)
 10. Allow guest reservations
 11. Disabled fields for reservations to be dynamic
+
+
+---
+improvements:
+1. Display that a service/product has an ongoing promotion. Display old price and new price.
