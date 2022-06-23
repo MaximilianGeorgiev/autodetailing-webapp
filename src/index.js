@@ -23,14 +23,13 @@ import { ShowBlog } from "./components/show/ShowBlog";
 import { ProductTable } from "./components/tables/ProductTable";
 import { ServiceTable } from "./components/tables/ServiceTable";
 import { PromotionTable } from "./components/tables/PromotionTable";
-import { EntityCards} from "./components/custom/EntityCards";
+import { Home} from "./components/Home.js";
 
 import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
     <CookiesProvider>
       <BrowserRouter>
         <Routes>
@@ -53,11 +52,9 @@ root.render(
           <Route path="/products/show/all" element={<ProductTable />} />
           <Route path="/services/show/all" element={<ServiceTable />} />
           <Route path="/promotions/show/all" element={<PromotionTable />} />
-          <Route path="/test" element={<EntityCards entityType="service" />} />
-          <Route path="/test2" element={<EntityCards entityType="product" />} />
+          <Route path="/test" element={<Home />} />
         </Routes>
         <App />
       </BrowserRouter>
     </CookiesProvider>
-  </React.StrictMode>
 );

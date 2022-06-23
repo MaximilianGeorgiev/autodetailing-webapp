@@ -10,7 +10,7 @@
 [DONE] 10. Allow guest reservations
 11. Disabled fields for reservations to be dynamic
 11. On profile update update cookies as well not just database
-
+12. On image click to open image in full resolution
 
 ---
 improvements:
