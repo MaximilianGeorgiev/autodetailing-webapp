@@ -1,6 +1,6 @@
 1. User role cookie fetching during service edit and service create are undefined
-2. Make picture uploading mandatory
-3. Make better style for upload button
+[DONE] 2. Make picture uploading mandatory
+[DONE] 3. Make better style for upload button
 4. Picture server and localhost URLs hard coded
 5. Add restriction for 3 pictures per entity
 6. Notifications after redirect keep showing up on refresh
@@ -16,3 +16,4 @@
 improvements:
 1. Display that a service/product has an ongoing promotion. Display old price and new price.
 2. Edit for reservations and orders
+3. Reset password / change password

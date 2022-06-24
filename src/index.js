@@ -16,6 +16,7 @@ import { EditProduct } from "./components/edit/EditProduct";
 import { EditService } from "./components/edit/EditService";
 import { EditPromotion } from "./components/edit/EditPromotion";
 import { EditBlog } from "./components/edit/EditBlog";
+import { EditUser } from "./components/edit/EditUser";
 import { ShowProduct } from "./components/show/ShowProduct";
 import { ShowService } from "./components/show/ShowService";
 import { ShowPromotion } from "./components/show/ShowPromotion";
@@ -47,6 +48,7 @@ root.render(
           <Route path="/blogs/create" element={<CreateBlog />} />
           <Route path="/products/edit/:id" element={<EditProduct />} />
           <Route path="/services/edit/:id" element={<EditService />} />
+          <Route path="/users/edit/:id" element={<EditUser />} />
           <Route path="/promotions/edit/:id" element={<EditPromotion />} />
           <Route path="/blogs/edit/:id" element={<EditBlog />} />
           <Route path="/products/show/:id" element={<ShowProduct />} />
