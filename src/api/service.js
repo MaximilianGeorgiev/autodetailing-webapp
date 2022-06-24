@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getCookieByName } from "../utils/cookies";
 import { deletePromotionsForService } from "./promotion";
+import { deleteReservationsWithService } from "./reservation";
 
 const API_URL = "http://localhost:3030";
 
@@ -127,10 +128,9 @@ export const deleteService = async (id) => {
   if (!id || id < 0 || isNaN(id)) return;
 
   // Cascade service deletion
-  // Remove active promotions
   await deletePromotionsForService(id);
-  // Remove all pictures
   await deletePicturesForService(id);
+  await deleteReservationsWithService(id);
 
   return new Promise((resolve, reject) => {
     axios
