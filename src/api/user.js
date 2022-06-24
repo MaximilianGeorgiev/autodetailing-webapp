@@ -1,5 +1,9 @@
 import axios from "axios";
 import { getCookieByName } from "../utils/cookies";
+import { unassignUserRoles } from "./role";
+import { deleteBlogsForUser } from "./blog";
+import { deleteReservationsForUser } from "./reservation";
+import { deleteOrdersForUser } from "./order";
 
 const API_URL = "http://localhost:3030";
 
@@ -58,8 +62,13 @@ export const getAllUsers = () => {
     });
   };
   
-  export const deleteUser = (id) => {
+  export const deleteUser = async (id) => {
     if (!id || id < 0 || isNaN(id)) return;
+
+    await unassignUserRoles(id);
+    await deleteReservationsForUser(id);
+    await deleteOrdersForUser(id);
+    await deleteBlogsForUser(id);
   
     return new Promise((resolve, reject) => {
       axios

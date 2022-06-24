@@ -52,6 +52,26 @@ export const deleteReservationsWithService = (id) => {
   });
 };
 
+export const deleteReservationsForUser = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/reservation/delete/user/${id}`, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const getAllReservations = () => {
   return new Promise((resolve, reject) => {
     axios.get(API_URL + "/reservation", {
