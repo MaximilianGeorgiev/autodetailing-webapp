@@ -32,6 +32,40 @@ export const createReservation = (userId, date, isPaid, totalPrice) => {
   });
 };
 
+export const getAllReservations = () => {
+  return new Promise((resolve, reject) => {
+    axios.get(API_URL + "/reservation", {
+      headers: {
+        Authorization: "Bearer " + getCookieByName("accessToken"),
+      }
+    })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      })
+  });
+};
+
+export const deleteReservation = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/reservation/delete/${id}`, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const addServiceToReservation = (reservationId, serviceId) => {
   if (!reservationId || reservationId < 0 || isNaN(reservationId)) return;
   if (!serviceId || serviceId < 0 || isNaN(serviceId)) return;
