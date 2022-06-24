@@ -1,5 +1,7 @@
 import axios from "axios";
 import { getCookieByName } from "../utils/cookies";
+import { deletePromotionsForProduct } from "./promotion";
+import { deleteOrdersWithProduct } from "./order";
 
 const API_URL = "http://localhost:3030";
 
@@ -86,8 +88,13 @@ export const getProductPicturePaths = (id) => {
     });
 };
 
-export const deleteProduct = (id) => {
+export const deleteProduct = async (id) => {
     if (!id || id < 0 || isNaN(id)) return;
+
+  // Cascade service deletion
+  await deletePromotionsForProduct(id);
+  await deletePicturesForProduct(id);
+  await deleteOrdersWithProduct(id);
   
     return new Promise((resolve, reject) => {
       axios
@@ -105,3 +112,21 @@ export const deleteProduct = (id) => {
         });
     });
   };
+
+  const deletePicturesForProduct = (id) => {
+    if (id < 0 || isNaN(id)) return;
+
+    const payload = {product_id: id};
+
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `/product/picture/remove/all`, payload, {
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken"),
+            },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
