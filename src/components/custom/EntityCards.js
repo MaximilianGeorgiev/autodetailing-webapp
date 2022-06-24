@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 
 import { getAllServices, getServicePicturePaths } from "../../api/service";
 import { getAllProducts, getProductPicturePaths } from "../../api/product";
+import { getAllBlogs, getBlogPicturePaths } from "../../api/blog";
 import { useNavigate } from "react-router-dom";
 
 // props:
@@ -31,7 +32,7 @@ export const EntityCards = (props) => {
       getAllServices().then((res) => {
         if (res.data.status === "success") {
           const services = res.data.payload.filter(
-            (val, index, arr) => index + 3 >= arr.length
+            (val, index, arr) => index + 2 >= arr.length
           );
           entities = services;
 
@@ -51,7 +52,7 @@ export const EntityCards = (props) => {
       getAllProducts().then((res) => {
         if (res.data.status === "success") {
           const products = res.data.payload.filter(
-            (val, index, arr) => index + 3 >= arr.length
+            (val, index, arr) => index + 2 >= arr.length
           );
           entities = products;
 
@@ -69,6 +70,29 @@ export const EntityCards = (props) => {
         }
       });
     }
+    else if (props.entityType === "blog") {
+      getAllBlogs().then((res) => {
+        if (res.data.status === "success") {
+          const blogs = res.data.payload.filter(
+            (val, index, arr) => index + 2 >= arr.length
+          );
+          entities = blogs;
+
+          // get all pictures that correspond to the selected blogs
+          for (let i = 0; i < blogs.length; i++) {
+            getBlogPicturePaths(blogs[i].blog_id).then((res) => {
+              if (res.data?.status === "success") {
+                updatedPaths.push({
+                  id: blogs[i].blog_id,
+                  path: res.data.payload[0].picture_path,
+                }); // take one picture for thumbnail
+              }
+            });
+          }
+        }
+      });
+    }
+
 
     setTimeout(() => {
       setEntityPictures(updatedPaths);
@@ -84,6 +108,8 @@ export const EntityCards = (props) => {
       return entities.filter((e) => e.service_id === id)[0].service_title;
     else if (props.entityType === "product")
       return entities.filter((e) => e.product_id === id)[0].product_title;
+    else if (props.entityType === "blog")
+      return entities.filter((e) => e.blog_id === id)[0].blog_title;
 
     return "";
   };
@@ -103,13 +129,19 @@ export const EntityCards = (props) => {
     return "";
   };
 
+  const displayText = (id) => {
+    if (!id) return "";
+
+    if (props.entityType === "blog") return (entities.filter((e) => e.blog_id === id)[0].blog_text);
+  };
+
   return (
     <>
       {picturesLoaded && (
         <ImageList sx={{ width: 577, height: 350 }}>
           <ImageListItem key="Subheader" cols={2}>
-            <Typography gutterBottom variant="h5"  component="div">
-              {props.entityType === "service" ? "Services" : "Products"}
+            <Typography gutterBottom variant="h5" component="div">
+              {props.entityType === "service" ? "Services" : props.entityType === "blog" ? "Blogs" : "Products"}
             </Typography>
           </ImageListItem>
           {entityPictures.map((pic) => (
@@ -122,7 +154,7 @@ export const EntityCards = (props) => {
               />
               <ImageListItemBar
                 title={displayTitle(pic.id)}
-                subtitle={displayPrice(pic.id)}
+                subtitle={props.entityType === "blog" ? displayText(pic.id) : displayPrice(pic.id)}
                 actionIcon={
                   <IconButton
                     sx={{ color: "rgba(255, 255, 255, 0.54)" }}

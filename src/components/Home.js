@@ -26,7 +26,7 @@ export const Home = () => {
         alignItems="left"
         divider={<Divider orientation="horizontal" flexItem />}
       >
-        <Item entityType="service" fullWidth />
+        <Item entityType="blog" fullWidth />
         <Item entityType="service" fullWidth />
         <Item entityType="product" fullWidth />
       </Stack>

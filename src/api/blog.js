@@ -41,6 +41,16 @@ export const getBlogById = (id) => {
     });
 };
 
+export const getAllBlogs = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + "/blog")
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
+
 export const updateBlog = (id, title, text) => {
     if (!id || id < 0 || isNaN(id)) return;
     if (!text || text === "") return;
