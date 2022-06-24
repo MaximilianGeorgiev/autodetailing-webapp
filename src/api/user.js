@@ -44,6 +44,60 @@ export const register = (userInfo) => {
     });
 };
 
+export const getAllUsers = () => {
+    return new Promise((resolve, reject) => {
+      axios.get(API_URL + "/user", {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        }
+      })
+        .then((res) => resolve(res))
+        .catch((err) => {
+          reject(err);
+        })
+    });
+  };
+  
+  export const deleteUser = (id) => {
+    if (!id || id < 0 || isNaN(id)) return;
+  
+    return new Promise((resolve, reject) => {
+      axios
+        .get(API_URL + `/user/delete/${id}`, {
+          headers: {
+            Authorization: "Bearer " + getCookieByName("accessToken"),
+          },
+          validateStatus: function (status) {
+            return status <= 422;
+          },
+        })
+        .then((res) => resolve(res))
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
+
+  export const getUserRoles = (id) => {
+      if (!id || id < 0 || isNaN(id)) return;
+
+      return new Promise((resolve, reject) => {
+        axios
+          .get(API_URL + `/user/roles/${id}`, {
+            headers: {
+              Authorization: "Bearer " + getCookieByName("accessToken"),
+            },
+            validateStatus: function (status) {
+              return status <= 422;
+            },
+          })
+          .then((res) => resolve(res))
+          .catch((err) => {
+            reject(err);
+          });
+      });
+  };
+
 export const checkUserExists = (userInfo) => {
     if (!userInfo) return;
     if (!userInfo?.email) return;

@@ -15,3 +15,4 @@
 ---
 improvements:
 1. Display that a service/product has an ongoing promotion. Display old price and new price.
+2. Edit for reservations and orders
