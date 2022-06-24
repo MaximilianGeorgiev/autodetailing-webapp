@@ -13,14 +13,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState, useEffect } from "react";
-import { getAllReservations, deleteReservation } from "../../api/reservation";
+import { getAllOrders, deleteOrder } from "../../api/order";
 import { getUserById } from "../../api/user";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
-export const ReservationTable = () => {
-    const [reservations, setReservations] = useState([]);
+export const OrderTable = () => {
+    const [orders, setOrders] = useState([]);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [customerInfo, setCustomerInfo] = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
@@ -45,26 +45,26 @@ export const ReservationTable = () => {
             return;
         }
 
-        getAllReservations().then((res) => {
+        getAllOrders().then((res) => {
             if (res.data.status === "success") {
                 let customerInfo = [];
 
-                res.data.payload.forEach((reservation) => {
-                    getUserById(reservation.user_id).then((userRes) => {
+                res.data.payload.forEach((order) => {
+                    getUserById(order.customer_id).then((userRes) => {
                         customerInfo.push(userRes.data.payload[0]);
                     });
                 });
 
                 setTimeout(() => {
                     setCustomerInfo(customerInfo);
-                    setReservations(res.data.payload);
+                    setOrders(res.data.payload);
                 }, 500);
             }
         });
     }, []);
 
     const deleteButtonOnClick = () => {
-        deleteReservation(selectedId).then((res) => {
+        deleteOrder(selectedId).then((res) => {
             navigate(0);
             setShowConfirmationDialog(false);
         });
@@ -76,43 +76,43 @@ export const ReservationTable = () => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Reservation №</TableCell>
-                            <TableCell align="right">Reservation date</TableCell>
-                            <TableCell align="right">Reservation price</TableCell>
+                            <TableCell>Order №</TableCell>
+                            <TableCell align="right">Total price</TableCell>
+                            <TableCell align="right">Delivery address</TableCell>
                             <TableCell align="right">Customer name</TableCell>
                             <TableCell align="right">Customer phone</TableCell>
                             <TableCell align="center">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {reservations.map((reservation) => (
+                        {orders.map((order) => (
                             <TableRow
-                                key={reservation.reservation_id}
+                                key={order.order_id}
                                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {reservation.reservation_id}
+                                    {order.order_id}
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    {new Date(reservation.reservation_datetime).toLocaleDateString()}
+                                    {order.order_totalprice + " BGN"}
                                 </TableCell>
                                 <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
-                                    {reservation.reservation_totalprice + " BGN"}
+                                    {order.order_address}
                                 </TableCell>
                                 <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
-                                    {customerInfo.filter((c) => c.user_id === reservation.user_id)[0].user_fullname}
+                                    {customerInfo.filter((c) => c.user_id === order.customer_id)[0].user_fullname}
                                 </TableCell>
                                 <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
-                                    {customerInfo.filter((c) => c.user_id === reservation.user_id)[0].user_phone}
+                                    {customerInfo.filter((c) => c.user_id === order.customer_id)[0].user_phone}
                                 </TableCell>
                                 <TableCell align="right">
                                     {" "}
@@ -122,7 +122,7 @@ export const ReservationTable = () => {
                                             variant="outlined"
                                             startIcon={<EditIcon />}
                                             onClick={() =>
-                                                navigate(`/reservations/edit/${reservation.reservation_id}`)
+                                                navigate(`/orders/edit/${order.order_id}`)
                                             }
                                         >
                                             Edit
@@ -132,7 +132,7 @@ export const ReservationTable = () => {
                                             variant="outlined"
                                             startIcon={<DeleteIcon />}
                                             onClick={() => {
-                                                setSelectedId(reservation.reservation_id);
+                                                setSelectedId(order.order_id);
                                                 setShowConfirmationDialog(true);
                                             }}
                                         >

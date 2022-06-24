@@ -24,8 +24,9 @@ import { ProductTable } from "./components/tables/ProductTable";
 import { ServiceTable } from "./components/tables/ServiceTable";
 import { PromotionTable } from "./components/tables/PromotionTable";
 import { ReservationTable } from "./components/tables/ReservationTable";
+import { OrderTable } from "./components/tables/OrderTable";
 
-import { Home} from "./components/Home.js";
+import { Home } from "./components/Home.js";
 
 import { App } from "./App";
 
@@ -55,6 +56,7 @@ root.render(
           <Route path="/services/show/all" element={<ServiceTable />} />
           <Route path="/promotions/show/all" element={<PromotionTable />} />
           <Route path="/reservations/show/all" element={<ReservationTable />} />
+          <Route path="/orders/show/all" element={<OrderTable />} />
           <Route path="/test" element={<Home />} />    
         </Routes>
         <App />

@@ -38,6 +38,41 @@ export const createOrder = (
   });
 };
 
+export const getAllOrders = () => {
+  return new Promise((resolve, reject) => {
+    axios.get(API_URL + "/order", {
+      headers: {
+        Authorization: "Bearer " + getCookieByName("accessToken"),
+      }
+    })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      })
+  });
+};
+
+export const deleteOrder = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/order/delete/${id}`, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+
 export const addProductToOrder = (orderId, productId) => {
   if (!orderId || orderId < 0 || isNaN(orderId)) return;
   if (!productId || productId < 0 || isNaN(productId)) return;
