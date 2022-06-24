@@ -1,19 +1,20 @@
-1. User role cookie fetching during service edit and service create are undefined
+1. User role cookie fetching during service edit and service create are undefined [HIGH]
 [DONE] 2. Make picture uploading mandatory
 [DONE] 3. Make better style for upload button
-4. Picture server and localhost URLs hard coded
-5. Add restriction for 3 pictures per entity
-6. Notifications after redirect keep showing up on refresh
-7. Entity edit allows only one picture delete at a time
-8. More than 3 pictures for blogs are scrollable, don't fit
-9. Deletion of entities with pictures (cascade), active promotions, orders/reservations
+4. Picture server and localhost URLs hard coded [LOW]
+5. Add restriction for 3 pictures per entity [LOW]
+6. Notifications after redirect keep showing up on refresh [LOW]
+7. Entity edit allows only one picture delete at a time [LOW]
+8. More than 3 pictures for blogs are scrollable, don't fit [HIGH]
+9. Deletion of entities with pictures (cascade), active promotions, orders/reservations [HIGH]
 [DONE] 10. Allow guest reservations
-11. Disabled fields for reservations to be dynamic
-11. On profile update update cookies as well not just database
-12. On image click to open image in full resolution
+11. Disabled fields for reservations to be dynamic [MEDIUM]
+11. On profile update update cookies as well not just database [HIGH]
+12. On image click to open image in full resolution [LOW]
 
 ---
 improvements:
-1. Display that a service/product has an ongoing promotion. Display old price and new price.
-2. Edit for reservations and orders
-3. Reset password / change password
+1. Display that a service/product has an ongoing promotion. Display old price and new price.[HIGH]
+2. Edit for reservations and orders [LOW]
+3. Reset password / change password [LOW]
+4. Add translations [MEDIUM]
