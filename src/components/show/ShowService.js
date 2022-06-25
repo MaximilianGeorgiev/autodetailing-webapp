@@ -11,6 +11,7 @@ import {
   getServicePicturePaths,
   deleteService,
 } from "../../api/service";
+import { getPromotionByServiceId } from "../../api/promotion";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 
@@ -25,6 +26,7 @@ import { Reservation } from "../custom/Reservation";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import SellIcon from '@mui/icons-material/Sell';
 
 export const ShowService = () => {
   const [serviceInfo, setServiceInfo] = useState();
@@ -34,6 +36,10 @@ export const ShowService = () => {
   const [picturesLoaded, setPicturesLoaded] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showReservation, setShowReservation] = useState(false);
+  const [activePromotion, setActivePromotion] = useState({
+    hasPromotion: false,
+    promotionInfo: {}
+  });
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -63,6 +69,29 @@ export const ShowService = () => {
 
       setServiceInfo(res.data.payload[0]);
     });
+
+    getPromotionByServiceId(id).then((res) => {
+      if (res.data?.status === "success") {
+        if (res.data.payload.length !== 0) {
+          for (let i = 0; i < res.data.payload.length; i++) {
+            const promotionTo = new Date(
+              res.data.payload[i].promotion_to
+            );
+
+            const promotionFrom = new Date(
+              res.data.payload[i].promotion_from
+            );
+
+            const now = new Date();
+
+            if (now >= promotionFrom && now <= promotionTo) {
+              setActivePromotion({ hasPromotion: true, promotionInfo: res.data.payload[i] });
+              break;
+            }
+          }
+        }
+      }
+    });
   }, []);
 
   const deleteButtonOnClick = () => {
@@ -88,14 +117,25 @@ export const ShowService = () => {
             {serviceInfo?.service_title ? serviceInfo.service_title : ""}
           </Typography>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Description:{" "}
             {serviceInfo?.service_description
               ? serviceInfo.service_description
               : ""}
           </Typography>
-          <Typography variant="subtitle1" gutterBottom component="div">
-            Price: {serviceInfo?.service_price ? serviceInfo.service_price : ""}{" "}
-            BGN
+          {
+            activePromotion.hasPromotion === true &&
+            <React.Fragment>
+
+              <Typography variant="h5" gutterBottom component="div" color="green" mt={3}>
+                <SellIcon sx={{ marginRight: 1 }} />This service has an ongoing promotion until {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
+              </Typography>
+              <Typography color="red" variant="h5" gutterBottom component="div" mt={3} style={{ textDecoration: 'line-through' }}>
+                Old price: {serviceInfo?.service_price ? serviceInfo.service_price : ""} BGN
+              </Typography>
+            </React.Fragment>
+
+          }
+          <Typography variant="h5" gutterBottom component="div" mt={3}>
+            Price: {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : serviceInfo?.service_price} BGN
           </Typography>
           {picturesLoaded && (
             <ImageList

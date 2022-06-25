@@ -145,7 +145,7 @@ export const ShowProduct = () => {
 
           }
           <Typography variant="h5" gutterBottom component="div" mt={3}>
-            Price: {productInfo?.product_price ? productInfo.product_price : ""} BGN
+            Price: {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : productInfo?.product_price} BGN
           </Typography>
           {picturesLoaded && (
             <ImageList
