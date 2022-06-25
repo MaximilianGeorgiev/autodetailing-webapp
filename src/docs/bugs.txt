@@ -18,3 +18,4 @@ improvements:
 2. Edit for reservations and orders [LOW]
 3. Reset password / change password [LOW]
 4. Add translations [MEDIUM]
+5. Export business logic from components [LOW]

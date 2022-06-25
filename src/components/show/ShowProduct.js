@@ -14,6 +14,7 @@ import {
   getProductPicturePaths,
   deleteProduct,
 } from "../../api/product";
+import { getPromotionByProductId } from "../../api/promotion";
 import { getCookieByName } from "../../utils/cookies";
 import { Order } from "../custom/Order";
 
@@ -27,6 +28,7 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import SellIcon from '@mui/icons-material/Sell';
 
 export const ShowProduct = () => {
   const [productInfo, setProductInfo] = useState();
@@ -34,6 +36,10 @@ export const ShowProduct = () => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
+  const [activePromotion, setActivePromotion] = useState({
+    hasPromotion: false,
+    promotionInfo: {}
+  });
 
   // paths are fetched after rendering is done so they must be awaited
   const [picturesLoaded, setPicturesLoaded] = useState(false);
@@ -73,6 +79,29 @@ export const ShowProduct = () => {
 
       setProductInfo(res.data.payload[0]);
     });
+
+    getPromotionByProductId(id).then((res) => {
+      if (res.data?.status === "success") {
+        if (res.data.payload.length !== 0) {
+          for (let i = 0; i < res.data.payload.length; i++) {
+            const promotionTo = new Date(
+              res.data.payload[i].promotion_to
+            );
+
+            const promotionFrom = new Date(
+              res.data.payload[i].promotion_from
+            );
+
+            const now = new Date();
+
+            if (now >= promotionFrom && now <= promotionTo) {
+              setActivePromotion({ hasPromotion: true, promotionInfo: res.data.payload[i] });
+              break;
+            }
+          }
+        }
+      }
+    });
   }, []);
 
   const deleteButtonOnClick = () => {
@@ -98,12 +127,24 @@ export const ShowProduct = () => {
             {productInfo?.product_title ? productInfo.product_title : ""}
           </Typography>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Description:{" "}
             {productInfo?.product_description
               ? productInfo.product_description
               : ""}
           </Typography>
-          <Typography variant="subtitle1" gutterBottom component="div">
+          {
+            activePromotion.hasPromotion === true &&
+            <React.Fragment>
+
+              <Typography variant="h5" gutterBottom component="div" color="green" mt={3}>
+                <SellIcon sx={{ marginRight: 1 }} />This product has an ongoing promotion until {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
+              </Typography>
+              <Typography color="red" variant="h5" gutterBottom component="div" mt={3} style={{ textDecoration: 'line-through' }}>
+                Old price: {productInfo?.product_price ? productInfo.product_price : ""} BGN
+              </Typography>
+            </React.Fragment>
+
+          }
+          <Typography variant="h5" gutterBottom component="div" mt={3}>
             Price: {productInfo?.product_price ? productInfo.product_price : ""} BGN
           </Typography>
           {picturesLoaded && (
@@ -134,25 +175,25 @@ export const ShowProduct = () => {
               product={productInfo}
             />
           )}
-          {hasPermission && 
-          <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
-            <Button
-              sx={{}}
-              variant="outlined"
-              startIcon={<EditIcon />}
-              onClick={() => navigate(`/products/edit/${id}`)}
-            >
-              Edit
-            </Button>
-            <Button
-              color="error"
-              variant="outlined"
-              startIcon={<DeleteIcon />}
-              onClick={() => setShowConfirmationDialog(true)}
-            >
-              Delete
-            </Button>
-          </ButtonGroup>
+          {hasPermission &&
+            <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
+              <Button
+                sx={{}}
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={() => navigate(`/products/edit/${id}`)}
+              >
+                Edit
+              </Button>
+              <Button
+                color="error"
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={() => setShowConfirmationDialog(true)}
+              >
+                Delete
+              </Button>
+            </ButtonGroup>
           }
           {showConfirmationDialog && (
             <ConfirmationDialog

@@ -195,9 +195,15 @@ export const Order = (props) => {
             for (let i = 0; i < res.data.payload.length; i++) {
               const promotionTo = new Date(
                 res.data.payload[i].promotion_to
-              ).toLocaleDateString();
-              const now = new Date().toLocaleDateString();
-              if (promotionTo >= now) {
+              );
+  
+              const promotionFrom = new Date(
+                res.data.payload[i].promotion_from
+              );
+  
+              const now = new Date();
+
+              if (now >= promotionFrom && now <= promotionTo) {
                 totalPrice = res.data.payload[i].promotion_new_price;
                 break;
               }
