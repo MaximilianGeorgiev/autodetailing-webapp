@@ -31,8 +31,12 @@ import { UserTable } from "./components/tables/UserTable";
 import { Home } from "./components/Home.js";
 
 import { App } from "./App";
+import './i18nextConf';
+import i18next from "i18next";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+i18next.changeLanguage('bg');
 
 root.render(
     <CookiesProvider>

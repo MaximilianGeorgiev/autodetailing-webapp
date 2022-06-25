@@ -1,0 +1,12 @@
+{
+    "Sign in" : "Вход",
+    "Email" : "Имейл Адрес",
+    "Password" : "Парола",
+    "Don't have an account? Sign Up" : "Нямате акаунт? Регистрация",
+    "Email field cannot be empty." : "Полето за имейл адрес е задължително.",
+    "Password field cannot be empty." : "Полето за парола е задължително.",
+    "No user was found with the provided credentials. Please try again." : "Потребител с тези входни данни не беше открит. Моля опитайте отново.",
+    "The provided password is incorrect." : "Въведената парола е неправилна.",
+    "A database error has occured." : "Възникна грешка свързана с базата данни",
+    "Login successful." : "Входът е успешен."
+    }

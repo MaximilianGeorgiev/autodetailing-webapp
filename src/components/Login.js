@@ -17,6 +17,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 import { Notification } from "./Notification";
 
@@ -24,13 +25,16 @@ import { getLoggedUserRoles, addRole } from "../api/user";
 import { getRoleByName } from "../api/role";
 
 import { clientHasLoginCookies } from "../utils/cookies";
+import i18next from "i18next";
 
 
 export const Login = () => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['']);
+    const { t } = useTranslation();
     
     useEffect(() => {
+        i18next.changeLanguage('bg');
         // logged in users shouldn't access login page
         const hasCookies = clientHasLoginCookies();
 
@@ -133,7 +137,7 @@ export const Login = () => {
                     });
 
                     // redirect to home page with notification
-                    navigate('/', { state: { "success": "true", "message": "Login successful.", "event": "loggedIn"} });
+                    navigate('/', { state: { "success": "true", "message": t("Login successful."), "event": "loggedIn"} });
                 }
             })
         }
@@ -157,13 +161,13 @@ export const Login = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        {t("Sign in")}
                     </Typography>
                     <Box noValidate sx={{ mt: 1 }}>
                         {submitError.error &&
                             <Notification
                                 severity="error"
-                                message={submitError.message}
+                                message={t(submitError.message)}
                                 posX="center"
                                 posY="bottom"
                             />}
@@ -181,7 +185,7 @@ export const Login = () => {
                             }
                             helperText={
                                 inputValues["email"]?.errorMsg
-                                    ? inputValues["email"].errorMsg
+                                    ? t(inputValues["email"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -207,7 +211,7 @@ export const Login = () => {
                             }
                             helperText={
                                 inputValues["password"]?.errorMsg
-                                    ? inputValues["password"].errorMsg
+                                    ? t(inputValues["password"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -227,12 +231,12 @@ export const Login = () => {
                             sx={{ mt: 3, mb: 2 }}
                             onClick={() => processLoginForm()}
                         >
-                            Sign In
+                            {t("Sign In")}
                         </Button>
 
                         <Grid container justifyContent="flex-end">
                             <Link href="/register" variant="body2">
-                                {"Don't have an account? Sign Up"}
+                                {t("Don't have an account? Sign Up")}
                             </Link>
                         </Grid>
                     </Box>
