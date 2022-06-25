@@ -5,7 +5,7 @@
 5. Add restriction for 3 pictures per entity [LOW]
 6. Notifications after redirect keep showing up on refresh [LOW]
 7. Entity edit allows only one picture delete at a time [LOW]
-8. More than 3 pictures for blogs are scrollable, don't fit [HIGH]
+[DONE] 8. More than 3 pictures for blogs are scrollable, don't fit [HIGH]
 [DONE] 9. Deletion of entities with pictures (cascade), active promotions, orders/reservations [HIGH]
 [DONE] 10. Allow guest reservations
 11. Disabled fields for reservations to be dynamic [MEDIUM]
@@ -14,8 +14,9 @@
 
 ---
 improvements:
-1. Display that a service/product has an ongoing promotion. Display old price and new price.[HIGH]
+[DONE] 1. Display that a service/product has an ongoing promotion. Display old price and new price.[HIGH]
 2. Edit for reservations and orders [LOW]
 3. Reset password / change password [LOW]
 4. Add translations [MEDIUM]
 5. Export business logic from components [LOW]
+6. Invalid URL page [MEDIUM]

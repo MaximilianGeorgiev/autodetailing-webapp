@@ -99,35 +99,29 @@ export const ShowBlog = () => {
               ? blogInfo.blog_text : ""}
           </Typography>
           {picturesLoaded && (
-            <ImageList
-              sx={{ width: '100%', height: 135 }}
-              cols={3}
-              rowHeight={164}
-            >
-              {picturePaths.map((path) => (
-                <Image src={`${path}?w=164&h=164&fit=crop&auto=format`} />
-              ))}
-            </ImageList>
+            picturePaths.map((path) => (
+              <Image src={`${path}?w=164&h=164&fit=crop&auto=format`} />
+            ))
           )}
-          {hasPermission && 
-          <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
-            <Button
-              sx={{}}
-              variant="outlined"
-              startIcon={<EditIcon />}
-              onClick={() => navigate(`/blogs/edit/${id}`)}
-            >
-              Edit
-            </Button>
-            <Button
-              color="error"
-              variant="outlined"
-              startIcon={<DeleteIcon />}
-              onClick={() => setShowConfirmationDialog(true)}
-            >
-              Delete
-            </Button>
-          </ButtonGroup>
+          {hasPermission &&
+            <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
+              <Button
+                sx={{}}
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={() => navigate(`/blogs/edit/${id}`)}
+              >
+                Edit
+              </Button>
+              <Button
+                color="error"
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={() => setShowConfirmationDialog(true)}
+              >
+                Delete
+              </Button>
+            </ButtonGroup>
           }
           {showConfirmationDialog && (
             <ConfirmationDialog
