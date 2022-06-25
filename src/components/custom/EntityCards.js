@@ -2,7 +2,6 @@ import * as React from "react";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import ListSubheader from "@mui/material/ListSubheader";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import { useState, useEffect } from "react";
@@ -12,6 +11,7 @@ import { getAllServices, getServicePicturePaths } from "../../api/service";
 import { getAllProducts, getProductPicturePaths } from "../../api/product";
 import { getAllBlogs, getBlogPicturePaths } from "../../api/blog";
 import { useNavigate } from "react-router-dom";
+import { getPromotionByServiceId, getPromotionByProductId } from "../../api/promotion";
 
 // props:
 // entityType: product/service
@@ -21,6 +21,10 @@ export const EntityCards = (props) => {
   const [entities, setEntities] = useState({});
   const [entityPictures, setEntityPictures] = useState([]);
   const [picturesLoaded, setPicturesLoaded] = useState(false);
+  const [activePromotion, setActivePromotion] = useState({
+    hasPromotion: false,
+    promotionInfo: {}
+  });
 
   const navigate = useNavigate();
 
@@ -36,6 +40,7 @@ export const EntityCards = (props) => {
           );
           entities = services;
 
+          // iterate through all services and get one picture for thumbnail and active promotions
           for (let i = 0; i < services.length; i++) {
             getServicePicturePaths(services[i].service_id).then((res) => {
               if (res.data?.status === "success") {
@@ -45,7 +50,33 @@ export const EntityCards = (props) => {
                 }); // take one picture for thumbnail
               }
             });
+
+            getPromotionByServiceId(services[i].service_id).then((promoRes) => {
+              if (promoRes.data?.status === "success") {
+                if (promoRes.data.payload.length !== 0) {
+                  for (let i = 0; i < promoRes.data.payload.length; i++) {
+                    const promotionTo = new Date(
+                      promoRes.data.payload[i].promotion_to
+                    );
+
+                    const promotionFrom = new Date(
+                      promoRes.data.payload[i].promotion_from
+                    );
+
+                    const now = new Date();
+
+                    if (now >= promotionFrom && now <= promotionTo) {
+                      setActivePromotion({ hasPromotion: true, promotionInfo: promoRes.data.payload[i] });
+                      break;
+                    }
+                  }
+                }
+              }
+            });
+
           }
+
+
         }
       });
     } else if (props.entityType === "product") {
@@ -66,7 +97,32 @@ export const EntityCards = (props) => {
                 }); // take one picture for thumbnail
               }
             });
+
+            getPromotionByProductId(products[i].product_id).then((promoRes) => {
+              if (promoRes.data?.status === "success") {
+                if (promoRes.data.payload.length !== 0) {
+                  for (let i = 0; i < promoRes.data.payload.length; i++) {
+                    const promotionTo = new Date(
+                      promoRes.data.payload[i].promotion_to
+                    );
+
+                    const promotionFrom = new Date(
+                      promoRes.data.payload[i].promotion_from
+                    );
+
+                    const now = new Date();
+
+                    if (now >= promotionFrom && now <= promotionTo) {
+                      setActivePromotion({ hasPromotion: true, promotionInfo: promoRes.data.payload[i] });
+                      break;
+                    }
+                  }
+                }
+              }
+            });
           }
+
+
         }
       });
     }
@@ -114,7 +170,7 @@ export const EntityCards = (props) => {
     return "";
   };
 
-  const displayPrice = (id) => {
+  const displayFullPrice = (id) => {
     if (!id) return "";
 
     if (props.entityType === "service")
@@ -129,6 +185,12 @@ export const EntityCards = (props) => {
     return "";
   };
 
+  const displayPromotionPrice = (id) => {
+    if (!id) return "";
+
+    return activePromotion.promotionInfo.promotion_new_price + " BGN";
+  };
+
   const displayText = (id) => {
     if (!id) return "";
 
@@ -138,14 +200,14 @@ export const EntityCards = (props) => {
   return (
     <>
       {picturesLoaded && (
-        <ImageList sx={{ width: 577, height: 350 }}>
-          <ImageListItem key="Subheader" cols={2}>
+        <ImageList display="flex" sx={{ flex: 1, flexDirection: 'row', width: 577, height: 350 }}>
+          <ImageListItem key="Subheader" cols={2} sx={{ flex: 1 }}>
             <Typography gutterBottom variant="h5" component="div">
               {props.entityType === "service" ? "Services" : props.entityType === "blog" ? "Blogs" : "Products"}
             </Typography>
           </ImageListItem>
           {entityPictures.map((pic) => (
-            <ImageListItem key={pic.path}>
+            <ImageListItem key={pic.path} sx={{ flex: 1 }}>
               <img
                 src={`${pic.path}?w=248&fit=crop&auto=format`}
                 srcSet={`${pic.path}?w=248&fit=crop&auto=format&dpr=2 2x`}
@@ -154,7 +216,9 @@ export const EntityCards = (props) => {
               />
               <ImageListItemBar
                 title={displayTitle(pic.id)}
-                subtitle={props.entityType === "blog" ? displayText(pic.id) : displayPrice(pic.id)}
+                subtitle={props.entityType === "blog" ? displayText(pic.id) :
+                  activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
+                    displayFullPrice(pic.id)}
                 actionIcon={
                   <IconButton
                     sx={{ color: "rgba(255, 255, 255, 0.54)" }}
