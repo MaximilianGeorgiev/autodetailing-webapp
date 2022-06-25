@@ -8,5 +8,10 @@
     "No user was found with the provided credentials. Please try again." : "Потребител с тези входни данни не беше открит. Моля опитайте отново.",
     "The provided password is incorrect." : "Въведената парола е неправилна.",
     "A database error has occured." : "Възникна грешка свързана с базата данни",
-    "Login successful." : "Входът е успешен."
+    "Login successful." : "Входът е успешен.",
+    "Profile" : "Профил",
+    "My orders": "Моите поръчки",
+    "My reservations": "Моите резервации",
+    "Logout": "Изход",
+    "Register": "Регистрация"
     }

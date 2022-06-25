@@ -18,18 +18,23 @@ import { useCookies } from "react-cookie";
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import i18next from "i18next";
 
 export const NavBar = () => {
   const [cookies] = useCookies(['']);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
-  Via the useLocation react-router hook information sent from the previous page can be accessed */
+  /* Sometimes on redirects from other pages back here they provide a some sort of notification.
+ Via the useLocation react-router hook information sent from the previous page can be accessed */
   const location = useLocation();
+  const { t } = useTranslation();
 
   useEffect(() => {
-   if (location.state?.event === "loggedOut") setIsLoggedIn(false);
-   else if (location.state?.event === "loggedIn") setIsLoggedIn(true);
+    i18next.changeLanguage('bg');
+
+    if (location.state?.event === "loggedOut") setIsLoggedIn(false);
+    else if (location.state?.event === "loggedIn") setIsLoggedIn(true);
   }, [location.state?.event]);
 
   const [visibleElement, setVisibleEvent] = useState(null);
@@ -78,14 +83,14 @@ export const NavBar = () => {
     >
       {isLoggedIn === true ? (
         <>
-          <MenuItem component={Link} to={'/login'}>Profile</MenuItem>
-          <MenuItem component={Link} to={'/orders'}>My orders</MenuItem>
-          <MenuItem component={Link} to={'/reservations'}>My reservations</MenuItem>
-          <MenuItem component={Link} to={'/logout'}>Logout</MenuItem></>)
+          <MenuItem component={Link} to={'/login'}>{t("Profile")}</MenuItem>
+          <MenuItem component={Link} to={'/orders'}>{t("My orders")}</MenuItem>
+          <MenuItem component={Link} to={'/reservations'}>{t("My reservations")}</MenuItem>
+          <MenuItem component={Link} to={'/logout'}>{t("Logout")}</MenuItem></>)
         : (
           <>
-            <MenuItem component={Link} to={'/login'}>Sign in</MenuItem>
-            <MenuItem component={Link} to={'/register'}>Register</MenuItem></>)
+            <MenuItem component={Link} to={'/login'}>{t("Sign in")}</MenuItem>
+            <MenuItem component={Link} to={'/register'}>{t("Register")}</MenuItem></>)
       }
     </Menu>
   );
@@ -116,7 +121,7 @@ export const NavBar = () => {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>{t("Profile")}</p>
       </MenuItem>
     </Menu>
   );
