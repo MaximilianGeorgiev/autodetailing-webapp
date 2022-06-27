@@ -41,11 +41,10 @@ export const ServiceTable = () => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
 
-    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
       navigate("/", {state: {"event": "loggedIn"}});
       return;
-    }*/
+    }
 
     getAllServices().then((res) => {
       if (res.data.status === "success") setServices(res.data.payload); // category_name is present

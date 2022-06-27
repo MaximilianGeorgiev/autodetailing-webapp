@@ -8,16 +8,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useLocation } from "react-router-dom";
 import { Notification } from "./components/Notification";
 import { EntityCards } from "./components/custom/EntityCards";
-
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+import { useTranslation } from "react-i18next";
 import { styled } from '@mui/material/styles';
 
 export const App = () => {
   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
   Via the useLocation react-router hook information sent from the previous page can be accessed */
   const location = useLocation();
+  const { t } = useTranslation();
 
   const Item = styled(EntityCards)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

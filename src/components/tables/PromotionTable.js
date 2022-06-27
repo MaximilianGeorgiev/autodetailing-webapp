@@ -40,12 +40,12 @@ export const PromotionTable = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
+    if (!hasCookies) navigate("/", { state: { event: "loggedOut" } });
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/", {state: {"event": "loggedIn"}});
+      navigate("/", { state: { event: "loggedIn" } });
       return;
     }
 
@@ -104,7 +104,13 @@ export const PromotionTable = () => {
                 key={promotion.product_title}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  onClick={() =>
+                    navigate(`/promotions/show/${promotion.promotion_id}`)
+                  }
+                >
                   {entityTitles.map((entity) => {
                     if (
                       entity.id === promotion.product_id ||
@@ -113,18 +119,30 @@ export const PromotionTable = () => {
                       return entity.title;
                   })}
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  onClick={() =>
+                    navigate(`/promotions/show/${promotion.promotion_id}`)
+                  }
+                >
                   {new Date(promotion.promotion_from).toLocaleDateString()}
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  onClick={() =>
+                    navigate(`/promotions/show/${promotion.promotion_id}`)
+                  }
                 >
                   {new Date(promotion.promotion_to).toLocaleDateString()}
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  onClick={() =>
+                    navigate(`/promotions/show/${promotion.promotion_id}`)
+                  }
                 >
                   {promotion.promotion_new_price}
                 </TableCell>

@@ -36,12 +36,12 @@ export const ProductTable = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", {state: {"event": "loggedOut"}});
+    if (!hasCookies) navigate("/", { state: { event: "loggedOut" } });
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/", {state: {"event": "loggedIn"}});
+      navigate("/", { state: { event: "loggedIn" } });
       return;
     }
 
@@ -76,24 +76,39 @@ export const ProductTable = () => {
                 key={product.product_title}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  onClick={() =>
+                    navigate(`/products/show/${product.product_id}`)
+                  }
+                >
                   {product.product_title}
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  onClick={() =>
+                    navigate(`/products/show/${product.product_id}`)
+                  }
                 >
                   {product.product_price}
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  onClick={() =>
+                    navigate(`/products/show/${product.product_id}`)
+                  }
                 >
                   {product.product_description}
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  onClick={() =>
+                    navigate(`/products/show/${product.product_id}`)
+                  }
                 >
                   {product.category_name}
                 </TableCell>

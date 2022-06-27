@@ -18,6 +18,6 @@ improvements:
 [DONE] 1. Display that a service/product has an ongoing promotion. Display old price and new price.[HIGH]
 2. Edit for reservations and orders [LOW]
 3. Reset password / change password [LOW]
-4. Add translations [MEDIUM]
+[DONE] 4. Add translations [MEDIUM]
 5. Export business logic from components [LOW]
 6. Invalid URL page [MEDIUM]
