@@ -43,7 +43,7 @@ export const App = () => {
 
       {location.state?.success === "true" && <Notification
         severity="success"
-        message={location.state?.message}
+        message={t(location.state?.message)}
         posX="center"
         posY="bottom"
       />}

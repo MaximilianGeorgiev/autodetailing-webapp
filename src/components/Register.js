@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { Notification } from "./Notification";
 
@@ -28,6 +29,7 @@ export const Register = () => {
     });
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     useEffect(() => {
         // logged in users shouldn't access register page
@@ -308,7 +310,7 @@ export const Register = () => {
             {submitError.error &&
                 <Notification
                     severity="error"
-                    message={submitError.errorMsg}
+                    message={t(submitError.errorMsg)}
                     posX="center"
                     posY="bottom"
                 />}
@@ -327,7 +329,7 @@ export const Register = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Register
+                        {t("Register")}
                     </Typography>
                     <Box noValidate sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -338,7 +340,7 @@ export const Register = () => {
                                     required
                                     fullWidth
                                     id="emailAddress"
-                                    label="E-mail address"
+                                    label={t("Email address")}
                                     autoFocus
                                     error={
                                         inputValues["email"]?.error
@@ -347,7 +349,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["email"]?.errorMsg
-                                            ? inputValues["email"].errorMsg
+                                            ? t(inputValues["email"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -366,7 +368,7 @@ export const Register = () => {
                                     required
                                     fullWidth
                                     id="email"
-                                    label="Username"
+                                    label={t("Username")}
                                     name="username"
                                     autoComplete="username"
                                     error={
@@ -376,7 +378,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["username"]?.errorMsg
-                                            ? inputValues["username"].errorMsg
+                                            ? t(inputValues["username"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -395,7 +397,7 @@ export const Register = () => {
                                     required
                                     fullWidth
                                     name="password"
-                                    label="Password"
+                                    label={t("Password")}
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
@@ -406,7 +408,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["password"]?.errorMsg
-                                            ? inputValues["password"].errorMsg
+                                            ? t(inputValues["password"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -425,7 +427,7 @@ export const Register = () => {
                                     required
                                     fullWidth
                                     name="repeatPassword"
-                                    label="Repeat password"
+                                    label={t("Repeat password")}
                                     type="password"
                                     id="repeatPassword"
                                     autoComplete="new-password"
@@ -436,7 +438,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["newPassword"]?.errorMsg
-                                            ? inputValues["newPassword"].errorMsg
+                                            ? t(inputValues["newPassword"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -455,7 +457,7 @@ export const Register = () => {
                                     required
                                     fullWidth
                                     name="fullname"
-                                    label="Full name"
+                                    label={"Full name"}
                                     id="fullname"
                                     autoComplete="fullname"
                                     error={
@@ -465,7 +467,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["fullname"]?.errorMsg
-                                            ? inputValues["fullname"].errorMsg
+                                            ? t(inputValues["fullname"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -484,7 +486,7 @@ export const Register = () => {
                                 <TextField
                                     fullWidth
                                     name="address"
-                                    label="Address"
+                                    label={t("Address")}
                                     id="address"
                                     autoComplete="address"
                                     onChange={(e) => {
@@ -502,7 +504,7 @@ export const Register = () => {
                                 <TextField
                                     fullWidth
                                     name="phone"
-                                    label="Phone number"
+                                    label={t("Phone number")}
                                     id="phone"
                                     autoComplete="phone"
                                     error={
@@ -512,7 +514,7 @@ export const Register = () => {
                                     }
                                     helperText={
                                         inputValues["phone"]?.errorMsg
-                                            ? inputValues["phone"].errorMsg
+                                            ? t(inputValues["phone"].errorMsg)
                                             : ""
                                     }
                                     onChange={(e) => {
@@ -542,12 +544,12 @@ export const Register = () => {
                                 }
                             }}
                         >
-                            Register
+                            {t("Register")}
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="/login" variant="body2">
-                                    Already have an account? Sign in
+                                    {t("Already have an account? Sign in")}
                                 </Link>
                             </Grid>
                         </Grid>
