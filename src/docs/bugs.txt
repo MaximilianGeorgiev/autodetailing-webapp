@@ -1,4 +1,4 @@
-1. User role cookie fetching during service edit and service create are undefined [HIGH]
+[DONE - TEST] 1. User role cookie fetching during service edit and service create are undefined [HIGH]
 [DONE] 2. Make picture uploading mandatory
 [DONE] 3. Make better style for upload button
 4. Picture server and localhost URLs hard coded [LOW]
@@ -9,7 +9,7 @@
 [DONE] 9. Deletion of entities with pictures (cascade), active promotions, orders/reservations [HIGH]
 [DONE] 10. Allow guest reservations
 11. Disabled fields for reservations to be dynamic [MEDIUM]
-11. On profile update update cookies as well not just database [HIGH]
+[DONE - TEST] 11. On profile update update cookies as well not just database [HIGH]
 12. On image click to open image in full resolution [LOW]
 13. All placeholder texts to be translated [LOW]
 
