@@ -18,6 +18,7 @@ import { getUserById, updateUser } from "../../api/user";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { useParams } from "react-router";
+import { useCookies } from "react-cookie";
 import { useTranslation } from "react-i18next";
 
 export const EditUser = (props) => {
@@ -30,6 +31,7 @@ export const EditUser = (props) => {
   const navigate = useNavigate();
   const { id } = useParams(); // query param from url
   const { t } = useTranslation();
+  const [cookies, setCookie, removeCookie] = useCookies(['']);
 
   const [inputValues, setInputValues] = useState({
     email: { value: "", error: false, errorMsg: "" },
@@ -62,7 +64,7 @@ export const EditUser = (props) => {
     // a promotion can be either for a product or a service
     getUserById(id).then((res) => {
       if (res.data?.status === "failed") {
-        navigate(`/users/show/${id}`);
+        userId === id ? navigate('/') : navigate('/users/show/all');
         return;
       }
 
@@ -173,7 +175,7 @@ export const EditUser = (props) => {
         if (res.data?.status === "success") {
           // navigate to main page if the user is the one editing their own profile
           const userId = getCookieByName("user_id");
-          
+
           if (userId === id) {
             setCookie("user_fullname", res.data.user[0].user_fullname);
             setCookie("user_username", res.data.user[0].user_username);
@@ -192,12 +194,12 @@ export const EditUser = (props) => {
             });
           } else {
             // navigate to admin page for users if the user is admin/moderator
-            navigate(`/users/show/${id}`, {
+            navigate('/users/show/all', {
               state: { success: "true", message: "Update successful." },
             });
           }
         } else
-          navigate(`/users/show/${id}`, {
+          navigate('/users/show/all', {
             state: { success: "false", message: "Update failed." },
           });
       });
