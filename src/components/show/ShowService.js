@@ -14,7 +14,7 @@ import {
 import { getPromotionByServiceId } from "../../api/promotion";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import ImageList from "@mui/material/ImageList";
 import Image from "material-ui-image";
@@ -23,11 +23,12 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { Reservation } from "../custom/Reservation";
+import { getCookieByName } from "../../utils/cookies";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import SellIcon from '@mui/icons-material/Sell';
+import SellIcon from "@mui/icons-material/Sell";
 
 export const ShowService = () => {
   const [serviceInfo, setServiceInfo] = useState();
@@ -37,9 +38,10 @@ export const ShowService = () => {
   const [picturesLoaded, setPicturesLoaded] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showReservation, setShowReservation] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
   const [activePromotion, setActivePromotion] = useState({
     hasPromotion: false,
-    promotionInfo: {}
+    promotionInfo: {},
   });
 
   const { id } = useParams();
@@ -53,6 +55,12 @@ export const ShowService = () => {
   });
 
   useEffect(() => {
+    // non admin and moderator users shouldn't see edit and delete buttons
+    const userRoles = getCookieByName("user_roles");
+
+    if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+      setHasPermission(true);
+
     getServicePicturePaths(id).then((res) => {
       if (res.data?.status === "success") {
         let paths = [];
@@ -76,18 +84,17 @@ export const ShowService = () => {
       if (res.data?.status === "success") {
         if (res.data.payload.length !== 0) {
           for (let i = 0; i < res.data.payload.length; i++) {
-            const promotionTo = new Date(
-              res.data.payload[i].promotion_to
-            );
+            const promotionTo = new Date(res.data.payload[i].promotion_to);
 
-            const promotionFrom = new Date(
-              res.data.payload[i].promotion_from
-            );
+            const promotionFrom = new Date(res.data.payload[i].promotion_from);
 
             const now = new Date();
 
             if (now >= promotionFrom && now <= promotionTo) {
-              setActivePromotion({ hasPromotion: true, promotionInfo: res.data.payload[i] });
+              setActivePromotion({
+                hasPromotion: true,
+                promotionInfo: res.data.payload[i],
+              });
               break;
             }
           }
@@ -123,21 +130,41 @@ export const ShowService = () => {
               ? serviceInfo.service_description
               : ""}
           </Typography>
-          {
-            activePromotion.hasPromotion === true &&
+          {activePromotion.hasPromotion === true && (
             <React.Fragment>
-
-              <Typography variant="h5" gutterBottom component="div" color="green" mt={3}>
-                <SellIcon sx={{ marginRight: 1 }} />{t("This service has an ongoing promotion until")} {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
+              <Typography
+                variant="h5"
+                gutterBottom
+                component="div"
+                color="green"
+                mt={3}
+              >
+                <SellIcon sx={{ marginRight: 1 }} />
+                {t("This service has an ongoing promotion until")}{" "}
+                {new Date(
+                  activePromotion.promotionInfo.promotion_to
+                ).toLocaleDateString()}
               </Typography>
-              <Typography color="red" variant="h5" gutterBottom component="div" mt={3} style={{ textDecoration: 'line-through' }}>
-                {t("Old price:")} {serviceInfo?.service_price ? serviceInfo.service_price : ""} {t("BGN")}
+              <Typography
+                color="red"
+                variant="h5"
+                gutterBottom
+                component="div"
+                mt={3}
+                style={{ textDecoration: "line-through" }}
+              >
+                {t("Old price:")}{" "}
+                {serviceInfo?.service_price ? serviceInfo.service_price : ""}{" "}
+                {t("BGN")}
               </Typography>
             </React.Fragment>
-
-          }
+          )}
           <Typography variant="h5" gutterBottom component="div" mt={3}>
-            {t("Price:")} {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : serviceInfo?.service_price} {t("BGN")}
+            {t("Price:")}{" "}
+            {activePromotion?.promotionInfo?.promotion_new_price
+              ? activePromotion.promotionInfo.promotion_new_price
+              : serviceInfo?.service_price}{" "}
+            {t("BGN")}
           </Typography>
           {picturesLoaded && (
             <ImageList
@@ -167,24 +194,26 @@ export const ShowService = () => {
               service={serviceInfo}
             />
           )}
-          <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
-            <Button
-              sx={{}}
-              variant="outlined"
-              startIcon={<EditIcon />}
-              onClick={() => navigate(`/services/edit/${id}`)}
-            >
-              {t("Edit")}
-            </Button>
-            <Button
-              color="error"
-              variant="outlined"
-              startIcon={<DeleteIcon />}
-              onClick={() => setShowConfirmationDialog(true)}
-            >
-              {t("Delete")}
-            </Button>
-          </ButtonGroup>
+          {hasPermission && (
+            <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
+              <Button
+                sx={{}}
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={() => navigate(`/services/edit/${id}`)}
+              >
+                {t("Edit")}
+              </Button>
+              <Button
+                color="error"
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={() => setShowConfirmationDialog(true)}
+              >
+                {t("Delete")}
+              </Button>
+            </ButtonGroup>
+          )}
           {showConfirmationDialog && (
             <ConfirmationDialog
               handleClose={() => setShowConfirmationDialog(false)}

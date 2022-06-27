@@ -15,7 +15,8 @@ import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { getCookieByName } from "../../utils/cookies";
 
 import Button from "@mui/material/Button";
 
@@ -29,6 +30,7 @@ export const ShowPromotion = () => {
   const [entityType, setEntityType] = useState("");
   const [entity, setEntity] = useState({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,6 +43,12 @@ export const ShowPromotion = () => {
   });
 
   useEffect(() => {
+    // non admin and moderator users shouldn't see edit and delete buttons
+    const userRoles = getCookieByName("user_roles");
+
+    if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+      setHasPermission(true);
+
     getPromotionById(id).then((res) => {
       if (res.data?.status === "failed") {
         navigate(`/`);
@@ -109,12 +117,14 @@ export const ShowPromotion = () => {
             {t("Price: ")}
             {promotionInfo?.promotion_new_price
               ? promotionInfo.promotion_new_price
-              : ""}{t(" BGN")}
+              : ""}
+            {t(" BGN")}
           </Typography>
 
           {entityType === "service" && (
             <Typography variant="subtitle1" gutterBottom component="div">
-              {t("For service:")} {entity?.service_title ? entity.service_title : ""}
+              {t("For service:")}{" "}
+              {entity?.service_title ? entity.service_title : ""}
             </Typography>
           )}
 
@@ -126,7 +136,8 @@ export const ShowPromotion = () => {
               gutterBottom
               component="div"
             >
-              {t("For product:")} {entity?.product_title ? entity.product_title : ""}
+              {t("For product:")}{" "}
+              {entity?.product_title ? entity.product_title : ""}
             </Typography>
           )}
           <Divider variant="middle" />
@@ -153,24 +164,26 @@ export const ShowPromotion = () => {
             </Button>
           )}
           <Divider variant="middle" />
-          <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
-            <Button
-              sx={{}}
-              variant="outlined"
-              startIcon={<EditIcon />}
-              onClick={() => navigate(`/promotions/edit/${id}`)}
-            >
-              {t("Edit")}
-            </Button>
-            <Button
-              color="error"
-              variant="outlined"
-              startIcon={<DeleteIcon />}
-              onClick={() => setShowConfirmationDialog(true)}
-            >
-              {t("Delete")}
-            </Button>
-          </ButtonGroup>
+          {hasPermission && (
+            <ButtonGroup fullWidth sx={{ marginTop: 4 }}>
+              <Button
+                sx={{}}
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={() => navigate(`/promotions/edit/${id}`)}
+              >
+                {t("Edit")}
+              </Button>
+              <Button
+                color="error"
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={() => setShowConfirmationDialog(true)}
+              >
+                {t("Delete")}
+              </Button>
+            </ButtonGroup>
+          )}
           {showConfirmationDialog && (
             <ConfirmationDialog
               handleClose={() => setShowConfirmationDialog(false)}

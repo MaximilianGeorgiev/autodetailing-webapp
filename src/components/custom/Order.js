@@ -28,6 +28,7 @@ export const Order = (props) => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   const [inputValues, setInputValues] = useState({
     date: { value: null, error: false, errorMsg: "" },
@@ -76,6 +77,7 @@ export const Order = (props) => {
         }
 
         setInputValues(updatedState);
+        setUserLoggedIn(true);
       });
     }
   }, []);
@@ -316,6 +318,7 @@ export const Order = (props) => {
             margin="normal"
             id="name"
             label={t("Email")}
+            disabled={userLoggedIn}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -341,6 +344,7 @@ export const Order = (props) => {
             autoFocus
             margin="normal"
             id="name"
+            disabled={userLoggedIn}
             label={t("Full name")}
             type="email"
             variant="standard"

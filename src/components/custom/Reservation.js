@@ -17,7 +17,7 @@ import {
 } from "../../api/reservation";
 import { getPromotionByServiceId } from "../../api/promotion";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 /*
 Current implementation:
@@ -29,6 +29,7 @@ database for reference (username and password will be mocked)
 */
 export const Reservation = (props) => {
   const [open, setOpen] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -70,6 +71,7 @@ export const Reservation = (props) => {
         }
 
         setInputValues(updatedState);
+        setUserLoggedIn(true);
       });
     }
   }, []);
@@ -173,14 +175,12 @@ export const Reservation = (props) => {
             totalPrice = props.service.service_price;
           else {
             for (let i = 0; i < res.data.payload.length; i++) {
-              const promotionTo = new Date(
-                res.data.payload[i].promotion_to
-              );
-  
+              const promotionTo = new Date(res.data.payload[i].promotion_to);
+
               const promotionFrom = new Date(
                 res.data.payload[i].promotion_from
               );
-  
+
               const now = new Date();
 
               if (now >= promotionFrom && now <= promotionTo) {
@@ -277,7 +277,9 @@ export const Reservation = (props) => {
         <DialogTitle align="center">{t("Make an appointment")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("In order to book an appointment for this service you will have to verify the following information:")}
+            {t(
+              "In order to book an appointment for this service you will have to verify the following information:"
+            )}
           </DialogContentText>
           <TextField
             autoFocus
@@ -286,6 +288,7 @@ export const Reservation = (props) => {
             label={t("Email Address")}
             type="email"
             variant="standard"
+            disabled={userLoggedIn}
             sx={{ marginRight: 25 }}
             value={inputValues["email"].value}
             error={
@@ -310,6 +313,7 @@ export const Reservation = (props) => {
             margin="normal"
             id="name"
             label={t("Full name")}
+            disabled={userLoggedIn}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -377,7 +381,9 @@ export const Reservation = (props) => {
               inputValues["date"]?.error ? inputValues["date"].error : false
             }
             helperText={
-              inputValues["date"]?.errorMsg ? t(inputValues["date"].errorMsg) : ""
+              inputValues["date"]?.errorMsg
+                ? t(inputValues["date"].errorMsg)
+                : ""
             }
             onChange={(e) => {
               setInputValues((prevInputValues) => ({
