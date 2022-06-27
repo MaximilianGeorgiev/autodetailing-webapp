@@ -17,6 +17,7 @@ import { getAllServices, deleteService } from "../../api/service";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
+import { useTranslation } from "react-i18next";
 
 export const ServiceTable = () => {
   const [services, setServices] = useState([]);
@@ -24,6 +25,7 @@ export const ServiceTable = () => {
   const [selectedId, setSelectedId] = useState(-1);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -38,10 +40,12 @@ export const ServiceTable = () => {
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
+
+    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
       navigate("/", {state: {"event": "loggedIn"}});
       return;
-    }
+    }*/
 
     getAllServices().then((res) => {
       if (res.data.status === "success") setServices(res.data.payload); // category_name is present
@@ -61,10 +65,10 @@ export const ServiceTable = () => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Service name</TableCell>
-              <TableCell align="right">Service price</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{t("Service name")}</TableCell>
+              <TableCell align="right">{t("Service price")}</TableCell>
+              <TableCell align="right">{t("Description")}</TableCell>
+              <TableCell align="center">{t("Actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -99,7 +103,7 @@ export const ServiceTable = () => {
                         navigate(`/services/edit/${service.service_id}`)
                       }
                     >
-                      Edit
+                      {t("Edit")}
                     </Button>
                     <Button
                       color="error"
@@ -110,7 +114,7 @@ export const ServiceTable = () => {
                         setShowConfirmationDialog(true);
                       }}
                     >
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </ButtonGroup>
                   {showConfirmationDialog && (

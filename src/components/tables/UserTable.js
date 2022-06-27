@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { getAllUsers, deleteUser, getUserRoles } from "../../api/user";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
 export const UserTable = () => {
@@ -25,6 +26,7 @@ export const UserTable = () => {
     const [selectedId, setSelectedId] = useState(-1);
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const darkTheme = createTheme({
         palette: {
@@ -75,13 +77,13 @@ export const UserTable = () => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>User №</TableCell>
-                            <TableCell align="right">Username</TableCell>
-                            <TableCell align="right">E-mail address</TableCell>
-                            <TableCell align="right">Full name</TableCell>
-                            <TableCell align="right">Phone</TableCell>
-                            <TableCell align="right">Address</TableCell>
-                            <TableCell align="center">Actions</TableCell>
+                            <TableCell>{t("User №")}</TableCell>
+                            <TableCell align="right">{t("Username")}</TableCell>
+                            <TableCell align="right">{t("E-mail address")}</TableCell>
+                            <TableCell align="right">{t("Full name")}</TableCell>
+                            <TableCell align="right">{t("Phone number")}</TableCell>
+                            <TableCell align="right">{t("Address")}</TableCell>
+                            <TableCell align="center">{t("Actions")}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -131,7 +133,7 @@ export const UserTable = () => {
                                                 navigate(`/users/edit/${user.user_id}`)
                                             }
                                         >
-                                            Edit
+                                            {t("Edit")}
                                         </Button>
                                         <Button
                                             color="error"
@@ -142,7 +144,7 @@ export const UserTable = () => {
                                                 setShowConfirmationDialog(true);
                                             }}
                                         >
-                                            Delete
+                                            {t("Delete")}
                                         </Button>
                                     </ButtonGroup>
                                     {showConfirmationDialog && (

@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { getAllPromotions, deletePromotion } from "../../api/promotion";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getProductById } from "../../api/product";
 import { getServiceById } from "../../api/service";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
@@ -28,6 +29,7 @@ export const PromotionTable = () => {
   const [selectedId, setSelectedId] = useState(-1);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -89,11 +91,11 @@ export const PromotionTable = () => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Promotion for</TableCell>
-              <TableCell align="right">Start date</TableCell>
-              <TableCell align="right">End date</TableCell>
-              <TableCell align="right">Discounted price</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{t("Promotion for")}</TableCell>
+              <TableCell align="right">{t("Start date")}</TableCell>
+              <TableCell align="right">{t("End date")}</TableCell>
+              <TableCell align="right">{t("Discounted price")}</TableCell>
+              <TableCell align="center">{t("Actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -137,7 +139,7 @@ export const PromotionTable = () => {
                         navigate(`/promotions/edit/${promotion.promotion_id}`)
                       }
                     >
-                      Edit
+                      {t("Edit")}
                     </Button>
                     <Button
                       color="error"
@@ -148,7 +150,7 @@ export const PromotionTable = () => {
                         setShowConfirmationDialog(true);
                       }}
                     >
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </ButtonGroup>
                   {showConfirmationDialog && (

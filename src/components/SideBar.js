@@ -22,6 +22,8 @@ import PercentIcon from '@mui/icons-material/Percent';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 
+import { useTranslation } from 'react-i18next';
+
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -53,6 +55,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const SideBar = (props) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
+    const { t } = useTranslation();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -92,6 +95,7 @@ export const SideBar = (props) => {
                 open={open}
             >
                 <DrawerHeader>
+    
                     <IconButton onClick={() => {
                         handleDrawerClose();
                         if (props.close) props.close(false)
@@ -112,7 +116,7 @@ export const SideBar = (props) => {
                                                     <ContactPageIcon />
                                 }
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={t(text)} />
                         </ListItem>
                     ))}
                 </List>

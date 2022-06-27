@@ -33,6 +33,7 @@ import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 import { handlePictureUpload, handlePictureDelete } from "../../api/picture";
 
 import { useParams } from "react-router";
+import { useTranslation } from 'react-i18next';
 
 export const EditService = (props) => {
   const darkTheme = createTheme({
@@ -43,6 +44,7 @@ export const EditService = (props) => {
 
   const navigate = useNavigate();
   const { id } = useParams(); // query param from url
+  const { t } = useTranslation();
 
   const [categories, setCategories] = useState([]); // dropdown options
   const [uploadedPictures, setUploadedPictures] = useState();
@@ -81,10 +83,11 @@ export const EditService = (props) => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
 
+    /*
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
       navigate("/", { state: { event: "loggedIn" } });
       return;
-    }
+    }*/
 
     // get available categories
     getAllCategories().then((res) => {
@@ -268,14 +271,14 @@ export const EditService = (props) => {
             <EditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit service
+            {t("Edit service")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Service name"
-              label="Service name"
+              label={t("Service name")}
               margin="normal"
               fullWidth
               value={
@@ -286,7 +289,7 @@ export const EditService = (props) => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -302,7 +305,7 @@ export const EditService = (props) => {
               name="description"
               type="text"
               placeholder="Description"
-              label="Description"
+              label={t("Description")}
               fullWidth
               margin="normal"
               multiline
@@ -320,7 +323,7 @@ export const EditService = (props) => {
               }
               helperText={
                 inputValues["description"]?.errorMsg
-                  ? inputValues["description"].errorMsg
+                  ? t(inputValues["description"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -336,7 +339,7 @@ export const EditService = (props) => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               margin="normal"
               fullWidth
               value={
@@ -347,7 +350,7 @@ export const EditService = (props) => {
               }
               helperText={
                 inputValues["price"]?.errorMsg
-                  ? inputValues["price"].errorMsg
+                  ? t(inputValues["price"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -367,13 +370,13 @@ export const EditService = (props) => {
               }
               helperText={
                 inputValues["category"]?.errorMsg
-                  ? inputValues["category"].errorMsg
+                  ? t(inputValues["category"].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <InputLabel id="demo-simple-select-label">{t("Category")}</InputLabel>
               <Select
                 label="Category"
                 value={
@@ -408,7 +411,7 @@ export const EditService = (props) => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
             {picturesLoaded && (
@@ -441,7 +444,7 @@ export const EditService = (props) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processServiceEditForm()}
             >
-              Edit service
+              {t("Edit service")}
             </Button>
           </Box>
         </Box>

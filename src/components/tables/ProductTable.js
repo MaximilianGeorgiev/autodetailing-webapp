@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { getAllProducts, deleteProduct } from "../../api/product";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
 export const ProductTable = () => {
@@ -24,6 +25,7 @@ export const ProductTable = () => {
   const [selectedId, setSelectedId] = useState(-1);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -61,11 +63,11 @@ export const ProductTable = () => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Product name</TableCell>
-              <TableCell align="right">Product price</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">Category</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{t("Product name")}</TableCell>
+              <TableCell align="right">{t("Product price")}</TableCell>
+              <TableCell align="right">{t("Description")}</TableCell>
+              <TableCell align="right">{t("Category")}</TableCell>
+              <TableCell align="center">{t("Actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -106,7 +108,7 @@ export const ProductTable = () => {
                         navigate(`/products/edit/${product.product_id}`)
                       }
                     >
-                      Edit
+                      {t("Edit")}
                     </Button>
                     <Button
                       color="error"
@@ -117,7 +119,7 @@ export const ProductTable = () => {
                         setShowConfirmationDialog(true);
                       }}
                     >
-                      Delete
+                      {t("Delete")}
                     </Button>
                   </ButtonGroup>
                   {showConfirmationDialog && (

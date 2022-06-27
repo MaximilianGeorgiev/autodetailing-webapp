@@ -23,10 +23,7 @@ import { Notification } from "./Notification";
 
 import { getLoggedUserRoles, addRole } from "../api/user";
 import { getRoleByName } from "../api/role";
-
 import { clientHasLoginCookies } from "../utils/cookies";
-import i18next from "i18next";
-
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -34,7 +31,6 @@ export const Login = () => {
     const { t } = useTranslation();
     
     useEffect(() => {
-        i18next.changeLanguage('bg');
         // logged in users shouldn't access login page
         const hasCookies = clientHasLoginCookies();
 
@@ -175,7 +171,7 @@ export const Login = () => {
                             name="email"
                             type="email"
                             placeholder="sample@gmail.com"
-                            label="Email"
+                            label={t("Email")}
                             margin="normal"
                             fullWidth
                             error={
@@ -202,7 +198,7 @@ export const Login = () => {
                             name="password"
                             type="password"
                             placeholder="password"
-                            label="Password"
+                            label={t("Password")}
                             fullWidth
                             error={
                                 inputValues["password"]?.error
@@ -231,7 +227,7 @@ export const Login = () => {
                             sx={{ mt: 3, mb: 2 }}
                             onClick={() => processLoginForm()}
                         >
-                            {t("Sign In")}
+                            {t("Sign in")}
                         </Button>
 
                         <Grid container justifyContent="flex-end">

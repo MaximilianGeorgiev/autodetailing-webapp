@@ -17,6 +17,7 @@ import {
 } from "../../api/reservation";
 import { getPromotionByServiceId } from "../../api/promotion";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 /*
 Current implementation:
@@ -29,6 +30,7 @@ database for reference (username and password will be mocked)
 export const Reservation = (props) => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [inputValues, setInputValues] = useState({
     date: { value: null, error: false, errorMsg: "" },
@@ -272,17 +274,16 @@ export const Reservation = (props) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle align="center">Make an appointment</DialogTitle>
+        <DialogTitle align="center">{t("Make an appointment")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            In order to book an appointment for this service you will have to
-            verify the following information:
+            {t("In order to book an appointment for this service you will have to verify the following information:")}
           </DialogContentText>
           <TextField
             autoFocus
             margin="normal"
             id="name"
-            label="Email Address"
+            label={t("Email Address")}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -292,7 +293,7 @@ export const Reservation = (props) => {
             }
             helperText={
               inputValues["email"]?.errorMsg
-                ? inputValues["email"].errorMsg
+                ? t(inputValues["email"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -308,7 +309,7 @@ export const Reservation = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Full name"
+            label={t("Full name")}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -320,7 +321,7 @@ export const Reservation = (props) => {
             }
             helperText={
               inputValues["fullname"]?.errorMsg
-                ? inputValues["fullname"].errorMsg
+                ? t(inputValues["fullname"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -336,7 +337,7 @@ export const Reservation = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Phone number"
+            label={t("Phone number")}
             type="email"
             variant="standard"
             InputLabelProps={{
@@ -349,7 +350,7 @@ export const Reservation = (props) => {
             }
             helperText={
               inputValues["phone"]?.errorMsg
-                ? inputValues["phone"].errorMsg
+                ? t(inputValues["phone"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -365,7 +366,7 @@ export const Reservation = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Appointment date"
+            label={t("Appointment date")}
             type="date"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -376,7 +377,7 @@ export const Reservation = (props) => {
               inputValues["date"]?.error ? inputValues["date"].error : false
             }
             helperText={
-              inputValues["date"]?.errorMsg ? inputValues["date"].errorMsg : ""
+              inputValues["date"]?.errorMsg ? t(inputValues["date"].errorMsg) : ""
             }
             onChange={(e) => {
               setInputValues((prevInputValues) => ({
@@ -389,8 +390,8 @@ export const Reservation = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => processReservation()}>Confirm</Button>
+          <Button onClick={handleClose}>{t("Cancel")}</Button>
+          <Button onClick={() => processReservation()}>{t("Confirm")}</Button>
         </DialogActions>
       </Dialog>
     </div>

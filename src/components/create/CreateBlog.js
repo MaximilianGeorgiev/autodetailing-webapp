@@ -15,6 +15,7 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 
 import { createBlog } from "../../api/blog";
 import { handlePictureUpload } from "../../api/picture";
+import { useTranslation } from 'react-i18next';
 
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
@@ -26,6 +27,7 @@ export const CreateBlog = () => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [inputValues, setInputValues] = useState({
     title: { value: "", error: false, errorMsg: "" },
@@ -97,7 +99,7 @@ export const CreateBlog = () => {
         const uploadSuccess = handlePictureUpload("blog", blogId, uploadedPictures);
 
         if (uploadSuccess) navigate("/", {
-          state: { success: "true", message: "Blog created successfully." },
+          state: { success: "true", message: "Article created successfully." },
         });
 
         else {
@@ -125,14 +127,14 @@ export const CreateBlog = () => {
             <AddBoxIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Create blog
+            {t("Create article")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Title"
-              label="Title"
+              label={t("Title")}
               margin="normal"
               fullWidth
               error={
@@ -140,7 +142,7 @@ export const CreateBlog = () => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -169,7 +171,7 @@ export const CreateBlog = () => {
               }
               helperText={
                 inputValues["text"]?.errorMsg
-                  ? inputValues["text"].errorMsg
+                  ? t(inputValues["text"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -198,7 +200,7 @@ export const CreateBlog = () => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
 
@@ -209,7 +211,7 @@ export const CreateBlog = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processBlogCreationForm()}
             >
-              Create blog
+              {t("Create article")}
             </Button>
           </Box>
         </Box>

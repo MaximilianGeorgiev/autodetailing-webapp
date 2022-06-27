@@ -24,6 +24,7 @@ import { getPromotionById, updatePromotion } from "../../api/promotion";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { useParams } from "react-router";
+import { useTranslation } from 'react-i18next';
 
 export const EditPromotion = (props) => {
   const darkTheme = createTheme({
@@ -33,6 +34,7 @@ export const EditPromotion = (props) => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id } = useParams(); // query param from url
 
   const [entities, setEntities] = useState([]); // dropdown options
@@ -280,12 +282,12 @@ export const EditPromotion = (props) => {
             <EditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit promotion
+            {t("Edit promotion")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               id="date"
-              label="Date from"
+              label={t("Date from")}
               type="date"
               margin="normal"
               fullWidth
@@ -300,7 +302,7 @@ export const EditPromotion = (props) => {
               }
               helperText={
                 inputValues["dateFrom"]?.errorMsg
-                  ? inputValues["dateFrom"].errorMsg
+                  ? t(inputValues["dateFrom"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -314,7 +316,7 @@ export const EditPromotion = (props) => {
             />
             <TextField
               id="date"
-              label="Date to"
+              label={t("Date to")}
               type="date"
               fullWidth
               margin="normal"
@@ -329,7 +331,7 @@ export const EditPromotion = (props) => {
               }
               helperText={
                 inputValues["dateTo"]?.errorMsg
-                  ? inputValues["dateTo"].errorMsg
+                  ? t(inputValues["dateTo"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -345,7 +347,7 @@ export const EditPromotion = (props) => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               fullWidth
               margin="normal"
               value={
@@ -360,7 +362,7 @@ export const EditPromotion = (props) => {
               }
               helperText={
                 inputValues["newPrice"]?.errorMsg
-                  ? inputValues["newPrice"].errorMsg
+                  ? t(inputValues["newPrice"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -380,13 +382,13 @@ export const EditPromotion = (props) => {
               }
               helperText={
                 inputValues[entityType]?.errorMsg
-                  ? inputValues[entityType].errorMsg
+                  ? t(inputValues[entityType].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
-              <InputLabel id="demo-simple-select-label">{entityType ? entityType[0].toUpperCase() + entityType.substring(1) : "Entity"}</InputLabel>
+              <InputLabel id="demo-simple-select-label">{entityType ? t(entityType[0].toUpperCase() + entityType.substring(1)) : "Entity"}</InputLabel>
               <Select
                 label={entityType ? entityType[0].toUpperCase() + entityType.substring(1) : "Entity"}
                 value={
@@ -422,7 +424,7 @@ export const EditPromotion = (props) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processPromotionEditForm()}
             >
-              Edit promotion
+              {t("Edit promotion")}
             </Button>
           </Box>
         </Box>

@@ -15,6 +15,7 @@ import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 import Button from "@mui/material/Button";
 
@@ -31,6 +32,7 @@ export const ShowPromotion = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -85,34 +87,34 @@ export const ShowPromotion = () => {
           }}
         >
           <Typography variant="h3" gutterBottom component="div">
-            Promotion{" "}
+            {t("Promotion ")}
             {promotionInfo?.promotion_id
               ? "№ " + promotionInfo?.promotion_id
               : ""}
           </Typography>
           <Divider variant="middle" />
           <Typography variant="subtitle1" gutterBottom component="div">
-            Start date:{" "}
+            {t("Start date: ")}
             {promotionInfo?.promotion_from
               ? new Date(promotionInfo.promotion_from).toLocaleDateString()
               : ""}
           </Typography>
           <Typography variant="subtitle1" gutterBottom component="div">
-            End date:{" "}
+            {t("End date: ")}
             {promotionInfo?.promotion_to
               ? new Date(promotionInfo.promotion_to).toLocaleDateString()
               : ""}
           </Typography>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Price:{" "} BGN
+            {t("Price: ")}
             {promotionInfo?.promotion_new_price
               ? promotionInfo.promotion_new_price
-              : ""}
+              : ""}{t(" BGN")}
           </Typography>
 
           {entityType === "service" && (
             <Typography variant="subtitle1" gutterBottom component="div">
-              For service: {entity?.service_title ? entity.service_title : ""}
+              {t("For service:")} {entity?.service_title ? entity.service_title : ""}
             </Typography>
           )}
 
@@ -124,7 +126,7 @@ export const ShowPromotion = () => {
               gutterBottom
               component="div"
             >
-              For product: {entity?.product_title ? entity.product_title : ""}
+              {t("For product:")} {entity?.product_title ? entity.product_title : ""}
             </Typography>
           )}
           <Divider variant="middle" />
@@ -134,9 +136,9 @@ export const ShowPromotion = () => {
               color="secondary"
               component="span"
               startIcon={<LibraryBooksIcon />}
-              sx={{marginTop: 3}}
+              sx={{ marginTop: 3 }}
             >
-              Book now
+              {t("Book now")}
             </Button>
           )}
           {entityType === "product" && (
@@ -145,9 +147,9 @@ export const ShowPromotion = () => {
               color="secondary"
               component="span"
               startIcon={<AddShoppingCartIcon />}
-              sx={{marginTop: 3}}
+              sx={{ marginTop: 3 }}
             >
-              Buy now
+              {t("Buy now")}
             </Button>
           )}
           <Divider variant="middle" />
@@ -158,7 +160,7 @@ export const ShowPromotion = () => {
               startIcon={<EditIcon />}
               onClick={() => navigate(`/promotions/edit/${id}`)}
             >
-              Edit
+              {t("Edit")}
             </Button>
             <Button
               color="error"
@@ -166,7 +168,7 @@ export const ShowPromotion = () => {
               startIcon={<DeleteIcon />}
               onClick={() => setShowConfirmationDialog(true)}
             >
-              Delete
+              {t("Delete")}
             </Button>
           </ButtonGroup>
           {showConfirmationDialog && (

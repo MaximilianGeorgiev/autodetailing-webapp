@@ -17,6 +17,7 @@ import { getAllReservations, deleteReservation } from "../../api/reservation";
 import { getUserById } from "../../api/user";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
 export const ReservationTable = () => {
@@ -26,6 +27,7 @@ export const ReservationTable = () => {
     const [selectedId, setSelectedId] = useState(-1);
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const darkTheme = createTheme({
         palette: {
@@ -76,12 +78,12 @@ export const ReservationTable = () => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Reservation №</TableCell>
-                            <TableCell align="right">Reservation date</TableCell>
-                            <TableCell align="right">Reservation price</TableCell>
-                            <TableCell align="right">Customer name</TableCell>
-                            <TableCell align="right">Customer phone</TableCell>
-                            <TableCell align="center">Actions</TableCell>
+                            <TableCell>{t("Reservation №")}</TableCell>
+                            <TableCell align="right">{t("Reservation date")}</TableCell>
+                            <TableCell align="right">{t("Reservation price")}</TableCell>
+                            <TableCell align="right">{t("Customer name")}</TableCell>
+                            <TableCell align="right">{t("Customer phone")}</TableCell>
+                            <TableCell align="center">{t("Actions")}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -125,7 +127,7 @@ export const ReservationTable = () => {
                                                 navigate(`/reservations/edit/${reservation.reservation_id}`)
                                             }
                                         >
-                                            Edit
+                                            {t("Edit")}
                                         </Button>
                                         <Button
                                             color="error"
@@ -136,7 +138,7 @@ export const ReservationTable = () => {
                                                 setShowConfirmationDialog(true);
                                             }}
                                         >
-                                            Delete
+                                            {t("Delete")}
                                         </Button>
                                     </ButtonGroup>
                                     {showConfirmationDialog && (

@@ -14,6 +14,7 @@ import { validatePhone, validateEmail } from "../../utils/validator";
 import { addProductToOrder, createOrder } from "../../api/order";
 import { getPromotionByProductId } from "../../api/promotion";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 /*
 Current implementation:
@@ -26,6 +27,7 @@ database for reference (username and password will be mocked)
 export const Order = (props) => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [inputValues, setInputValues] = useState({
     date: { value: null, error: false, errorMsg: "" },
@@ -196,11 +198,11 @@ export const Order = (props) => {
               const promotionTo = new Date(
                 res.data.payload[i].promotion_to
               );
-  
+
               const promotionFrom = new Date(
                 res.data.payload[i].promotion_from
               );
-  
+
               const now = new Date();
 
               if (now >= promotionFrom && now <= promotionTo) {
@@ -304,17 +306,16 @@ export const Order = (props) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle align="center">Make an order</DialogTitle>
+        <DialogTitle align="center">{t("Make an order")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            In order to make an order for the following product you will have to
-            verify the following information:
+            {t("In order to make an order for the following product you will have to verify the following information:")}
           </DialogContentText>
           <TextField
             autoFocus
             margin="normal"
             id="name"
-            label="Email Address"
+            label={t("Email")}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -324,7 +325,7 @@ export const Order = (props) => {
             }
             helperText={
               inputValues["email"]?.errorMsg
-                ? inputValues["email"].errorMsg
+                ? t(inputValues["email"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -340,7 +341,7 @@ export const Order = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Full name"
+            label={t("Full name")}
             type="email"
             variant="standard"
             sx={{ marginRight: 25 }}
@@ -352,7 +353,7 @@ export const Order = (props) => {
             }
             helperText={
               inputValues["fullname"]?.errorMsg
-                ? inputValues["fullname"].errorMsg
+                ? t(inputValues["fullname"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -368,7 +369,7 @@ export const Order = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Phone number"
+            label={t("Phone number")}
             type="email"
             variant="standard"
             InputLabelProps={{
@@ -381,7 +382,7 @@ export const Order = (props) => {
             }
             helperText={
               inputValues["phone"]?.errorMsg
-                ? inputValues["phone"].errorMsg
+                ? t(inputValues["phone"].errorMsg)
                 : ""
             }
             onChange={(e) => {
@@ -397,7 +398,7 @@ export const Order = (props) => {
             autoFocus
             margin="normal"
             id="name"
-            label="Address"
+            label={t("Address")}
             type="email"
             variant="standard"
             InputLabelProps={{
@@ -407,7 +408,7 @@ export const Order = (props) => {
             value={inputValues["address"].value}
             error={
               inputValues["address"]?.error
-                ? inputValues["address"].error
+                ? t(inputValues["address"].errorMsg)
                 : false
             }
             helperText={
@@ -426,8 +427,8 @@ export const Order = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => processOrder()}>Confirm</Button>
+          <Button onClick={handleClose}>{t("Cancel")}</Button>
+          <Button onClick={() => processOrder()}>{t("Confirm")}</Button>
         </DialogActions>
       </Dialog>
     </div>

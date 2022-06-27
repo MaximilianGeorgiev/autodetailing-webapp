@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
+import { useTranslation } from 'react-i18next';
 
 import { getAllServices, getServicePicturePaths } from "../../api/service";
 import { getAllProducts, getProductPicturePaths } from "../../api/product";
@@ -27,6 +28,7 @@ export const EntityCards = (props) => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     let updatedPaths = [...entityPictures];
@@ -175,11 +177,11 @@ export const EntityCards = (props) => {
 
     if (props.entityType === "service")
       return (
-        entities.filter((e) => e.service_id === id)[0].service_price + " BGN"
+        entities.filter((e) => e.service_id === id)[0].service_price + " " + t("BGN")
       );
     else if (props.entityType === "product")
       return (
-        entities.filter((e) => e.product_id === id)[0].product_price + " BGN"
+        entities.filter((e) => e.product_id === id)[0].product_price + " " + t("BGN")
       );
 
     return "";
@@ -188,7 +190,7 @@ export const EntityCards = (props) => {
   const displayPromotionPrice = (id) => {
     if (!id) return "";
 
-    return activePromotion.promotionInfo.promotion_new_price + " BGN";
+    return activePromotion.promotionInfo.promotion_new_price + " " + t("BGN");
   };
 
   const displayText = (id) => {
@@ -203,7 +205,7 @@ export const EntityCards = (props) => {
         <ImageList display="flex" sx={{ flex: 1, flexDirection: 'row', width: 577, height: 350 }}>
           <ImageListItem key="Subheader" cols={2} sx={{ flex: 1 }}>
             <Typography gutterBottom variant="h5" component="div">
-              {props.entityType === "service" ? "Services" : props.entityType === "blog" ? "Blogs" : "Products"}
+              {props.entityType === "service" ? t("Services") : props.entityType === "blog" ? t("Blogs") : t("Products")}
             </Typography>
           </ImageListItem>
           {entityPictures.map((pic) => (

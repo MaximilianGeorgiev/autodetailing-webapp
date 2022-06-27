@@ -22,6 +22,7 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import { getAllCategories } from "../../api/category";
 import { createProduct } from "../../api/product";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
+import { useTranslation } from 'react-i18next';
 
 import { handlePictureUpload } from "../../api/picture";
 
@@ -33,6 +34,7 @@ export const CreateProduct = () => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [categories, setCategories] = useState([]); // dropdown options
   const [uploadedPictures, setUploadedPictures] = useState();
@@ -197,14 +199,14 @@ export const CreateProduct = () => {
             <AddBoxIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Create a product
+            {t("Create product")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Product name"
-              label="Product name"
+              label={t("Product name")}
               margin="normal"
               fullWidth
               error={
@@ -212,7 +214,7 @@ export const CreateProduct = () => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -228,7 +230,7 @@ export const CreateProduct = () => {
               name="description"
               type="text"
               placeholder="Description"
-              label="Description"
+              label={t("Description")}
               fullWidth
               margin="normal"
               multiline
@@ -241,7 +243,7 @@ export const CreateProduct = () => {
               }
               helperText={
                 inputValues["description"]?.errorMsg
-                  ? inputValues["description"].errorMsg
+                  ? t(inputValues["description"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -257,7 +259,7 @@ export const CreateProduct = () => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               margin="normal"
               fullWidth
               error={
@@ -265,7 +267,7 @@ export const CreateProduct = () => {
               }
               helperText={
                 inputValues["price"]?.errorMsg
-                  ? inputValues["price"].errorMsg
+                  ? t(inputValues["price"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -285,13 +287,13 @@ export const CreateProduct = () => {
               }
               helperText={
                 inputValues["selectedCategory"]?.errorMsg
-                  ? inputValues["selectedCategory"].errorMsg
+                  ? t(inputValues["selectedCategory"].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <InputLabel id="demo-simple-select-label">{t("Category")}</InputLabel>
               <Select
                 label="Category"
                 onChange={(e) => {
@@ -323,7 +325,7 @@ export const CreateProduct = () => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
             <Button
@@ -333,7 +335,7 @@ export const CreateProduct = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processProductCreationForm()}
             >
-              Create product
+              {t("Create product")}
             </Button>
           </Box>
         </Box>

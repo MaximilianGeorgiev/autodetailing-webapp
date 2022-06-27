@@ -11,6 +11,7 @@
 11. Disabled fields for reservations to be dynamic [MEDIUM]
 11. On profile update update cookies as well not just database [HIGH]
 12. On image click to open image in full resolution [LOW]
+13. All placeholder texts to be translated [LOW]
 
 ---
 improvements:

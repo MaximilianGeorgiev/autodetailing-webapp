@@ -17,6 +17,7 @@ import { getAllOrders, deleteOrder } from "../../api/order";
 import { getUserById } from "../../api/user";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { clientHasLoginCookies, getCookieByName } from "../../utils/cookies";
 
 export const OrderTable = () => {
@@ -26,6 +27,7 @@ export const OrderTable = () => {
     const [selectedId, setSelectedId] = useState(-1);
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const darkTheme = createTheme({
         palette: {
@@ -77,11 +79,11 @@ export const OrderTable = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Order №</TableCell>
-                            <TableCell align="right">Total price</TableCell>
-                            <TableCell align="right">Delivery address</TableCell>
-                            <TableCell align="right">Customer name</TableCell>
-                            <TableCell align="right">Customer phone</TableCell>
-                            <TableCell align="center">Actions</TableCell>
+                            <TableCell align="right">{t("Total price")}</TableCell>
+                            <TableCell align="right">{t("Delivery address")}</TableCell>
+                            <TableCell align="right">{t("Customer name")}</TableCell>
+                            <TableCell align="right">{t("Customer phone")}</TableCell>
+                            <TableCell align="center">{t("Actions")}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -125,7 +127,7 @@ export const OrderTable = () => {
                                                 navigate(`/orders/edit/${order.order_id}`)
                                             }
                                         >
-                                            Edit
+                                            {t("Edit")}
                                         </Button>
                                         <Button
                                             color="error"
@@ -136,7 +138,7 @@ export const OrderTable = () => {
                                                 setShowConfirmationDialog(true);
                                             }}
                                         >
-                                            Delete
+                                            {t("Delete")}
                                         </Button>
                                     </ButtonGroup>
                                     {showConfirmationDialog && (

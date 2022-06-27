@@ -21,6 +21,7 @@ import { updateBlog, getBlogById, getBlogPicturePaths } from "../../api/blog";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { handlePictureUpload, handlePictureDelete } from "../../api/picture";
+import { useTranslation } from 'react-i18next';
 
 import { useParams } from "react-router";
 
@@ -32,6 +33,7 @@ export const EditBlog = (props) => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id } = useParams(); // query param from url
 
   const [uploadedPictures, setUploadedPictures] = useState();
@@ -104,14 +106,14 @@ export const EditBlog = (props) => {
       updatedState.title = {
         value: updatedState.title.value,
         error: true,
-        errorMsg: "Blog title cannot be empty.",
+        errorMsg: "Article title cannot be empty.",
       };
 
     if (!inputValues?.text?.value)
       updatedState.text = {
         value: updatedState.text.value,
         error: true,
-        errorMsg: "Blog text cannot be empty.",
+        errorMsg: "Article text cannot be empty.",
       };
 
     // case: subsequent error requests but one of the fields is corrected
@@ -173,14 +175,14 @@ export const EditBlog = (props) => {
             <EditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit blog
+            {t("Edit article")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Title"
-              label="Title"
+              label={t("Title")}
               margin="normal"
               fullWidth
               value={
@@ -191,7 +193,7 @@ export const EditBlog = (props) => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -207,7 +209,7 @@ export const EditBlog = (props) => {
               name="description"
               type="text"
               placeholder="Text"
-              label="Text"
+              label={t("Text")}
               fullWidth
               margin="normal"
               multiline
@@ -221,7 +223,7 @@ export const EditBlog = (props) => {
               }
               helperText={
                 inputValues["text"]?.errorMsg
-                  ? inputValues["text"].errorMsg
+                  ? t(inputValues["text"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -248,7 +250,7 @@ export const EditBlog = (props) => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
             {picturesLoaded && (
@@ -281,7 +283,7 @@ export const EditBlog = (props) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processBlogEditForm()}
             >
-              Edit blog
+              {t("Edit article")}
             </Button>
           </Box>
         </Box>

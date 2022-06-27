@@ -19,6 +19,7 @@ import FormControl from "@mui/material/FormControl";
 import { getAllProducts } from "../../api/product";
 import { getAllServices } from "../../api/service";
 import { createPromotion } from "../../api/promotion";
+import { useTranslation } from 'react-i18next';
 
 import { getCookieByName } from "../../utils/cookies";
 import { validateDates }  from "../../utils/validator";
@@ -34,6 +35,7 @@ export const CreatePromotion = () => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // a promotion can be created for either a product or a service
   // store the existing products needed for a dropdown
@@ -223,18 +225,18 @@ export const CreatePromotion = () => {
             <AddBoxIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Create promotion
+            {t("Create promotion")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <SelectableButtonGroup
-              firstOption="Products"
-              secondOption="Services"
+              firstOption={t("Products")}
+              secondOption={t("Services")}
               margin="normal"
               toggleSelect={setCategoryToggle}
             />
             <TextField
               id="date"
-              label="Date from"
+              label={t("Date from")}
               type="date"
               margin="normal"
               fullWidth
@@ -249,7 +251,7 @@ export const CreatePromotion = () => {
               }
               helperText={
                 inputValues["dateFrom"]?.errorMsg
-                  ? inputValues["dateFrom"].errorMsg
+                  ? t(inputValues["dateFrom"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -263,7 +265,7 @@ export const CreatePromotion = () => {
             />
             <TextField
               id="date"
-              label="Date to"
+              label={t("Date to")}
               type="date"
               fullWidth
               margin="normal"
@@ -278,7 +280,7 @@ export const CreatePromotion = () => {
               }
               helperText={
                 inputValues["dateTo"]?.errorMsg
-                  ? inputValues["dateTo"].errorMsg
+                  ? t(inputValues["dateTo"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -294,7 +296,7 @@ export const CreatePromotion = () => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               fullWidth
               margin="normal"
               error={
@@ -304,7 +306,7 @@ export const CreatePromotion = () => {
               }
               helperText={
                 inputValues["newPrice"]?.errorMsg
-                  ? inputValues["newPrice"].errorMsg
+                  ? t(inputValues["newPrice"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -324,17 +326,17 @@ export const CreatePromotion = () => {
               }
               helperText={
                 inputValues["selectedEntity"]?.errorMsg
-                  ? inputValues["selectedEntity"].errorMsg
+                  ? t(inputValues["selectedEntity"].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
               <InputLabel id="demo-simple-select-label">
-                {categoryToggle ? "Product" : "Service"}
+                {categoryToggle ? t("Product") : t("Service")}
               </InputLabel>
               <Select
-                label={categoryToggle ? "Product" : "Service"}
+                label={categoryToggle ? t("Product") : t("Service")}
                 onChange={(e) => {
                   setInputValues((prevInputValues) => ({
                     ...prevInputValues,
@@ -356,7 +358,7 @@ export const CreatePromotion = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processPromotionCreationForm()}
             >
-              Create promotion
+              {t("Create promotion")}
             </Button>
           </Box>
         </Box>

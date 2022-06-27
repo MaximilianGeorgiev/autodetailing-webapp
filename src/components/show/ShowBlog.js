@@ -18,10 +18,11 @@ import { getCookieByName } from "../../utils/cookies";
 
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
-import ImageList from "@mui/material/ImageList";
 import Image from "material-ui-image";
 import Button from "@mui/material/Button";
+
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -37,6 +38,7 @@ export const ShowBlog = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -111,7 +113,7 @@ export const ShowBlog = () => {
                 startIcon={<EditIcon />}
                 onClick={() => navigate(`/blogs/edit/${id}`)}
               >
-                Edit
+                {t("Edit")}
               </Button>
               <Button
                 color="error"
@@ -119,7 +121,7 @@ export const ShowBlog = () => {
                 startIcon={<DeleteIcon />}
                 onClick={() => setShowConfirmationDialog(true)}
               >
-                Delete
+                {t("Delete")}
               </Button>
             </ButtonGroup>
           }

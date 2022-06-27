@@ -20,6 +20,7 @@ import { Order } from "../custom/Order";
 
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 import ImageList from "@mui/material/ImageList";
 import Image from "material-ui-image";
@@ -46,6 +47,7 @@ export const ShowProduct = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -136,16 +138,16 @@ export const ShowProduct = () => {
             <React.Fragment>
 
               <Typography variant="h5" gutterBottom component="div" color="green" mt={3}>
-                <SellIcon sx={{ marginRight: 1 }} />This product has an ongoing promotion until {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
+                <SellIcon sx={{ marginRight: 1 }} />{t("This product has an ongoing promotion until")} {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
               </Typography>
               <Typography color="red" variant="h5" gutterBottom component="div" mt={3} style={{ textDecoration: 'line-through' }}>
-                Old price: {productInfo?.product_price ? productInfo.product_price : ""} BGN
+                {t("Old price:")} {productInfo?.product_price ? productInfo.product_price : ""} {t("BGN")}
               </Typography>
             </React.Fragment>
 
           }
           <Typography variant="h5" gutterBottom component="div" mt={3}>
-            Price: {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : productInfo?.product_price} BGN
+            {t("Price:")} {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : productInfo?.product_price} {t("BGN")}
           </Typography>
           {picturesLoaded && (
             <ImageList
@@ -167,7 +169,7 @@ export const ShowProduct = () => {
             style={{ justifyContent: 'center' }}
             onClick={() => setShowOrder(true)}
           >
-            Buy now
+            {t("Buy now")}
           </Button>
           {showOrder && (
             <Order
@@ -183,7 +185,7 @@ export const ShowProduct = () => {
                 startIcon={<EditIcon />}
                 onClick={() => navigate(`/products/edit/${id}`)}
               >
-                Edit
+                {t("Edit")}
               </Button>
               <Button
                 color="error"
@@ -191,7 +193,7 @@ export const ShowProduct = () => {
                 startIcon={<DeleteIcon />}
                 onClick={() => setShowConfirmationDialog(true)}
               >
-                Delete
+                {t("Delete")}
               </Button>
             </ButtonGroup>
           }

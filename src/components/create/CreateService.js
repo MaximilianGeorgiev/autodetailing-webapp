@@ -20,6 +20,7 @@ import FormControl from "@mui/material/FormControl";
 import { getAllCategories } from "../../api/category";
 import { createService } from "../../api/service";
 import { handlePictureUpload } from "../../api/picture";
+import { useTranslation } from 'react-i18next';
 
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
@@ -31,6 +32,7 @@ export const CreateService = () => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [categories, setCategories] = useState([]); // dropdown options
 
@@ -100,7 +102,7 @@ export const CreateService = () => {
       updatedState.price = {
         value: updatedState.price.value,
         error: true,
-        errorMsg: "Service field cannot be empty.",
+        errorMsg: "Service price field cannot be empty.",
       };
 
     if (!inputValues?.selectedCategory?.value) {
@@ -204,14 +206,14 @@ export const CreateService = () => {
             <AddBoxIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Create service
+            {t("Create service")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Service name"
-              label="Service name"
+              label={(t("Service name"))}
               margin="normal"
               fullWidth
               error={
@@ -219,7 +221,7 @@ export const CreateService = () => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -235,7 +237,7 @@ export const CreateService = () => {
               name="description"
               type="text"
               placeholder="Description"
-              label="Description"
+              label={t("Description")}
               fullWidth
               multiline
               rows={3}
@@ -248,7 +250,7 @@ export const CreateService = () => {
               }
               helperText={
                 inputValues["description"]?.errorMsg
-                  ? inputValues["description"].errorMsg
+                  ? t(inputValues["description"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -264,7 +266,7 @@ export const CreateService = () => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               fullWidth
               margin="normal"
               error={
@@ -272,7 +274,7 @@ export const CreateService = () => {
               }
               helperText={
                 inputValues["price"]?.errorMsg
-                  ? inputValues["price"].errorMsg
+                  ? t(inputValues["price"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -292,13 +294,13 @@ export const CreateService = () => {
               }
               helperText={
                 inputValues["selectedCategory"]?.errorMsg
-                  ? inputValues["selectedCategory"].errorMsg
+                  ? t(inputValues["selectedCategory"].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <InputLabel id="demo-simple-select-label">{t("Category")}</InputLabel>
               <Select
                 label="Category"
                 onChange={(e) => {
@@ -331,7 +333,7 @@ export const CreateService = () => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
 
@@ -342,7 +344,7 @@ export const CreateService = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processServiceCreationForm()}
             >
-              Create service
+              {t("Create service")}
             </Button>
           </Box>
         </Box>

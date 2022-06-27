@@ -36,8 +36,6 @@ import i18next from "i18next";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-i18next.changeLanguage('bg');
-
 root.render(
     <CookiesProvider>
       <BrowserRouter>

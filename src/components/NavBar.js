@@ -12,6 +12,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 import { SideBar } from "./SideBar.js";
+import { ChangeLanguage } from "./custom/ChangeLanguage";
 
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -20,6 +21,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import i18next from "i18next";
+import { getCookieByName } from "../utils/cookies.js";
 
 export const NavBar = () => {
   const [cookies] = useCookies(['']);
@@ -31,8 +33,6 @@ export const NavBar = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    i18next.changeLanguage('bg');
-
     if (location.state?.event === "loggedOut") setIsLoggedIn(false);
     else if (location.state?.event === "loggedIn") setIsLoggedIn(true);
   }, [location.state?.event]);
@@ -149,10 +149,7 @@ export const NavBar = () => {
           >
             MUI
           </Typography>
-
-
-
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1 }}><ChangeLanguage /></Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"

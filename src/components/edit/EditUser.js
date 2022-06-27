@@ -18,6 +18,7 @@ import { getUserById, updateUser } from "../../api/user";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { useParams } from "react-router";
+import { useTranslation } from 'react-i18next';
 
 export const EditUser = (props) => {
     const darkTheme = createTheme({
@@ -28,6 +29,7 @@ export const EditUser = (props) => {
 
     const navigate = useNavigate();
     const { id } = useParams(); // query param from url
+    const { t } = useTranslation();
 
     const [inputValues, setInputValues] = useState({
         email: { value: "", error: false, errorMsg: "" },
@@ -195,12 +197,12 @@ export const EditUser = (props) => {
                         <EditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Edit user
+                        {t("Edit user")}
                     </Typography>
                     <Box noValidate sx={{ mt: 1 }}>
                         <TextField
                             id="email"
-                            label="E-mail"
+                            label={t("E-mail")}
                             type="email"
                             margin="normal"
                             fullWidth
@@ -215,7 +217,7 @@ export const EditUser = (props) => {
                             }
                             helperText={
                                 inputValues["email"]?.errorMsg
-                                    ? inputValues["email"].errorMsg
+                                    ? t(inputValues["email"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -229,7 +231,7 @@ export const EditUser = (props) => {
                         />
                         <TextField
                             id="fullname"
-                            label="Full name"
+                            label={t("Full name")}
                             type="email"
                             fullWidth
                             margin="normal"
@@ -244,7 +246,7 @@ export const EditUser = (props) => {
                             }
                             helperText={
                                 inputValues["fullname"]?.errorMsg
-                                    ? inputValues["fullname"].errorMsg
+                                    ? t(inputValues["fullname"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -260,7 +262,7 @@ export const EditUser = (props) => {
                             name="phone"
                             type="text"
                             placeholder="Phone number"
-                            label="Phone number"
+                            label={t("Phone number")}
                             fullWidth
                             margin="normal"
                             value={
@@ -275,7 +277,7 @@ export const EditUser = (props) => {
                             }
                             helperText={
                                 inputValues["phone"]?.errorMsg
-                                    ? inputValues["phone"].errorMsg
+                                    ? t(inputValues["phone"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -291,7 +293,7 @@ export const EditUser = (props) => {
                             name="phone"
                             type="text"
                             placeholder="Address"
-                            label="Address"
+                            label={t("Address")}
                             fullWidth
                             margin="normal"
                             value={
@@ -306,7 +308,7 @@ export const EditUser = (props) => {
                             }
                             helperText={
                                 inputValues["address"]?.errorMsg
-                                    ? inputValues["address"].errorMsg
+                                    ? t(inputValues["address"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
@@ -325,7 +327,7 @@ export const EditUser = (props) => {
                             sx={{ mt: 3, mb: 2 }}
                             onClick={() => processUserEditForm()}
                         >
-                            Edit user
+                            {t("Edit user")}
                         </Button>
                     </Box>
                 </Box>

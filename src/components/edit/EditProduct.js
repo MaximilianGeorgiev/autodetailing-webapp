@@ -32,6 +32,7 @@ import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 import { handlePictureUpload, handlePictureDelete } from "../../api/picture";
 
 import { useParams } from "react-router";
+import { useTranslation } from 'react-i18next';
 
 export const EditProduct = (props) => {
   const darkTheme = createTheme({
@@ -41,6 +42,7 @@ export const EditProduct = (props) => {
   });
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id } = useParams(); // query param from url
 
   const [categories, setCategories] = useState([]); // dropdown options
@@ -267,14 +269,14 @@ export const EditProduct = (props) => {
             <EditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit product
+            {t("Edit product")}
           </Typography>
           <Box noValidate sx={{ mt: 1 }}>
             <TextField
               name="title"
               type="text"
               placeholder="Product name"
-              label="Product name"
+              label={t("Product name")}
               margin="normal"
               fullWidth
               value={
@@ -285,7 +287,7 @@ export const EditProduct = (props) => {
               }
               helperText={
                 inputValues["title"]?.errorMsg
-                  ? inputValues["title"].errorMsg
+                  ? t(inputValues["title"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -301,7 +303,7 @@ export const EditProduct = (props) => {
               name="description"
               type="text"
               placeholder="Description"
-              label="Description"
+              label={t("Description")}
               fullWidth
               margin="normal"
               multiline
@@ -319,7 +321,7 @@ export const EditProduct = (props) => {
               }
               helperText={
                 inputValues["description"]?.errorMsg
-                  ? inputValues["description"].errorMsg
+                  ? t(inputValues["description"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -335,7 +337,7 @@ export const EditProduct = (props) => {
               name="price"
               type="text"
               placeholder="Price"
-              label="Price"
+              label={t("Price")}
               margin="normal"
               fullWidth
               value={
@@ -346,7 +348,7 @@ export const EditProduct = (props) => {
               }
               helperText={
                 inputValues["price"]?.errorMsg
-                  ? inputValues["price"].errorMsg
+                  ? t(inputValues["price"].errorMsg)
                   : ""
               }
               onChange={(e) => {
@@ -366,13 +368,13 @@ export const EditProduct = (props) => {
               }
               helperText={
                 inputValues["category"]?.errorMsg
-                  ? inputValues["category"].errorMsg
+                  ? t(inputValues["category"].errorMsg)
                   : ""
               }
               fullWidth
               margin="normal"
             >
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <InputLabel id="demo-simple-select-label">{t("Category")}</InputLabel>
               <Select
                 label="Category"
                 value={
@@ -407,7 +409,7 @@ export const EditProduct = (props) => {
                 component="span"
                 startIcon={<PhotoCameraBackIcon />}
               >
-                Upload pictures
+                {t("Upload pictures")}
               </Button>
             </label>
             {picturesLoaded && (
@@ -440,7 +442,7 @@ export const EditProduct = (props) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={() => processProductEditForm()}
             >
-              Edit product
+              {t("Edit product")}
             </Button>
           </Box>
         </Box>

@@ -14,6 +14,7 @@ import {
 import { getPromotionByServiceId } from "../../api/promotion";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 import ImageList from "@mui/material/ImageList";
 import Image from "material-ui-image";
@@ -43,6 +44,7 @@ export const ShowService = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const darkTheme = createTheme({
     palette: {
@@ -126,16 +128,16 @@ export const ShowService = () => {
             <React.Fragment>
 
               <Typography variant="h5" gutterBottom component="div" color="green" mt={3}>
-                <SellIcon sx={{ marginRight: 1 }} />This service has an ongoing promotion until {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
+                <SellIcon sx={{ marginRight: 1 }} />{t("This service has an ongoing promotion until")} {new Date(activePromotion.promotionInfo.promotion_to).toLocaleDateString()}
               </Typography>
               <Typography color="red" variant="h5" gutterBottom component="div" mt={3} style={{ textDecoration: 'line-through' }}>
-                Old price: {serviceInfo?.service_price ? serviceInfo.service_price : ""} BGN
+                {t("Old price:")} {serviceInfo?.service_price ? serviceInfo.service_price : ""} {t("BGN")}
               </Typography>
             </React.Fragment>
 
           }
           <Typography variant="h5" gutterBottom component="div" mt={3}>
-            Price: {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : serviceInfo?.service_price} BGN
+            {t("Price:")} {activePromotion?.promotionInfo?.promotion_new_price ? activePromotion.promotionInfo.promotion_new_price : serviceInfo?.service_price} {t("BGN")}
           </Typography>
           {picturesLoaded && (
             <ImageList
@@ -157,7 +159,7 @@ export const ShowService = () => {
             style={{ justifyContent: "center" }}
             onClick={() => setShowReservation(true)}
           >
-            Book now
+            {t("Book now")}
           </Button>
           {showReservation && (
             <Reservation
@@ -172,7 +174,7 @@ export const ShowService = () => {
               startIcon={<EditIcon />}
               onClick={() => navigate(`/services/edit/${id}`)}
             >
-              Edit
+              {t("Edit")}
             </Button>
             <Button
               color="error"
@@ -180,7 +182,7 @@ export const ShowService = () => {
               startIcon={<DeleteIcon />}
               onClick={() => setShowConfirmationDialog(true)}
             >
-              Delete
+              {t("Delete")}
             </Button>
           </ButtonGroup>
           {showConfirmationDialog && (
