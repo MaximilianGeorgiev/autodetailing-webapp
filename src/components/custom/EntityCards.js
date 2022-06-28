@@ -19,6 +19,9 @@ import { getPromotionByServiceId, getPromotionByProductId } from "../../api/prom
 import { useState, useEffect } from "react";
 
 
+// props:
+// entityType: service, product, blog
+// isPreview: boolean; displays 3 entities only if it is for the home page, lists all if it is for view pages
 export const EntityCards = (props) => {
   const [entities, setEntities] = useState({});
   const [entityPictures, setEntityPictures] = useState([]);
@@ -52,10 +55,9 @@ export const EntityCards = (props) => {
     if (props.entityType === "service") {
       getAllServices().then((res) => {
         if (res.data.status === "success") {
-          // const services = res.data.payload.filter(
-          //    (val, index, arr) => index + 2 >= arr.length
-          // );
-          const services = res.data.payload;
+          const services = props.isPreview
+            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            : res.data.payload;
           entities = services;
 
           // iterate through all services and get one picture for thumbnail and active promotions
@@ -219,7 +221,6 @@ export const EntityCards = (props) => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-
       <Box sx={{ flexGrow: 1, ml: 2, mt: 10.5, mr: 3 }}>
         <Grid container spacing={2}>
           {picturesLoaded && (
@@ -239,15 +240,27 @@ export const EntityCards = (props) => {
                     <Typography variant="body2" color="text.secondary" noWrap>
                       {displayText(pic.id)}
                     </Typography>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="h5" component="div" mt={3}>
                       {activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
                         displayFullPrice(pic.id)}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
-              </Item></Grid>))}
+              </Item>
+              </Grid>))}
             </>
-          )}
+          )} {props.isPreview &&
+            <Grid item xs={2}>
+              <Item>
+                <CardActionArea onClick={() => navigate(`/${props.entityType}s/show`)}>
+                  <CardMedia component="img"
+                    height={props.entityType === "blog" ? 415 : 458}
+                    image={'http://localhost:8080/uploads/black.jpg'}
+                    alt="green iguana">
+                  </CardMedia>
+                </CardActionArea>
+              </Item>
+            </Grid>}
         </Grid>
       </Box>
     </ThemeProvider>

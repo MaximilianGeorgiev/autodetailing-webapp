@@ -22,6 +22,6 @@ improvements:
 [DONE] 4. Add translations [MEDIUM]
 5. Export business logic from components [LOW]
 6. Invalid URL page [MEDIUM]
-7. Finish main page and 'All' entity pages [HIGH]
+[DONE] 7. Finish main page and 'All' entity pages [HIGH]
 8. Contacts page [MEDIUM]
 9. My reservations and my order page [MEDIUM]

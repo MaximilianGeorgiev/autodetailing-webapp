@@ -65,9 +65,9 @@ root.render(
           <Route path="/orders/show/all" element={<OrderTable />} />
           <Route path="/users/show/all" element={<UserTable />} />
           <Route path="/test" element={<Home />} />
-          <Route path="/services" element={<EntityCards entityType="service" />} />
-          <Route path="/products" element={<EntityCards entityType="product" />} />
-          <Route path="/blogs" element={<EntityCards entityType="blog" />} />
+          <Route path="/services" element={<EntityCards entityType="service" isPreview={false} />} />
+          <Route path="/products" element={<EntityCards entityType="product" isPreview={false} />} />
+          <Route path="/blogs" element={<EntityCards entityType="blog" isPreview={false} />} />
         </Routes>
         <App />
       </BrowserRouter>

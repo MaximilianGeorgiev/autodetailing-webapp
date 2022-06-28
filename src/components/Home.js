@@ -1,34 +1,34 @@
 import { EntityCards } from "./custom/EntityCards";
 
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 export const Home = () => {
+  const { t } = useTranslation();
+
   const Item = styled(EntityCards)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
-    textAlign: "center",
+    textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
 
+
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stack
-        direction={{ xs: "column", sm: "column", md: "column" }}
-        spacing={{ xs: 1, sm: 2, md: 4 }}
-        display="flex"
-        flexDirection="grow"
-        m={8}
-        alignItems="left"
-        divider={<Divider orientation="horizontal" flexItem />}
-      >
-        <Item entityType="blog" fullWidth />
-        <Item entityType="service" fullWidth />
-        <Item entityType="product" fullWidth />
+    <Box sx={{ width: '100%' }} m={14}>
+      <Stack>
+        <Typography variant="h4" mb={-7} ml={2}>{t("Blogs")}</Typography>
+        <Item entityType="blog" isPreview={true} />
+        <Typography variant="h4" mb={-7} ml={2} mt={3}>{t("Services")}</Typography>
+        <Item entityType="service" isPreview={true} />
+        <Typography variant="h4" mb={-7} ml={2} mt={3}>{t("Articles")}</Typography>
+        <Item entityType="product" isPreview={true} />
       </Stack>
     </Box>
   );
