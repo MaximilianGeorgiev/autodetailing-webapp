@@ -28,6 +28,7 @@ import { ReservationTable } from "./components/tables/ReservationTable";
 import { OrderTable } from "./components/tables/OrderTable";
 import { UserTable } from "./components/tables/UserTable";
 import { EntityCards } from "./components/custom/EntityCards";
+import { NotFound } from './components/custom/NotFound';
 
 import { Home } from "./components/Home.js";
 
@@ -41,6 +42,7 @@ root.render(
     <CookiesProvider>
       <BrowserRouter>
         <Routes>
+        <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
