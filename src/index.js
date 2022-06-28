@@ -33,10 +33,36 @@ import { NotFound } from './components/custom/NotFound';
 import { Home } from "./components/Home.js";
 
 import { App } from "./App";
+import { refreshToken } from "./api/user";
 import './i18nextConf';
-import i18next from "i18next";
+import axios from 'axios';
+import {getCookieByName, setCookiess} from "./utils/cookies";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+
+// For GET requests
+
+
+// For POST requests
+axios.interceptors.response.use(
+   (res) => {
+      if (res.status === 403) {
+      }
+      return res;
+   },
+   async (err) => {
+    delete axios.defaults.headers.common['Authorization'];
+    console.log("Access token " + getCookieByName("accessToken"));
+    if (err.response.status === 403) {
+      const result = await refreshToken();
+
+      setCookiess("accessToken", result.data.accessToken);
+      setCookiess("refreshToken", result.data.refreshToken);
+    }
+      return Promise.reject(err);
+   }
+);
 
 root.render(
     <CookiesProvider>

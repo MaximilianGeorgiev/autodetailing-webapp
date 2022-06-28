@@ -23,7 +23,7 @@ import { Notification } from "./Notification";
 
 import { getLoggedUserRoles, addRole } from "../api/user";
 import { getRoleByName } from "../api/role";
-import { clientHasLoginCookies } from "../utils/cookies";
+import { clientHasLoginCookies, getCookieByName } from "../utils/cookies";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -89,8 +89,8 @@ export const Login = () => {
                 } else if (res.data.status === "success") {
                     // set access token as a cookie (secure), httpOnly: only server can access cookie
                     // 15 minutes access token, 20 minutes refresh token
-                    setCookie("accessToken", res.data.accessToken, { maxAge: 900, httpOnly: false });
-                    setCookie("refreshToken", res.data.refreshToken, { maxAge: 1200, httpOnly: false });
+                    setCookie("accessToken", res.data.accessToken);
+                    setCookie("refreshToken", res.data.refreshToken);
 
                     setCookie("user_fullname", res.data.user[0].user_fullname);
                     setCookie("user_username", res.data.user[0].user_username);
@@ -98,6 +98,8 @@ export const Login = () => {
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
 
+                    console.log("cookie R " + getCookieByName("refreshToken"))
+                    console.log("cookie A " + getCookieByName("accessToken"))
                     let roles = [];
 
                     getLoggedUserRoles(res.data.user[0].user_id).then((userRoles) => {

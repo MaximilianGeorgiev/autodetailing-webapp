@@ -21,7 +21,7 @@ improvements:
 3. Reset password / change password [LOW]
 [DONE] 4. Add translations [MEDIUM]
 5. Export business logic from components [LOW]
-6. Invalid URL page [MEDIUM]
+[DONE] 6. Invalid URL page [MEDIUM]
 [DONE] 7. Finish main page and 'All' entity pages [HIGH]
 8. Contacts page [MEDIUM]
 9. My reservations and my order page [MEDIUM]

@@ -200,3 +200,27 @@ export const updateUser = (id, formData) => {
           });
       });
 };
+
+export const refreshToken = () => {
+  const refreshToken = getCookieByName("refreshToken");
+  const userName = getCookieByName("user_username");
+
+  console.log("refreshToken " + refreshToken)
+
+  const payload = {token: refreshToken, username: userName}
+
+  return new Promise((resolve, reject) => {
+    axios.post(API_URL + "/refreshToken", payload, {
+        validateStatus: function (status) {
+            return status <= 422;
+        },
+        headers: {
+            Authorization: "Bearer " + getCookieByName("refreshToken")
+        },
+    })
+        .then((res) => resolve(res))
+        .catch((err) => {
+            reject(err);
+        });
+});
+};

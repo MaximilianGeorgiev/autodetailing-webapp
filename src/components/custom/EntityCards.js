@@ -221,7 +221,7 @@ export const EntityCards = (props) => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box sx={{ flexGrow: 1, ml: 2, mt: 10.5, mr: 3 }}>
+      <Box sx={{ flexGrow: 1, ml: 2, mt: 10.5 }}>
         <Grid container spacing={2}>
           {picturesLoaded && (
             <>
@@ -229,7 +229,7 @@ export const EntityCards = (props) => {
                 <CardActionArea onClick={() => navigate(`/${props.entityType}s/show/${pic.id}`)}>
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="200"
                     image={pic.path}
                     alt="green iguana"
                   />
