@@ -1,24 +1,25 @@
-import * as React from "react";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
-import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
-import { useTranslation } from 'react-i18next';
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 
+import { useTranslation } from 'react-i18next';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { getAllServices, getServicePicturePaths } from "../../api/service";
 import { getAllProducts, getProductPicturePaths } from "../../api/product";
 import { getAllBlogs, getBlogPicturePaths } from "../../api/blog";
 import { useNavigate } from "react-router-dom";
 import { getPromotionByServiceId, getPromotionByProductId } from "../../api/promotion";
+import { useState, useEffect } from "react";
 
-// props:
-// entityType: product/service
-// hasImages: boolean
+
 export const EntityCards = (props) => {
-  // fetch the latest 3 entities so they can be fitted
   const [entities, setEntities] = useState({});
   const [entityPictures, setEntityPictures] = useState([]);
   const [picturesLoaded, setPicturesLoaded] = useState(false);
@@ -27,8 +28,22 @@ export const EntityCards = (props) => {
     promotionInfo: {}
   });
 
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const Item = styled(Card)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
   useEffect(() => {
     let updatedPaths = [...entityPictures];
@@ -37,9 +52,10 @@ export const EntityCards = (props) => {
     if (props.entityType === "service") {
       getAllServices().then((res) => {
         if (res.data.status === "success") {
-          const services = res.data.payload.filter(
-            (val, index, arr) => index + 2 >= arr.length
-          );
+          // const services = res.data.payload.filter(
+          //    (val, index, arr) => index + 2 >= arr.length
+          // );
+          const services = res.data.payload;
           entities = services;
 
           // iterate through all services and get one picture for thumbnail and active promotions
@@ -156,7 +172,7 @@ export const EntityCards = (props) => {
       setEntityPictures(updatedPaths);
       setEntities(entities);
       setPicturesLoaded(true);
-    }, 450);
+    }, 800);
   }, []);
 
   const displayTitle = (id) => {
@@ -197,46 +213,43 @@ export const EntityCards = (props) => {
     if (!id) return "";
 
     if (props.entityType === "blog") return (entities.filter((e) => e.blog_id === id)[0].blog_text);
+    else if (props.entityType === "service") return (entities.filter((e) => e.service_id === id)[0].service_description);
+    else if (props.entityType === "product") return (entities.filter((e) => e.product_id === id)[0].product_description);
   };
 
   return (
-    <>
-      {picturesLoaded && (
-        <ImageList display="flex" sx={{ flex: 1, flexDirection: 'row', width: 577, height: 350 }}>
-          <ImageListItem key="Subheader" cols={2} sx={{ flex: 1 }}>
-            <Typography gutterBottom variant="h5" component="div">
-              {props.entityType === "service" ? t("Services") : props.entityType === "blog" ? t("Blogs") : t("Products")}
-            </Typography>
-          </ImageListItem>
-          {entityPictures.map((pic) => (
-            <ImageListItem key={pic.path} sx={{ flex: 1 }}>
-              <img
-                src={`${pic.path}?w=248&fit=crop&auto=format`}
-                srcSet={`${pic.path}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt={""}
-                loading="lazy"
-              />
-              <ImageListItemBar
-                title={displayTitle(pic.id)}
-                subtitle={props.entityType === "blog" ? displayText(pic.id) :
-                  activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
-                    displayFullPrice(pic.id)}
-                actionIcon={
-                  <IconButton
-                    sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                    aria-label={`info about ${pic.id}`}
-                    onClick={() => {
-                      navigate(`/${props.entityType}s/show/${pic.id}`);
-                    }}
-                  >
-                    <InfoIcon />
-                  </IconButton>
-                }
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
-      )}
-    </>
+    <ThemeProvider theme={darkTheme}>
+
+      <Box sx={{ flexGrow: 1, ml: 2, mt: 10.5, mr: 3 }}>
+        <Grid container spacing={2}>
+          {picturesLoaded && (
+            <>
+              {entityPictures.map((pic) => (<Grid item xs={2}><Item>
+                <CardActionArea onClick={() => navigate(`/${props.entityType}s/show/${pic.id}`)}>
+                  <CardMedia
+                    component="img"
+                    height="300"
+                    image={pic.path}
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {displayTitle(pic.id)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {displayText(pic.id)}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
+                        displayFullPrice(pic.id)}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Item></Grid>))}
+            </>
+          )}
+        </Grid>
+      </Box>
+    </ThemeProvider>
   );
-};
+}

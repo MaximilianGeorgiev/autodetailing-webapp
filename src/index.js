@@ -27,6 +27,7 @@ import { PromotionTable } from "./components/tables/PromotionTable";
 import { ReservationTable } from "./components/tables/ReservationTable";
 import { OrderTable } from "./components/tables/OrderTable";
 import { UserTable } from "./components/tables/UserTable";
+import { EntityCards } from "./components/custom/EntityCards";
 
 import { Home } from "./components/Home.js";
 
@@ -63,7 +64,10 @@ root.render(
           <Route path="/reservations/show/all" element={<ReservationTable />} />
           <Route path="/orders/show/all" element={<OrderTable />} />
           <Route path="/users/show/all" element={<UserTable />} />
-          <Route path="/test" element={<Home />} />    
+          <Route path="/test" element={<Home />} />
+          <Route path="/services" element={<EntityCards entityType="service" />} />
+          <Route path="/products" element={<EntityCards entityType="product" />} />
+          <Route path="/blogs" element={<EntityCards entityType="blog" />} />
         </Routes>
         <App />
       </BrowserRouter>
