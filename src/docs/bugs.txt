@@ -3,7 +3,7 @@
 [DONE] 3. Make better style for upload button
 4. Picture server and localhost URLs hard coded [LOW]
 5. Add restriction for 3 pictures per entity [LOW]
-6. Notifications after redirect keep showing up on refresh [LOW]
+[DONE] 6. Notifications after redirect keep showing up on refresh [LOW]
 7. Entity edit allows only one picture delete at a time [LOW]
 [DONE] 8. More than 3 pictures for blogs are scrollable, don't fit [HIGH]
 [DONE] 9. Deletion of entities with pictures (cascade), active promotions, orders/reservations [HIGH]
@@ -12,7 +12,7 @@
 [DONE - TEST] 11. On profile update update cookies as well not just database [HIGH]
 12. On image click to open image in full resolution [LOW]
 13. All placeholder texts to be translated [LOW]
-14. Refresh auth and refresh tokens periodically [HIGH]
+[DONE] 14. Refresh auth and refresh tokens periodically [HIGH]
 15. Login doesn't change dropdown options [HIGH]
 ---
 improvements:
