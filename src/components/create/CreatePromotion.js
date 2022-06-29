@@ -77,13 +77,13 @@ export const CreatePromotion = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/");
+    if (!hasCookies) navigate("/home");
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     console.log("promo" + JSON.stringify(userRoles))
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/");
+      navigate("/home");
       return;
     }
 
@@ -203,7 +203,7 @@ export const CreatePromotion = () => {
         inputValues.selectedEntity.value,
         categoryToggle ? "product" : "service"
       ).then((res) => {
-        navigate("/promotions/show/all", { state: { "success": "true", "message": "Promotion created successfully." } });
+        navigate(`/${categoryToggle}s`, { state: { "success": "true", "message": "Promotion created successfully." } });
       });
     }
 

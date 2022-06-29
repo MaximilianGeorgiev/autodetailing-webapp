@@ -56,7 +56,7 @@ export const EntityCards = (props) => {
       getAllServices().then((res) => {
         if (res.data.status === "success") {
           const services = props.isPreview
-            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            ? res.data.payload.filter((val, index, arr) => index + 4 >= arr.length)
             : res.data.payload;
           entities = services;
 
@@ -100,7 +100,7 @@ export const EntityCards = (props) => {
       getAllProducts().then((res) => {
         if (res.data.status === "success") {
           const products = props.isPreview
-            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            ? res.data.payload.filter((val, index, arr) => index + 4 >= arr.length)
             : res.data.payload;
           entities = products;
 
@@ -145,7 +145,7 @@ export const EntityCards = (props) => {
       getAllBlogs().then((res) => {
         if (res.data.status === "success") {
           const blogs = props.isPreview
-            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            ? res.data.payload.filter((val, index, arr) => index + 4 >= arr.length)
             : res.data.payload;
           entities = blogs;
 

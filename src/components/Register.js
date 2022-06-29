@@ -35,7 +35,7 @@ export const Register = () => {
         // logged in users shouldn't access register page
         const hasCookies = clientHasLoginCookies();
 
-        if (hasCookies) navigate("/");
+        if (hasCookies) navigate("/home");
     }, []);
 
     // state: {field1: {value: "", error: bool, errorMsg: ""}, field2: {...}}
@@ -539,7 +539,7 @@ export const Register = () => {
 
                                 if (validationPassed) {
                                     submitForm().then((status) => {
-                                        if (status) navigate("/", { state: { "success": "true", "message": "Registration successful." } });
+                                        if (status) navigate("/home", { state: { "success": "true", "message": "Registration successful." } });
                                     });
                                 }
                             }}

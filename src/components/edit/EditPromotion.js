@@ -65,13 +65,13 @@ export const EditPromotion = (props) => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/");
+    if (!hasCookies) navigate("/home");
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
 
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/");
+      navigate("/home");
       return;
     }
 

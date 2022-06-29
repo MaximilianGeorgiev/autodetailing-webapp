@@ -45,7 +45,7 @@ export const EditUser = (props) => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/");
+    if (!hasCookies) navigate("/home");
 
     // Only the logged in user can edit their own profile, or an administrator/moderator
     const userRoles = getCookieByName("user_roles");
@@ -56,7 +56,7 @@ export const EditUser = (props) => {
       !userRoles.includes("Moderator") &&
       !userRoles.includes("Admin")
     ) {
-      navigate("/");
+      navigate("/home");
       return;
     }
 
@@ -64,7 +64,7 @@ export const EditUser = (props) => {
     // a promotion can be either for a product or a service
     getUserById(id).then((res) => {
       if (res.data?.status === "failed") {
-        userId === id ? navigate('/') : navigate('/users/show/all');
+        userId === id ? navigate('/home') : navigate('/users/show/all');
         return;
       }
 
@@ -189,7 +189,7 @@ export const EditUser = (props) => {
               res.data.user[0].user_address ? res.data.user[0].user_address : ""
             );
 
-            navigate("/", {
+            navigate("/home", {
               state: { success: "true", message: "Update successful." },
             });
           } else {

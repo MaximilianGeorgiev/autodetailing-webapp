@@ -76,7 +76,7 @@ export const ShowBlog = () => {
 
   const deleteButtonOnClick = () => {
     deleteBlog(id).then((res) => {
-      navigate("/blogs/show");
+      navigate("/home");
       setShowConfirmationDialog(false);
     });
   };

@@ -70,7 +70,7 @@ export const SideBar = (props) => {
     };
 
     const sideBarOnClickUrl = (text) => {
-        let urlString = "/";
+        let urlString = "/home";
 
         if (text === "Products") urlString = "/products";
         else if (text === "Services") urlString = "/services";

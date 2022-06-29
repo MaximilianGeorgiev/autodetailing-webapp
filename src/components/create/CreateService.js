@@ -61,14 +61,14 @@ export const CreateService = () => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/");
+    if (!hasCookies) navigate("/home");
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     console.log("service" + userRoles);
 
     if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-      navigate("/");
+      navigate("/home");
       return;
     }
 
@@ -175,7 +175,7 @@ export const CreateService = () => {
         );
 
         if (uploadSuccess)
-          navigate("/services/show/all", {
+          navigate(`/services/show/${serviceId}`, {
             state: {
               success: "true",
               message: "Service created successfully.",
