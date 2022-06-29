@@ -97,9 +97,7 @@ export const Login = () => {
                     setCookie("user_id", res.data.user[0].user_id);
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
-
-                    console.log("cookie R " + getCookieByName("refreshToken"))
-                    console.log("cookie A " + getCookieByName("accessToken"))
+                    
                     let roles = [];
 
                     getLoggedUserRoles(res.data.user[0].user_id).then((userRoles) => {

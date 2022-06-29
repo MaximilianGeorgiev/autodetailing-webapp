@@ -36,68 +36,68 @@ import { App } from "./App";
 import { refreshToken } from "./api/user";
 import './i18nextConf';
 import axios from 'axios';
-import {getCookieByName, setCookiess} from "./utils/cookies";
+import { getCookieByName, setCookies } from "./utils/cookies";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const instance = axios.create(); // if we don't use a new instance the token refreshing will trigger an endless loop
 
-// For GET requests
-
-
-// For POST requests
 axios.interceptors.response.use(
-   (res) => {
-      if (res.status === 403) {
-      }
-      return res;
-   },
-   async (err) => {
-    delete axios.defaults.headers.common['Authorization'];
-    console.log("Access token " + getCookieByName("accessToken"));
+  (res) => {
+    if (res.status === 403) {
+    }
+    return res;
+  },
+  async (err) => {
     if (err.response.status === 403) {
+
       const result = await refreshToken();
 
-      setCookiess("accessToken", result.data.accessToken);
-      setCookiess("refreshToken", result.data.refreshToken);
+      setCookies("accessToken", result.data.accessToken);
+      setCookies("refreshToken", result.data.refreshToken);
+
+      // attach the new access token and retry the failed API call
+      instance.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
+      return instance.get(err.config.url);
     }
-      return Promise.reject(err);
-   }
+    return Promise.reject(err);
+  }
 );
 
 root.render(
-    <CookiesProvider>
-      <BrowserRouter>
-        <Routes>
+  <CookiesProvider>
+    <BrowserRouter>
+      <Routes>
         <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/" element={<App />} />
-          <Route path="/products/create" element={<CreateProduct />} />
-          <Route path="/services/create" element={<CreateService />} />
-          <Route path="/promotions/create" element={<CreatePromotion />} />
-          <Route path="/blogs/create" element={<CreateBlog />} />
-          <Route path="/products/edit/:id" element={<EditProduct />} />
-          <Route path="/services/edit/:id" element={<EditService />} />
-          <Route path="/users/edit/:id" element={<EditUser />} />
-          <Route path="/promotions/edit/:id" element={<EditPromotion />} />
-          <Route path="/blogs/edit/:id" element={<EditBlog />} />
-          <Route path="/products/show/:id" element={<ShowProduct />} />
-          <Route path="/services/show/:id" element={<ShowService />} />
-          <Route path="/promotions/show/:id" element={<ShowPromotion />} />
-          <Route path="/blogs/show/:id" element={<ShowBlog />} />
-          <Route path="/products/show/all" element={<ProductTable />} />
-          <Route path="/services/show/all" element={<ServiceTable />} />
-          <Route path="/promotions/show/all" element={<PromotionTable />} />
-          <Route path="/reservations/show/all" element={<ReservationTable />} />
-          <Route path="/orders/show/all" element={<OrderTable />} />
-          <Route path="/users/show/all" element={<UserTable />} />
-          <Route path="/test" element={<Home />} />
-          <Route path="/services" element={<EntityCards entityType="service" isPreview={false} />} />
-          <Route path="/products" element={<EntityCards entityType="product" isPreview={false} />} />
-          <Route path="/blogs" element={<EntityCards entityType="blog" isPreview={false} />} />
-        </Routes>
-        <App />
-      </BrowserRouter>
-    </CookiesProvider>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/" element={<App />} />
+        <Route path="/products/create" element={<CreateProduct />} />
+        <Route path="/services/create" element={<CreateService />} />
+        <Route path="/promotions/create" element={<CreatePromotion />} />
+        <Route path="/blogs/create" element={<CreateBlog />} />
+        <Route path="/products/edit/:id" element={<EditProduct />} />
+        <Route path="/services/edit/:id" element={<EditService />} />
+        <Route path="/users/edit/:id" element={<EditUser />} />
+        <Route path="/promotions/edit/:id" element={<EditPromotion />} />
+        <Route path="/blogs/edit/:id" element={<EditBlog />} />
+        <Route path="/products/show/:id" element={<ShowProduct />} />
+        <Route path="/services/show/:id" element={<ShowService />} />
+        <Route path="/promotions/show/:id" element={<ShowPromotion />} />
+        <Route path="/blogs/show/:id" element={<ShowBlog />} />
+        <Route path="/products/show/all" element={<ProductTable />} />
+        <Route path="/services/show/all" element={<ServiceTable />} />
+        <Route path="/promotions/show/all" element={<PromotionTable />} />
+        <Route path="/reservations/show/all" element={<ReservationTable />} />
+        <Route path="/orders/show/all" element={<OrderTable />} />
+        <Route path="/users/show/all" element={<UserTable />} />
+        <Route path="/test" element={<Home />} />
+        <Route path="/services" element={<EntityCards entityType="service" isPreview={false} />} />
+        <Route path="/products" element={<EntityCards entityType="product" isPreview={false} />} />
+        <Route path="/blogs" element={<EntityCards entityType="blog" isPreview={false} />} />
+      </Routes>
+      <App />
+    </BrowserRouter>
+  </CookiesProvider>
 );

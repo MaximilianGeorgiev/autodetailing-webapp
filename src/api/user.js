@@ -205,8 +205,6 @@ export const refreshToken = () => {
   const refreshToken = getCookieByName("refreshToken");
   const userName = getCookieByName("user_username");
 
-  console.log("refreshToken " + refreshToken)
-
   const payload = {token: refreshToken, username: userName}
 
   return new Promise((resolve, reject) => {

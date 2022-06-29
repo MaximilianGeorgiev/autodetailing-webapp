@@ -46,7 +46,7 @@ const clientHasLoginCookies = () => {
   return false;
 };
 
-const setCookiess = (name, value) => {
+const setCookies = (name, value) => {
   if (
     name !== "" &&
     name !== undefined &&
@@ -55,4 +55,4 @@ const setCookiess = (name, value) => {
     document.cookie = `${name}=${value}`;
 };
 
-export { getCookieByName, clientHasLoginCookies, setCookiess };
+export { getCookieByName, clientHasLoginCookies, setCookies };
