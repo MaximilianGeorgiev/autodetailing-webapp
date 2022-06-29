@@ -7,6 +7,7 @@ import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from "react-router-dom";
 
 export const Home = () => {
   const { t } = useTranslation();

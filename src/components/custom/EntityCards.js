@@ -169,7 +169,7 @@ export const EntityCards = (props) => {
       setEntityPictures(updatedPaths);
       setEntities(entities);
       setPicturesLoaded(true);
-    }, 500);
+    }, 900);
   }, []);
 
   const displayTitle = (id) => {
@@ -190,11 +190,11 @@ export const EntityCards = (props) => {
 
     if (props.entityType === "service")
       return (
-        entities.filter((e) => e.service_id === id)[0]?.service_price + " " + t("BGN")
+        parseFloat(entities.filter((e) => e.service_id === id)[0]?.service_price).toFixed(2) + " " + t("BGN")
       );
     else if (props.entityType === "product")
       return (
-        entities.filter((e) => e.product_id === id)[0]?.product_price + " " + t("BGN")
+        parseFloat(entities.filter((e) => e.product_id === id)[0]?.product_price).toFixed(2) + " " + t("BGN")
       );
 
     return "";
@@ -203,7 +203,7 @@ export const EntityCards = (props) => {
   const displayPromotionPrice = (id) => {
     if (!id) return "";
 
-    return activePromotion.promotionInfo.promotion_new_price + " " + t("BGN");
+    return parseFloat(activePromotion.promotionInfo.promotion_new_price).toFixed(2) + " " + t("BGN");
   };
 
   const displayText = (id) => {
@@ -227,14 +227,14 @@ export const EntityCards = (props) => {
                     height="200"
                     image={pic.path}
                   />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                  <CardContent height="100%">
+                    <Typography gutterBottom variant="h5" component="div" noWrap>
                       {displayTitle(pic.id)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       {displayText(pic.id)}
                     </Typography>
-                    <Typography gutterBottom variant="h5" component="div" mt={3}>
+                    <Typography gutterBottom variant="h6" component="h6" mt={3}>
                       {activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
                         displayFullPrice(pic.id)}
                     </Typography>
@@ -246,9 +246,9 @@ export const EntityCards = (props) => {
           )} {props.isPreview &&
             <Grid item xs={2}>
               <Item>
-                <CardActionArea onClick={() => navigate(`/${props.entityType}s/show`)}>
-                  <CardMedia component="img"
-                    height={props.entityType === "blog" ? 415 : 458}
+                <CardActionArea onClick={() => navigate(`/${props.entityType}s`)}>
+                <CardMedia component="img"
+                    height={props.entityType === "blog" ? 317 : 356}
                     image={'http://localhost:8080/uploads/black.jpg'}
                     alt="green iguana">
                   </CardMedia>
