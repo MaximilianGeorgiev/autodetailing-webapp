@@ -27,7 +27,7 @@ export const Home = () => {
         <Item entityType="blog" isPreview={true} />
         <Typography variant="h4" mb={-7} ml={2} mt={3}>{t("Services")}</Typography>
         <Item entityType="service" isPreview={true} />
-        <Typography variant="h4" mb={-7} ml={2} mt={3}>{t("Articles")}</Typography>
+        <Typography variant="h4" mb={-7} ml={2} mt={3}>{t("Products")}</Typography>
         <Item entityType="product" isPreview={true} />
       </Stack>
     </Box>

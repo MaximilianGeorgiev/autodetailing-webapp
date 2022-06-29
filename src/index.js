@@ -29,6 +29,7 @@ import { OrderTable } from "./components/tables/OrderTable";
 import { UserTable } from "./components/tables/UserTable";
 import { EntityCards } from "./components/custom/EntityCards";
 import { NotFound } from './components/custom/NotFound';
+import { Contacts } from "./components/Contacts";
 
 import { Home } from "./components/Home.js";
 
@@ -36,7 +37,9 @@ import { App } from "./App";
 import { refreshToken } from "./api/user";
 import './i18nextConf';
 import axios from 'axios';
-import { getCookieByName, setCookies } from "./utils/cookies";
+import { setCookies } from "./utils/cookies";
+
+import { CONTACTS_PHONE, CONTACTS_OWNER_NAME, CONTACTS_EMAIL, CONTACTS_ADDRESS, CONTACTS_DESCRIPTION } from "./utils/info";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -96,6 +99,12 @@ root.render(
         <Route path="/services" element={<EntityCards entityType="service" isPreview={false} />} />
         <Route path="/products" element={<EntityCards entityType="product" isPreview={false} />} />
         <Route path="/blogs" element={<EntityCards entityType="blog" isPreview={false} />} />
+        <Route path="/contacts" element={<Contacts
+          ownerName={CONTACTS_OWNER_NAME}
+          email={CONTACTS_EMAIL}
+          address={CONTACTS_ADDRESS}
+          phone={CONTACTS_PHONE}
+          description={CONTACTS_DESCRIPTION} />} />
       </Routes>
       <App />
     </BrowserRouter>

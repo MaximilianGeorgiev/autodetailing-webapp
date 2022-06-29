@@ -25,4 +25,4 @@ improvements:
 [DONE] 6. Invalid URL page [MEDIUM]
 [DONE] 7. Finish main page and 'All' entity pages [HIGH]
 8. Contacts page [MEDIUM]
-9. My reservations and my order page [MEDIUM]
+[DONE] 9. My reservations and my order page [MEDIUM]
