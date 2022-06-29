@@ -66,7 +66,7 @@ export const EntityCards = (props) => {
               if (res.data?.status === "success") {
                 updatedPaths.push({
                   id: services[i].service_id,
-                  path: res.data.payload[0].picture_path,
+                  path: res.data.payload[0]?.picture_path,
                 }); // take one picture for thumbnail
               }
             });
@@ -93,18 +93,15 @@ export const EntityCards = (props) => {
                 }
               }
             });
-
           }
-
-
         }
       });
     } else if (props.entityType === "product") {
       getAllProducts().then((res) => {
         if (res.data.status === "success") {
-          const products = res.data.payload.filter(
-            (val, index, arr) => index + 2 >= arr.length
-          );
+          const products = props.isPreview
+            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            : res.data.payload;
           entities = products;
 
           // get all pictures that correspond to the selected products
@@ -141,17 +138,15 @@ export const EntityCards = (props) => {
               }
             });
           }
-
-
         }
       });
     }
     else if (props.entityType === "blog") {
       getAllBlogs().then((res) => {
         if (res.data.status === "success") {
-          const blogs = res.data.payload.filter(
-            (val, index, arr) => index + 2 >= arr.length
-          );
+          const blogs = props.isPreview
+            ? res.data.payload.filter((val, index, arr) => index + 5 >= arr.length)
+            : res.data.payload;
           entities = blogs;
 
           // get all pictures that correspond to the selected blogs
@@ -160,7 +155,7 @@ export const EntityCards = (props) => {
               if (res.data?.status === "success") {
                 updatedPaths.push({
                   id: blogs[i].blog_id,
-                  path: res.data.payload[0].picture_path,
+                  path: res.data.payload[0]?.picture_path,
                 }); // take one picture for thumbnail
               }
             });
@@ -174,18 +169,18 @@ export const EntityCards = (props) => {
       setEntityPictures(updatedPaths);
       setEntities(entities);
       setPicturesLoaded(true);
-    }, 800);
+    }, 500);
   }, []);
 
   const displayTitle = (id) => {
     if (!id) return "";
 
     if (props.entityType === "service")
-      return entities.filter((e) => e.service_id === id)[0].service_title;
+      return entities.filter((e) => e.service_id === id)[0]?.service_title;
     else if (props.entityType === "product")
-      return entities.filter((e) => e.product_id === id)[0].product_title;
+      return entities.filter((e) => e.product_id === id)[0]?.product_title;
     else if (props.entityType === "blog")
-      return entities.filter((e) => e.blog_id === id)[0].blog_title;
+      return entities.filter((e) => e.blog_id === id)[0]?.blog_title;
 
     return "";
   };
@@ -195,11 +190,11 @@ export const EntityCards = (props) => {
 
     if (props.entityType === "service")
       return (
-        entities.filter((e) => e.service_id === id)[0].service_price + " " + t("BGN")
+        entities.filter((e) => e.service_id === id)[0]?.service_price + " " + t("BGN")
       );
     else if (props.entityType === "product")
       return (
-        entities.filter((e) => e.product_id === id)[0].product_price + " " + t("BGN")
+        entities.filter((e) => e.product_id === id)[0]?.product_price + " " + t("BGN")
       );
 
     return "";
@@ -214,9 +209,9 @@ export const EntityCards = (props) => {
   const displayText = (id) => {
     if (!id) return "";
 
-    if (props.entityType === "blog") return (entities.filter((e) => e.blog_id === id)[0].blog_text);
-    else if (props.entityType === "service") return (entities.filter((e) => e.service_id === id)[0].service_description);
-    else if (props.entityType === "product") return (entities.filter((e) => e.product_id === id)[0].product_description);
+    if (props.entityType === "blog") return (entities.filter((e) => e.blog_id === id)[0]?.blog_text);
+    else if (props.entityType === "service") return (entities.filter((e) => e.service_id === id)[0]?.service_description);
+    else if (props.entityType === "product") return (entities.filter((e) => e.product_id === id)[0]?.product_description);
   };
 
   return (
@@ -231,7 +226,6 @@ export const EntityCards = (props) => {
                     component="img"
                     height="200"
                     image={pic.path}
-                    alt="green iguana"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">

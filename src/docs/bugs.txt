@@ -13,7 +13,8 @@
 12. On image click to open image in full resolution [LOW]
 13. All placeholder texts to be translated [LOW]
 [DONE] 14. Refresh auth and refresh tokens periodically [HIGH]
-15. Login doesn't change dropdown options [HIGH]
+[DONE] 15. Login doesn't change dropdown options [HIGH]
+16. Side bar navigation slow [LOW]
 ---
 improvements:
 [DONE] 1. Display that a service/product has an ongoing promotion. Display old price and new price.[HIGH]

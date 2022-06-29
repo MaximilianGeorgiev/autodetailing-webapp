@@ -23,6 +23,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -56,6 +57,9 @@ export const SideBar = (props) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const options = ['Home', 'Products', 'Services', 'Articles', 'Contacts'];
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -63,6 +67,17 @@ export const SideBar = (props) => {
 
     const handleDrawerClose = () => {
         setOpen(false);
+    };
+
+    const sideBarOnClickUrl = (text) => {
+        let urlString = "/";
+
+        if (text === "Products") urlString = "/products";
+        else if (text === "Services") urlString = "/services";
+        else if (text === "Articles") urlString = "/blogs";
+        else if (text === "Contacts") urlString = "/contacts";
+
+        return urlString;
     };
 
     return (
@@ -105,13 +120,19 @@ export const SideBar = (props) => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Home', 'Products', 'Services', 'Promotions', 'Articles', 'Contacts'].map((text, index) => (
-                        <ListItem button key={text}>
+                    {options.map((text, index) => (
+                        <ListItem button key={text} onClick={() => {
+                            navigate(sideBarOnClickUrl(text), {replace: true});
+                            /* 3 of the items use the same component and when we navigate 
+                              to their URL it doesn't trigger a rerender even though all props are different.
+                              That's why for now a manual refresh of the page was added.
+                            */
+                            navigate(0);
+                        }}>
                             <ListItemIcon>
                                 {text === "Home" ? <HomeIcon /> :
                                     text === "Products" ? <ProductionQuantityLimitsIcon /> :
                                         text === "Services" ? <LocalCarWashIcon /> :
-                                            text === "Promotions" ? <PercentIcon /> :
                                                 text === "Articles" ? <NewspaperIcon /> :
                                                     <ContactPageIcon />
                                 }
