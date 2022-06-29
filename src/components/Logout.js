@@ -17,6 +17,6 @@ export const Logout = (props) => {
     if (cookies["accessToken"]) removeCookie("accessToken");
     if (cookies["refreshToken"]) removeCookie("refreshToken");
 
-    navigate("/", { state: { event: "loggedOut" } });
+    navigate("/");
   }, []);
 };

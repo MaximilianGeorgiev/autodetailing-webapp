@@ -35,7 +35,7 @@ export const Register = () => {
         // logged in users shouldn't access register page
         const hasCookies = clientHasLoginCookies();
 
-        if (hasCookies) navigate("/", {state: {"event": "loggedIn"}});
+        if (hasCookies) navigate("/");
     }, []);
 
     // state: {field1: {value: "", error: bool, errorMsg: ""}, field2: {...}}

@@ -21,7 +21,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import i18next from "i18next";
-import { getCookieByName } from "../utils/cookies.js";
+import { clientHasLoginCookies, getCookieByName } from "../utils/cookies.js";
 
 export const NavBar = () => {
   const [cookies] = useCookies(['']);
@@ -32,10 +32,11 @@ export const NavBar = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
+  // user_id cookie is assigned during login and removed during logout; menu options are different for logged in users
   useEffect(() => {
-    if (location.state?.event === "loggedOut") setIsLoggedIn(false);
-    else if (location.state?.event === "loggedIn") setIsLoggedIn(true);
-  }, [location.state?.event]);
+    if (getCookieByName("user_id") !== "undefined") setIsLoggedIn(true);
+    else setIsLoggedIn(false);
+  }, [getCookieByName("user_id")]);
 
   const [visibleElement, setVisibleEvent] = useState(null);
   const [visibleElementMobile, setVisibleElementMobile] = useState(null);

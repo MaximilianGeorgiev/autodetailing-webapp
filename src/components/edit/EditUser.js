@@ -45,7 +45,7 @@ export const EditUser = (props) => {
   useEffect(() => {
     // don't allow non logged in users to access this page
     const hasCookies = clientHasLoginCookies();
-    if (!hasCookies) navigate("/", { state: { event: "loggedOut" } });
+    if (!hasCookies) navigate("/");
 
     // Only the logged in user can edit their own profile, or an administrator/moderator
     const userRoles = getCookieByName("user_roles");
@@ -56,7 +56,7 @@ export const EditUser = (props) => {
       !userRoles.includes("Moderator") &&
       !userRoles.includes("Admin")
     ) {
-      navigate("/", { state: { event: "loggedIn" } });
+      navigate("/");
       return;
     }
 
