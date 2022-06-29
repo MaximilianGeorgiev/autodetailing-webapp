@@ -89,8 +89,8 @@ root.render(
         <Route path="/products/show/all" element={<ProductTable />} />
         <Route path="/services/show/all" element={<ServiceTable />} />
         <Route path="/promotions/show/all" element={<PromotionTable />} />
-        <Route path="/reservations/show/all" element={<ReservationTable />} />
-        <Route path="/orders/show/all" element={<OrderTable />} />
+        <Route path="/reservations" element={<ReservationTable />} />
+        <Route path="/orders" element={<OrderTable />} />
         <Route path="/users/show/all" element={<UserTable />} />
         <Route path="/home" element={<Home />} />
         <Route path="/services" element={<EntityCards entityType="service" isPreview={false} />} />

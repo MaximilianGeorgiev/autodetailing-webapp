@@ -10,8 +10,8 @@
     "A database error has occured." : "Възникна грешка свързана с базата данни",
     "Login successful." : "Входът е успешен.",
     "Profile" : "Профил",
-    "My orders": "Моите поръчки",
-    "My reservations": "Моите резервации",
+    "Orders": "Поръчки",
+    "Reservations": "Резервации",
     "Logout": "Изход",
     "Register": "Регистрация",
     "Home" : "Начало",
@@ -129,5 +129,10 @@
     "User with provided credentials already exists." : "Потребител с въведените данни вече съществува.",
     "Email address" : "Имейл адрес",
     "Repeat password" : "Потвърдете паролата",
-    "Already have an account? Sign in" : "Вече имате профил? Вход"
+    "Already have an account? Sign in" : "Вече имате профил? Вход",
+    "Is paid" : "Платено?",
+    "Not paid" : "Не е платено",
+    "Is delivery" : "Доставка?",
+    "Yes" : "Да",
+    "No" : "Не"
     }

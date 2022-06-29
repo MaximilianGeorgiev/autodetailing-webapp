@@ -25,6 +25,7 @@ export const ReservationTable = () => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [customerInfo, setCustomerInfo] = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
+    const [userIsAdmin, setUserIsAdmin] = useState(false);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -38,28 +39,34 @@ export const ReservationTable = () => {
     useEffect(() => {
         // don't allow non logged in users to access this page
         const hasCookies = clientHasLoginCookies();
+        let userIsAdmin = false;
         if (!hasCookies) navigate("/home");
 
-        // don't permit non moderator and non admin users to access this page (redirect)
         const userRoles = getCookieByName("user_roles");
-        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-            navigate("/home");
-            return;
-        }
+
+        if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+            userIsAdmin = true // if user is admin show all reservations, if not only user's and omit a few columns
 
         getAllReservations().then((res) => {
             if (res.data.status === "success") {
                 let customerInfo = [];
+                let reservations = [];
 
-                res.data.payload.forEach((reservation) => {
-                    getUserById(reservation.user_id).then((userRes) => {
-                        customerInfo.push(userRes.data.payload[0]);
+                if (userIsAdmin) {
+                    res.data.payload.forEach((reservation) => {
+                        getUserById(reservation.user_id).then((userRes) => {
+                            customerInfo.push(userRes.data.payload[0]);
+                        });
                     });
-                });
+
+                    reservations = res.data.payload;
+                } else
+                    reservations = res.data.payload.filter((reservation) => reservation.user_id === parseInt(getCookieByName("user_id")));
 
                 setTimeout(() => {
                     setCustomerInfo(customerInfo);
-                    setReservations(res.data.payload);
+                    setReservations(reservations);
+                    setUserIsAdmin(userIsAdmin);
                 }, 500);
             }
         });
@@ -81,8 +88,9 @@ export const ReservationTable = () => {
                             <TableCell>{t("Reservation №")}</TableCell>
                             <TableCell align="right">{t("Reservation date")}</TableCell>
                             <TableCell align="right">{t("Reservation price")}</TableCell>
-                            <TableCell align="right">{t("Customer name")}</TableCell>
-                            <TableCell align="right">{t("Customer phone")}</TableCell>
+                            {userIsAdmin && <TableCell align="right">{t("Customer name")}</TableCell>}
+                            {userIsAdmin && <TableCell align="right">{t("Customer phone")}</TableCell>}
+                            {!userIsAdmin && <TableCell align="right">{t("Is paid")}</TableCell>}
                             <TableCell align="center">{t("Actions")}</TableCell>
                         </TableRow>
                     </TableHead>
@@ -104,21 +112,27 @@ export const ReservationTable = () => {
                                 >
                                     {reservation.reservation_totalprice + " BGN"}
                                 </TableCell>
-                                <TableCell
+                                {userIsAdmin && <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
                                     {customerInfo.filter((c) => c.user_id === reservation.user_id)[0].user_fullname}
                                 </TableCell>
-                                <TableCell
+                                } {!userIsAdmin && <TableCell
+                                    align="right"
+                                    sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                                >
+                                    {t("Not paid")}
+                                </TableCell>
+                                }{userIsAdmin && <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
                                     {customerInfo.filter((c) => c.user_id === reservation.user_id)[0].user_phone}
-                                </TableCell>
+                                </TableCell>}
                                 <TableCell align="right">
                                     {" "}
-                                    <ButtonGroup sx={{ width: "100%" }}>
+                                    <ButtonGroup sx={{ width: userIsAdmin ? "100%" : "50%"}}>
                                         <Button
                                             sx={{}}
                                             variant="outlined"

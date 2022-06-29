@@ -25,6 +25,7 @@ export const OrderTable = () => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [customerInfo, setCustomerInfo] = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
+    const [userIsAdmin, setUserIsAdmin] = useState(false);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -39,27 +40,36 @@ export const OrderTable = () => {
         // don't allow non logged in users to access this page
         const hasCookies = clientHasLoginCookies();
         if (!hasCookies) navigate("/home");
+        let userIsAdmin = false;
 
         // don't permit non moderator and non admin users to access this page (redirect)
         const userRoles = getCookieByName("user_roles");
-        if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
-            navigate("/home");
-            return;
-        }
+
+
+        if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+            userIsAdmin = true // if user is admin show all orders, if not only user's and omit a few columns
 
         getAllOrders().then((res) => {
             if (res.data.status === "success") {
                 let customerInfo = [];
+                let orders = [];
 
-                res.data.payload.forEach((order) => {
-                    getUserById(order.customer_id).then((userRes) => {
-                        customerInfo.push(userRes.data.payload[0]);
+                if (userIsAdmin) {
+                    res.data.payload.forEach((order) => {
+                        getUserById(order.customer_id).then((userRes) => {
+                            customerInfo.push(userRes.data.payload[0]);
+                        });
                     });
-                });
+
+                    orders = res.data.payload;
+                } else
+                    orders = res.data.payload.filter((order) => order.customer_id === parseInt(getCookieByName("user_id")));
+
 
                 setTimeout(() => {
                     setCustomerInfo(customerInfo);
-                    setOrders(res.data.payload);
+                    setOrders(orders);
+                    setUserIsAdmin(userIsAdmin);
                 }, 500);
             }
         });
@@ -81,8 +91,9 @@ export const OrderTable = () => {
                             <TableCell>Order №</TableCell>
                             <TableCell align="right">{t("Total price")}</TableCell>
                             <TableCell align="right">{t("Delivery address")}</TableCell>
-                            <TableCell align="right">{t("Customer name")}</TableCell>
-                            <TableCell align="right">{t("Customer phone")}</TableCell>
+                            {userIsAdmin && <TableCell align="right">{t("Customer name")}</TableCell>}
+                            {userIsAdmin && <TableCell align="right">{t("Customer phone")}</TableCell>}
+                            {!userIsAdmin && <TableCell align="right">{t("Is delivery")}</TableCell>}
                             <TableCell align="center">{t("Actions")}</TableCell>
                         </TableRow>
                     </TableHead>
@@ -104,21 +115,28 @@ export const OrderTable = () => {
                                 >
                                     {order.order_address}
                                 </TableCell>
-                                <TableCell
+                                {userIsAdmin && <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
                                     {customerInfo.filter((c) => c.user_id === order.customer_id)[0].user_fullname}
-                                </TableCell>
-                                <TableCell
+                                </TableCell>}
+                                {userIsAdmin && <TableCell
                                     align="right"
                                     sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                 >
                                     {customerInfo.filter((c) => c.user_id === order.customer_id)[0].user_phone}
-                                </TableCell>
+                                </TableCell>}
+                                {!userIsAdmin && <TableCell
+                                    align="right"
+                                    sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                                >
+                                    {t("Не")}
+                                </TableCell>}
+
                                 <TableCell align="right">
                                     {" "}
-                                    <ButtonGroup sx={{ width: "100%" }}>
+                                    <ButtonGroup sx={{ width: userIsAdmin ? "100%" : "50%"}}>
                                         <Button
                                             sx={{}}
                                             variant="outlined"

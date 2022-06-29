@@ -85,8 +85,8 @@ export const NavBar = () => {
       {isLoggedIn === true ? (
         <>
           <MenuItem component={Link} to={'/login'}>{t("Profile")}</MenuItem>
-          <MenuItem component={Link} to={'/orders'}>{t("My orders")}</MenuItem>
-          <MenuItem component={Link} to={'/reservations'}>{t("My reservations")}</MenuItem>
+          <MenuItem component={Link} to={'/orders'}>{t("Orders")}</MenuItem>
+          <MenuItem component={Link} to={'/reservations'}>{t("Reservations")}</MenuItem>
           <MenuItem component={Link} to={'/logout'}>{t("Logout")}</MenuItem></>)
         : (
           <>
