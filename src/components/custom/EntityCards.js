@@ -249,7 +249,7 @@ export const EntityCards = (props) => {
                 <CardActionArea onClick={() => navigate(`/${props.entityType}s`)}>
                 <CardMedia component="img"
                     height={props.entityType === "blog" ? 317 : 356}
-                    image={'http://localhost:8080/uploads/black.jpg'}
+                    image={'http://192.168.1.9:8080/uploads/black.jpg'}
                     alt="green iguana">
                   </CardMedia>
                 </CardActionArea>

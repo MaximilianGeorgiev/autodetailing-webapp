@@ -86,6 +86,19 @@ export const getAllReservations = () => {
   });
 };
 
+export const getReservationById = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/reservation/id/${id}`)
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const deleteReservation = (id) => {
   if (!id || id < 0 || isNaN(id)) return;
 
@@ -115,6 +128,34 @@ export const addServiceToReservation = (reservationId, serviceId) => {
   return new Promise((resolve, reject) => {
     axios
       .post(API_URL + "/reservation/service/add", payload, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const updateReservation = (reservationId, newDate) => {
+  if (!reservationId || reservationId < 0) return;
+  if (!newDate || newDate === null) return;
+
+  const payload = {
+    updateData: {
+      reservation_id: reservationId,
+      reservation_datetime: newDate
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    axios
+      .put(API_URL + `/reservation/${reservationId}`, payload, {
         headers: {
           Authorization: "Bearer " + getCookieByName("accessToken"),
         },
