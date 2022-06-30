@@ -3,6 +3,19 @@ import { getCookieByName } from "../utils/cookies";
 
 const API_URL = "http://localhost:3030";
 
+export const getOrderById = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(API_URL + `/order/id/${id}`)
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const createOrder = (
   userId,
   isDelivery,
@@ -51,6 +64,34 @@ export const getAllOrders = () => {
       })
   });
 };
+
+export const updateOrder = (orderId, newAddress) => {
+  if (!orderId || orderId < 0) return;
+  if (!newAddress || newAddress === "") return;
+
+  const payload = {
+    updateData: {
+      order_id: orderId,
+      order_address: newAddress
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    axios
+      .put(API_URL + `/order/${orderId}`, payload, {
+        headers: {
+          Authorization: "Bearer " + getCookieByName("accessToken"),
+        },
+        validateStatus: function (status) {
+          return status <= 422;
+        },
+      })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 
 export const deleteOrder = (id) => {
   if (!id || id < 0 || isNaN(id)) return;

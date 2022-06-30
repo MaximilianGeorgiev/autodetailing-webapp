@@ -14,15 +14,15 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 
 import {
-    updateReservation,
-    getReservationById,
-} from "../../api/reservation";
+    updateOrder,
+    getOrderById,
+} from "../../api/order";
 import { getCookieByName, clientHasLoginCookies } from "../../utils/cookies";
 
 import { useParams } from "react-router";
 import { useTranslation } from 'react-i18next';
 
-export const EditReservation = (props) => {
+export const EditOrder = (props) => {
     const darkTheme = createTheme({
         palette: {
             mode: "dark",
@@ -36,7 +36,7 @@ export const EditReservation = (props) => {
     let userIsAdmin = false;
 
     const [inputValues, setInputValues] = useState({
-        date: { value: "", error: false, errorMsg: "" },
+        address: { value: "", error: false, errorMsg: "" },
     });
 
     useEffect(() => {
@@ -51,44 +51,57 @@ export const EditReservation = (props) => {
             userIsAdmin = true;
 
         // prepopulate edit form
-        getReservationById(id).then((res) => {
+        getOrderById(id).then((res) => {
             if (res.data?.status === "failed") {
-                navigate('/reservations');
+                navigate('/orders');
                 return;
             }
 
-            const reservation = res.data?.payload[0];
+            const order = res.data?.payload[0];
 
-            // end users can only edit their own;
-            if (reservation.user_id !== parseInt(getCookieByName("user_id")) && !userIsAdmin) {
+            // end users can only edit their own
+            if (order.customer_id !== parseInt(getCookieByName("user_id")) && !userIsAdmin) {
                 navigate("/home");
                 return;
             }
 
             let updatedState = { ...inputValues };
 
-            updatedState.date = {
-                value: reservation.reservation_datetime,
-                error: inputValues.date.error,
-                errorMsg: inputValues.date.errorMsg,
+            updatedState.address = {
+                value: order.order_address,
+                error: inputValues.address.error,
+                errorMsg: inputValues.address.errorMsg,
             };
 
             setInputValues(updatedState);
         });
     }, []);
 
-    const processReservationEditForm = () => {
-        if (inputValues?.date?.value) {
-            updateReservation(
+    const processOrderEditForm = () => {
+        if (!inputValues?.address.value) {
+            let updatedState = { ...inputValues };
+
+            updatedState.address = {
+                value: updatedState.address.value,
+                error: true,
+                errorMsg: "Address cannot be empty.",
+            };
+
+            setInputValues(updatedState);
+            return;
+        }
+
+        if (inputValues?.address?.value) {
+            updateOrder(
                 id,
-                inputValues.date.value
+                inputValues.address.value
             ).then((res) => {
                 if (res.data?.status === "success")
-                    navigate('/reservations', {
+                    navigate('/orders', {
                         state: { success: "true", message: "Update successful." },
                     });
                 else
-                    navigate('/reservations', {
+                    navigate('/orders', {
                         state: { success: "false", message: "Update failed." },
                     });
             });
@@ -111,34 +124,33 @@ export const EditReservation = (props) => {
                         <EditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        {t("Edit reservation")}
+                        {t("Edit order")}
                     </Typography>
                     <Box noValidate sx={{ mt: 1 }}>
                         <TextField
-                            name="Date"
-                            type="date"
-                            placeholder="Date"
-                            label={t("Date")}
+                            name="Address"
+                            type="text"
+                            label={t("Address")}
                             margin="normal"
                             fullWidth
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             value={
-                                inputValues["date"]?.value ? inputValues["date"].value : ""
+                                inputValues["address"]?.value ? inputValues["address"].value : ""
                             }
                             error={
-                                inputValues["date"]?.error ? inputValues["date"].error : false
+                                inputValues["address"]?.error ? inputValues["address"].error : false
                             }
                             helperText={
-                                inputValues["date"]?.errorMsg
-                                    ? t(inputValues["date"].errorMsg)
+                                inputValues["address"]?.errorMsg
+                                    ? t(inputValues["address"].errorMsg)
                                     : ""
                             }
                             onChange={(e) => {
                                 setInputValues((prevInputValues) => ({
                                     ...prevInputValues,
-                                    date: {
+                                    address: {
                                         value: e.target.value,
                                     },
                                 }));
@@ -149,9 +161,9 @@ export const EditReservation = (props) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            onClick={() => processReservationEditForm()}
+                            onClick={() => processOrderEditForm()}
                         >
-                            {t("Edit reservation")}
+                            {t("Edit order")}
                         </Button>
                     </Box>
                 </Box>
