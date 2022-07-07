@@ -82,7 +82,7 @@ export const CreatePromotion = () => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     console.log("promo" + JSON.stringify(userRoles))
-    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+    if (!userRoles.includes("Admin")) {
       navigate("/home");
       return;
     }

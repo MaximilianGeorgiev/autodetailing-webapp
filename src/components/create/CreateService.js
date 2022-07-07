@@ -67,7 +67,7 @@ export const CreateService = () => {
     const userRoles = getCookieByName("user_roles");
     console.log("service" + userRoles);
 
-    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+    if (!userRoles.includes("Admin")) {
       navigate("/home");
       return;
     }

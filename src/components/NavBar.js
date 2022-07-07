@@ -27,6 +27,7 @@ export const NavBar = () => {
   const [cookies] = useCookies(['']);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isModerator, setIsModerator] = useState(false);
 
   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
  Via the useLocation react-router hook information sent from the previous page can be accessed */
@@ -44,6 +45,8 @@ export const NavBar = () => {
       
       if (userRoles.includes("Admin")) {
         setIsAdmin(true);
+      } else if (userRoles.includes("Moderator")){
+        setIsModerator(true);
       }
     }, 200);
 
@@ -108,6 +111,12 @@ export const NavBar = () => {
             <MenuItem component={Link} to={'/services/create'}>{t("Create service")}</MenuItem>
             <MenuItem component={Link} to={'/blogs/create'}>{t("Create article")}</MenuItem>
             <MenuItem component={Link} to={'/promotions/create'}>{t("Create promotion")}</MenuItem>
+            </>
+          }
+          {
+            isModerator === true &&
+            <>
+            <MenuItem component={Link} to={'/blogs/create'}>{t("Create article")}</MenuItem>
             </>
           }
           <MenuItem component={Link} to={'/logout'}>{t("Logout")}</MenuItem></>)

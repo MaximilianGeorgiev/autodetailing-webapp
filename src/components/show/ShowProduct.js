@@ -60,7 +60,7 @@ export const ShowProduct = () => {
       // non admin and moderator users shouldn't see edit and delete buttons
       const userRoles = getCookieByName("user_roles");
 
-      if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+      if (userRoles.includes("Admin"))
         setHasPermission(true);
     }, 200);
 

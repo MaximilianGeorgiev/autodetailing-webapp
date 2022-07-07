@@ -47,7 +47,7 @@ export const EditOrder = (props) => {
         const userRoles = getCookieByName("user_roles");
 
         // admins can edit all reservations
-        if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+        if (userRoles.includes("Admin"))
             userIsAdmin = true;
 
         // prepopulate edit form

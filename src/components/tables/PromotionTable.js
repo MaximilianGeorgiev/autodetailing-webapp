@@ -44,7 +44,7 @@ export const PromotionTable = () => {
 
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
-    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+    if (!userRoles.includes("Admin")) {
       navigate("/home");
       return;
     }
@@ -108,7 +108,7 @@ export const PromotionTable = () => {
                   component="th"
                   scope="row"
                   onClick={() =>
-                    navigate(`/promotions/show/${promotion.promotion_id}`)
+                    navigate(`/promotions/edit/${promotion.promotion_id}`)
                   }
                 >
                   {entityTitles.map((entity) => {

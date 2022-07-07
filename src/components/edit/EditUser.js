@@ -53,7 +53,6 @@ export const EditUser = (props) => {
 
     if (
       userId !== id &&
-      !userRoles.includes("Moderator") &&
       !userRoles.includes("Admin")
     ) {
       navigate("/home");

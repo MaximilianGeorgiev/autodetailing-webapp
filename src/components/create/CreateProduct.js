@@ -67,7 +67,7 @@ export const CreateProduct = () => {
     // don't permit non moderator and non admin users to access this page (redirect)
     const userRoles = getCookieByName("user_roles");
     
-    if (!userRoles.includes("Moderator") && !userRoles.includes("Admin")) {
+    if (!userRoles.includes("Admin")) {
       navigate("/home");
       return;
     }

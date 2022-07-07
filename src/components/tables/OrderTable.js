@@ -46,7 +46,7 @@ export const OrderTable = () => {
         const userRoles = getCookieByName("user_roles");
 
 
-        if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+        if (userRoles.includes("Admin"))
             userIsAdmin = true // if user is admin show all orders, if not only user's and omit a few columns
 
         getAllOrders().then((res) => {
