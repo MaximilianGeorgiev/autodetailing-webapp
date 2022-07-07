@@ -3,6 +3,24 @@ import { getCookieByName } from "../utils/cookies";
 
 const API_URL = "http://localhost:3030";
 
+const deletePicturesForBlog = (id) => {
+    if (id < 0 || isNaN(id)) return;
+
+    const payload = {blog_id: id};
+
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `/blog/picture/remove/all`, payload, {
+            headers: {
+                Authorization: "Bearer " + getCookieByName("accessToken"),
+            },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => {
+                reject(err);
+            })
+    });
+};
+
 export const createBlog = (title, text, author = null) => {
     if (!title || title === "") return;
     if (!text || text === "") return;
@@ -86,8 +104,10 @@ export const getBlogPicturePaths = (id) => {
     });
 };
 
-export const deleteBlog = (id) => {
+export const deleteBlog = async (id) => {
     if (!id || id < 0 || isNaN(id)) return;
+
+    await deletePicturesForBlog(id);
 
     return new Promise((resolve, reject) => {
         axios
