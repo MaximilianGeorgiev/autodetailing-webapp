@@ -95,7 +95,7 @@ export const NavBar = () => {
     >
       {isLoggedIn === true ? (
         <>
-          <MenuItem component={Link} to={'/login'}>{t("Profile")}</MenuItem>
+          <MenuItem component={Link} to={`/users/edit/${getCookieByName("user_id")}`}>{t("Profile")}</MenuItem>
           <MenuItem component={Link} to={'/orders'}>{t("Orders")}</MenuItem>
           <MenuItem component={Link} to={'/reservations'}>{t("Reservations")}</MenuItem>{
             isAdmin === true && 
