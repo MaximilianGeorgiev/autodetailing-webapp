@@ -251,12 +251,22 @@ export const Reservation = (props) => {
                       }
 
                       if (serviceRes.data?.status === "success") {
-                        navigate("/reservations", {
-                          state: {
-                            success: "true",
-                            message: "Reservation created successfully.",
-                          },
-                        });
+                        if (getCookieByName("user_id" !== "undefined" &&
+                            getCookieByName("user_id" !== ""))) {
+                            navigate("/reservations", {
+                              state: {
+                                success: "true",
+                                message: "Reservation created successfully.",
+                              },
+                            });
+                          } else {
+                            navigate("/home", {
+                              state: {
+                                success: "true",
+                                message: "Reservation created successfully.",
+                              },
+                            });
+                          }
                       }
                     }
                   });

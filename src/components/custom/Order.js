@@ -284,12 +284,22 @@ export const Order = (props) => {
 
                         updateUser(getCookieByName("user_id"), payload);
                         if (productRes.data?.status === "success") {
-                          navigate("/orders", {
-                            state: {
-                              success: "true",
-                              message: "Order created successfully.",
-                            },
-                          });
+                          if (getCookieByName("user_id" !== "undefined" &&
+                            getCookieByName("user_id" !== ""))) {
+                            navigate("/orders", {
+                              state: {
+                                success: "true",
+                                message: "Order created successfully.",
+                              },
+                            });
+                          } else {
+                            navigate("/home", {
+                              state: {
+                                success: "true",
+                                message: "Order created successfully.",
+                              },
+                            });
+                          }
                         }
                       }
                     }

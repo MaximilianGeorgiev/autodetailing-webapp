@@ -66,7 +66,7 @@ export const PromotionTable = () => {
         else if (promo.service_id)
           getServiceById(promo.service_id).then((serviceRes) =>
             titles.push({
-              id: promo.product_id,
+              id: promo.service_id,
               title: serviceRes.data.payload[0].service_title,
             })
           );
