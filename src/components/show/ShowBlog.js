@@ -76,7 +76,7 @@ export const ShowBlog = () => {
 
   const deleteButtonOnClick = () => {
     deleteBlog(id).then((res) => {
-      navigate("/home");
+      navigate("/blogs");
       setShowConfirmationDialog(false);
     });
   };
@@ -102,7 +102,7 @@ export const ShowBlog = () => {
           </Typography>
           {picturesLoaded && (
             picturePaths.map((path) => (
-              <Image src={`${path}?w=164&h=164&fit=crop&auto=format`} />
+              <Image src={`${path}?w=164&h=124&fit=crop&auto=format`} />
             ))
           )}
           {hasPermission &&

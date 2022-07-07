@@ -54,7 +54,7 @@
     "There is no category selected." : "Не е избрана категория.",
     "Price is not valid." : "Посочената цена е невалидна.",
     "Product created successfully." : "Продуктът е създаден успешно",
-    "Create product" : "Създайте продукт",
+    "Create product" : "Създаване на продукт",
     "Product name" : "Име на продукта",
     "Description" : "Описание",
     "Category" : "Категория",
@@ -66,7 +66,7 @@
     "Promotion created successfully." : "Промоцията е създадена успешно.",
     "Date from" : "Начална дата",
     "Date to" : "Крайна дата",
-    "Create promotion" : "Създайте промоция",
+    "Create promotion" : "Създаване на промоция",
     "Service name field cannot be empty." : "Полето за име на услугата не може да е празно.",
     "Service description field cannot be empty." : "Полето за описание на услугата не може да е празно.",
     "Service price field cannot be empty." : "Полето за цена на услугата не може да е празно",
@@ -142,5 +142,6 @@
     "Edit reservation" : "Редактиране на резервация",
     "Edit order" : "Редактиране на поръчка",
     "Address cannot be empty." : "Адресът не може да е празен.",
-    "Date": "Дата"
+    "Date": "Дата",
+    "Users": "Потребители"
     }

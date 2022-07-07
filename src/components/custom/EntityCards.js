@@ -26,10 +26,7 @@ export const EntityCards = (props) => {
   const [entities, setEntities] = useState({});
   const [entityPictures, setEntityPictures] = useState([]);
   const [picturesLoaded, setPicturesLoaded] = useState(false);
-  const [activePromotion, setActivePromotion] = useState({
-    hasPromotion: false,
-    promotionInfo: {}
-  });
+  const [activePromotion, setActivePromotion] = useState([]);
 
   const darkTheme = createTheme({
     palette: {
@@ -86,7 +83,10 @@ export const EntityCards = (props) => {
                     const now = new Date();
 
                     if (now >= promotionFrom && now <= promotionTo) {
-                      setActivePromotion({ hasPromotion: true, promotionInfo: promoRes.data.payload[i] });
+                      setActivePromotion((prevState) => [
+                        ...prevState,
+                        { entityId: promoRes.data.payload[i].service_id, hasPromotion: true, promotionInfo: promoRes.data.payload[i] }
+                      ]);
                       break;
                     }
                   }
@@ -130,7 +130,10 @@ export const EntityCards = (props) => {
                     const now = new Date();
 
                     if (now >= promotionFrom && now <= promotionTo) {
-                      setActivePromotion({ hasPromotion: true, promotionInfo: promoRes.data.payload[i] });
+                      setActivePromotion((prevState) => [
+                        ...prevState,
+                        { entityId: promoRes.data.payload[i].product_id, hasPromotion: true, promotionInfo: promoRes.data.payload[i] }
+                      ]);
                       break;
                     }
                   }
@@ -203,7 +206,8 @@ export const EntityCards = (props) => {
   const displayPromotionPrice = (id) => {
     if (!id) return "";
 
-    return parseFloat(activePromotion.promotionInfo.promotion_new_price).toFixed(2) + " " + t("BGN");
+    const entityPromotion = activePromotion.filter((promo) => promo.entityId === id)[0];
+    return parseFloat(entityPromotion.promotionInfo.promotion_new_price).toFixed(2) + " " + t("BGN");
   };
 
   const displayText = (id) => {
@@ -235,8 +239,11 @@ export const EntityCards = (props) => {
                       {displayText(pic.id)}
                     </Typography>
                     <Typography gutterBottom variant="h6" component="h6" mt={3}>
-                      {activePromotion.hasPromotion ? (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>) :
-                        displayFullPrice(pic.id)}
+                      {
+                        activePromotion.filter((promo) => promo.entityId === pic.id).length === 0
+                          ? displayFullPrice(pic.id)
+                          : (<><s>{displayFullPrice(pic.id)}</s> {displayPromotionPrice(pic.id)}</>)
+                      }
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -247,11 +254,16 @@ export const EntityCards = (props) => {
             <Grid item xs={2}>
               <Item>
                 <CardActionArea onClick={() => navigate(`/${props.entityType}s`)}>
-                <CardMedia component="img"
-                    height={props.entityType === "blog" ? 317 : 356}
-                    image={'http://192.168.1.9:8080/uploads/black.jpg'}
-                    alt="green iguana">
+                  <CardMedia component="img"
+                    height={props.entityType === "blog" ? 246 : 284}
+                    image={'http://localhost:8080/uploads/black.jpg'}
+                  >
                   </CardMedia>
+                  <CardContent height="100%">
+                    <Typography gutterBottom variant="h5" component="div" noWrap>
+                      {t(`Show all ${props.entityType}s`)}
+                    </Typography>
+                  </CardContent>
                 </CardActionArea>
               </Item>
             </Grid>}

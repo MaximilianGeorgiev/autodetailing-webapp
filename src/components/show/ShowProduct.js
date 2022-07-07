@@ -56,12 +56,13 @@ export const ShowProduct = () => {
   });
 
   useEffect(() => {
+    setTimeout(() => {
+      // non admin and moderator users shouldn't see edit and delete buttons
+      const userRoles = getCookieByName("user_roles");
 
-    // non admin and moderator users shouldn't see edit and delete buttons
-    const userRoles = getCookieByName("user_roles");
-
-    if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
-      setHasPermission(true);
+      if (userRoles.includes("Moderator") || userRoles.includes("Admin"))
+        setHasPermission(true);
+    }, 200);
 
     getProductPicturePaths(id).then((res) => {
       if (res.data?.status === "success") {
@@ -108,7 +109,7 @@ export const ShowProduct = () => {
 
   const deleteButtonOnClick = () => {
     deleteProduct(id).then((res) => {
-      navigate("/products/show/all");
+      navigate("/products/");
       setShowConfirmationDialog(false);
     });
   };

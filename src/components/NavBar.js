@@ -26,6 +26,7 @@ import { clientHasLoginCookies, getCookieByName } from "../utils/cookies.js";
 export const NavBar = () => {
   const [cookies] = useCookies(['']);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   /* Sometimes on redirects from other pages back here they provide a some sort of notification.
  Via the useLocation react-router hook information sent from the previous page can be accessed */
@@ -34,8 +35,18 @@ export const NavBar = () => {
 
   // user_id cookie is assigned during login and removed during logout; menu options are different for logged in users
   useEffect(() => {
-    if (getCookieByName("user_id") !== "undefined") setIsLoggedIn(true);
-    else setIsLoggedIn(false);
+    setTimeout(() => {
+      if (getCookieByName("user_id") !== "undefined" && getCookieByName("user_id") !== "") setIsLoggedIn(true);
+      else setIsLoggedIn(false);
+  
+      const userRoles = getCookieByName("user_roles");
+      console.log("roles " + JSON.stringify(userRoles))
+      
+      if (userRoles.includes("Admin")) {
+        setIsAdmin(true);
+      }
+    }, 200);
+
   }, [getCookieByName("user_id")]);
 
   const [visibleElement, setVisibleEvent] = useState(null);
@@ -86,7 +97,19 @@ export const NavBar = () => {
         <>
           <MenuItem component={Link} to={'/login'}>{t("Profile")}</MenuItem>
           <MenuItem component={Link} to={'/orders'}>{t("Orders")}</MenuItem>
-          <MenuItem component={Link} to={'/reservations'}>{t("Reservations")}</MenuItem>
+          <MenuItem component={Link} to={'/reservations'}>{t("Reservations")}</MenuItem>{
+            isAdmin === true && 
+            <>
+            <MenuItem component={Link} to={'/promotions/show/all'}>{t("Promotions")}</MenuItem>
+            <MenuItem component={Link} to={'/users/show/all'}>{t("Users")}</MenuItem>
+            <MenuItem component={Link} to={'/products/show/all'}>{t("Products")}</MenuItem>
+            <MenuItem component={Link} to={'/services/show/all'}>{t("Services")}</MenuItem>
+            <MenuItem component={Link} to={'/products/create'}>{t("Create product")}</MenuItem>
+            <MenuItem component={Link} to={'/services/create'}>{t("Create service")}</MenuItem>
+            <MenuItem component={Link} to={'/blogs/create'}>{t("Create article")}</MenuItem>
+            <MenuItem component={Link} to={'/promotions/create'}>{t("Create promotion")}</MenuItem>
+            </>
+          }
           <MenuItem component={Link} to={'/logout'}>{t("Logout")}</MenuItem></>)
         : (
           <>
@@ -142,14 +165,7 @@ export const NavBar = () => {
           >
             <MenuIcon size="large" />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            MUI
-          </Typography>
+          
           <Box sx={{ flexGrow: 1 }}><ChangeLanguage /></Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton

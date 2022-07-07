@@ -196,14 +196,16 @@ export const CreatePromotion = () => {
       validatePrice(inputValues.newPrice.value) &&
       validateDates(inputValues.dateFrom.value, inputValues.dateTo.value)
     ) {
+      let entityType = categoryToggle ? "product" : "service";
+
       createPromotion(
         inputValues.dateFrom.value,
         inputValues.dateTo.value,
         inputValues.newPrice.value,
         inputValues.selectedEntity.value,
-        categoryToggle ? "product" : "service"
+        entityType
       ).then((res) => {
-        navigate(`/${categoryToggle}s`, { state: { "success": "true", "message": "Promotion created successfully." } });
+        navigate(`/${entityType}s`, { state: { "success": "true", "message": "Promotion created successfully." } });
       });
     }
 

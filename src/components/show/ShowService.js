@@ -105,7 +105,7 @@ export const ShowService = () => {
 
   const deleteButtonOnClick = () => {
     deleteService(id).then((res) => {
-      navigate("/services/show");
+      navigate("/services");
       setShowConfirmationDialog(false);
     });
   };

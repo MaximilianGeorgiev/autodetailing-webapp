@@ -18,5 +18,6 @@ export const Logout = (props) => {
     if (cookies["refreshToken"]) removeCookie("refreshToken");
 
     navigate("/home");
+    navigate(0);
   }, []);
 };

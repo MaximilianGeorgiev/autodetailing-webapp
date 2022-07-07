@@ -77,7 +77,7 @@ export const ShowPromotion = () => {
 
   const deleteButtonOnClick = () => {
     deletePromotion(id).then((res) => {
-      navigate("/promotions/show");
+      navigate("/home");
       setShowConfirmationDialog(false);
     });
   };

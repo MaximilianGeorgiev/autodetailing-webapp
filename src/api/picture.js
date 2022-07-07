@@ -2,7 +2,7 @@ import axios from "axios";
 import { getCookieByName } from "../utils/cookies";
 
 //const API_URL = "http://192.168.1.8:8080";
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:3030";
 
 /*
     Picture uploading flow:
