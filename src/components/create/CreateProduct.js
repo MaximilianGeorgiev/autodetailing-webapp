@@ -52,7 +52,7 @@ export const CreateProduct = () => {
     for (const category of categories)
       menuItems.push(
         <MenuItem value={category.category_id}>
-          {category.category_name}
+          {t(category.category_name)}
         </MenuItem>
       );
 

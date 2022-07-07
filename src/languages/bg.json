@@ -143,5 +143,12 @@
     "Edit order" : "Редактиране на поръчка",
     "Address cannot be empty." : "Адресът не може да е празен.",
     "Date": "Дата",
-    "Users": "Потребители"
+    "Users": "Потребители",
+    "Brushes": "Четки",
+    "Detailing products" : "Продукти за детайлинг",
+    "Cleaning products" : "Продукти за почистване",
+    "Microfiber towels" : "Микрофибърни кърпи",
+    "Polishing" : "Полиране",
+    "Exterior services" : "Екстериорни услуги",
+    "Interior services" : "Интериорни услуги"
     }
