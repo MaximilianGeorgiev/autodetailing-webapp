@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
+import { useCookies } from "react-cookie";
 
 import {
   getProductById,
@@ -48,6 +49,7 @@ export const ShowProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [cookies, setCookie, removeCookie] = useCookies(['']);
 
   const darkTheme = createTheme({
     palette: {
@@ -58,7 +60,7 @@ export const ShowProduct = () => {
   useEffect(() => {
     setTimeout(() => {
       // non admin and moderator users shouldn't see edit and delete buttons
-      const userRoles = getCookieByName("user_roles");
+      const userRoles = cookies.user_roles;
 
       if (userRoles.includes("Admin"))
         setHasPermission(true);

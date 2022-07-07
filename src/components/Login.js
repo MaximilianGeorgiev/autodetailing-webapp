@@ -94,7 +94,7 @@ export const Login = () => {
 
                     setCookie("user_fullname", res.data.user[0].user_fullname);
                     setCookie("user_username", res.data.user[0].user_username);
-                    setCookie("user_id", res.data.user[0].user_id);
+                    setCookie("user_id", res.data.user[0].user_id, {path: "/"});
                     setCookie("user_phone", res.data.user[0].user_phone ? res.data.user[0].user_phone : "");
                     setCookie("user_address", res.data.user[0].user_address ? res.data.user[0].user_address : "");
                     
@@ -129,7 +129,7 @@ export const Login = () => {
                                 }
                             });
                         }
-                        setCookie("user_roles", roles);
+                        setCookie("user_roles", [...roles], {path: "/"});
                     });
 
                     // redirect to home page with notification

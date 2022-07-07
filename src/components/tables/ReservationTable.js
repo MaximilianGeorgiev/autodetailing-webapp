@@ -15,6 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState, useEffect } from "react";
 import { getAllReservations, deleteReservation } from "../../api/reservation";
 import { getUserById } from "../../api/user";
+import { getServiceById } from "../../api/service";
+import { getServicesInReservation } from "../../api/reservation";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,6 +28,7 @@ export const ReservationTable = () => {
     const [customerInfo, setCustomerInfo] = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
     const [userIsAdmin, setUserIsAdmin] = useState(false);
+    const [reservationServices, setReservationServices] = useState([]);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -63,10 +66,24 @@ export const ReservationTable = () => {
                 } else
                     reservations = res.data.payload.filter((reservation) => reservation.user_id === parseInt(getCookieByName("user_id")));
 
+
+                    let reservationServices = [];
+
+               
+
+                    reservations.forEach((reservation) => {
+                        getServicesInReservation(reservation.reservation_id).then((reservationServiceRes) => {
+                            getServiceById(reservationServiceRes.data.payload[0].service_id).then((serviceRes) => {
+                                reservationServices.push({reservationId: reservation.reservation_id, service: serviceRes.data.payload[0]})
+                            });
+                        });
+                    });
+
                 setTimeout(() => {
                     setCustomerInfo(customerInfo);
                     setReservations(reservations);
                     setUserIsAdmin(userIsAdmin);
+                    setReservationServices(reservationServices);
                 }, 500);
             }
         });
@@ -86,6 +103,7 @@ export const ReservationTable = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>{t("Reservation №")}</TableCell>
+                            <TableCell>{t("Service")}</TableCell>
                             <TableCell align="right">{t("Reservation date")}</TableCell>
                             <TableCell align="right">{t("Reservation price")}</TableCell>
                             {userIsAdmin && <TableCell align="right">{t("Customer name")}</TableCell>}
@@ -102,6 +120,9 @@ export const ReservationTable = () => {
                             >
                                 <TableCell component="th" scope="row">
                                     {reservation.reservation_id}
+                                </TableCell>
+                                 <TableCell component="th" scope="row">
+                                 {reservationServices.filter((op) => op.reservationId === reservation.reservation_id)[0].service.service_title}
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     {new Date(reservation.reservation_datetime).toLocaleDateString()}

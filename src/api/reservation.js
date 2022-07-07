@@ -99,6 +99,22 @@ export const getReservationById = (id) => {
   });
 };
 
+export const getServicesInReservation = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios.get(API_URL + `/reservation/services/${id}`, {
+      headers: {
+        Authorization: "Bearer " + getCookieByName("accessToken"),
+      }
+    })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      })
+  });
+};
+
 export const deleteReservation = (id) => {
   if (!id || id < 0 || isNaN(id)) return;
 

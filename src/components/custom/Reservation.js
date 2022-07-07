@@ -114,12 +114,22 @@ export const Reservation = (props) => {
       };
 
     // case: subsequent error requests but one of the fields is corrected
-    if (inputValues?.date?.value)
-      updatedState.date = {
-        value: updatedState.date.value,
-        error: false,
-        errorMsg: "",
-      };
+    if (inputValues?.date?.value) {
+      if (new Date(inputValues.date.value) <= new Date()){
+        updatedState.date = {
+          value: updatedState.date.value,
+          error: true,
+          errorMsg: "Appointment date must be at least one day a head!",
+        };
+      } else {
+        updatedState.date = {
+          value: updatedState.date.value,
+          error: false,
+          errorMsg: "",
+        };
+      }
+    }
+      
 
     if (inputValues?.fullname?.value)
       updatedState.fullname = {
@@ -163,6 +173,7 @@ export const Reservation = (props) => {
       inputValues?.fullname.value &&
       inputValues?.phone.value &&
       validatePhone(updatedState.phone.value) &&
+      new Date(inputValues?.date?.value) > new Date() &&
       props.service
     ) {
       // 1. Check if this service has an ongoing promotion and if so set the "totalPrice" to the new price of the promotion

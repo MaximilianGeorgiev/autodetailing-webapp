@@ -151,5 +151,9 @@
     "Polishing" : "Полиране",
     "Exterior services" : "Екстериорни услуги",
     "Interior services" : "Интериорни услуги",
-    "Registration successful." : "Регистрацията успешна."
+    "Registration successful." : "Регистрацията успешна.",
+    "Appointment date must be at least one day a head!" : "Датата трябва да е поне един ден след днес!",
+    "Ordered product" : "Поръчан продукт",
+    "Order №" : "Поръчка №"
+
     }

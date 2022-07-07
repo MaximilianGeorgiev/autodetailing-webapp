@@ -13,8 +13,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useState, useEffect } from "react";
-import { getAllOrders, deleteOrder } from "../../api/order";
+import { getAllOrders, deleteOrder, getProductsInOrder } from "../../api/order";
 import { getUserById } from "../../api/user";
+import { getProductById } from "../../api/product";
 import { ConfirmationDialog } from "../custom/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,6 +27,7 @@ export const OrderTable = () => {
     const [customerInfo, setCustomerInfo] = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
     const [userIsAdmin, setUserIsAdmin] = useState(false);
+    const [orderProducts, setOrderProducts] = useState([]);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -66,10 +68,24 @@ export const OrderTable = () => {
                     orders = res.data.payload.filter((order) => order.customer_id === parseInt(getCookieByName("user_id")));
 
 
+                
+                let orderProducts = [];
+
+               
+
+                orders.forEach((order) => {
+                    getProductsInOrder(order.order_id).then((orderProductsRes) => {
+                        getProductById(orderProductsRes.data.payload[0].product_id).then((productRes) => {
+                            orderProducts.push({orderId: order.order_id, product: productRes.data.payload[0]})
+                        });
+                    });
+                });
+
                 setTimeout(() => {
                     setCustomerInfo(customerInfo);
                     setOrders(orders);
                     setUserIsAdmin(userIsAdmin);
+                    setOrderProducts(orderProducts);
                 }, 500);
             }
         });
@@ -88,7 +104,8 @@ export const OrderTable = () => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Order №</TableCell>
+                            <TableCell>{t("Order №")}</TableCell>
+                            <TableCell>{t("Ordered product")}</TableCell>
                             <TableCell align="right">{t("Total price")}</TableCell>
                             <TableCell align="right">{t("Delivery address")}</TableCell>
                             {userIsAdmin && <TableCell align="right">{t("Customer name")}</TableCell>}
@@ -105,6 +122,9 @@ export const OrderTable = () => {
                             >
                                 <TableCell component="th" scope="row">
                                     {order.order_id}
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    {orderProducts.filter((op) => op.orderId === order.order_id)[0].product.product_title}
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     {order.order_totalprice + " BGN"}

@@ -65,6 +65,22 @@ export const getAllOrders = () => {
   });
 };
 
+export const getProductsInOrder = (id) => {
+  if (!id || id < 0 || isNaN(id)) return;
+
+  return new Promise((resolve, reject) => {
+    axios.get(API_URL + `/order/products/${id}`, {
+      headers: {
+        Authorization: "Bearer " + getCookieByName("accessToken"),
+      }
+    })
+      .then((res) => resolve(res))
+      .catch((err) => {
+        reject(err);
+      })
+  });
+};
+
 export const updateOrder = (orderId, newAddress) => {
   if (!orderId || orderId < 0) return;
   if (!newAddress || newAddress === "") return;
