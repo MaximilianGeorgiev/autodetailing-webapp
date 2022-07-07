@@ -98,9 +98,17 @@ export const CreateBlog = () => {
         // Upload pictures to the server
         const uploadSuccess = handlePictureUpload("blog", blogId, uploadedPictures);
 
-        if (uploadSuccess) navigate(`/blogs/show/${blogId}`, {
-          state: { success: "true", message: "Article created successfully." },
-        });
+        if (uploadSuccess) {
+          // otherwise navigation happens before files are physically uploaded.
+          setTimeout(() => {
+            navigate(`/blogs/show/${blogId}`, {
+              state: {
+                success: "true",
+                message: "Article created successfully.",
+              },
+            });
+          }, 150);
+        }
 
         else {
           // display errors

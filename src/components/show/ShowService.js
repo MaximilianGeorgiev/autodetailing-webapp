@@ -66,6 +66,7 @@ export const ShowService = () => {
         let paths = [];
 
         res?.data?.payload.forEach((path) => paths.push(path.picture_path));
+        
         setPicturePaths([...paths]);
         setPicturesLoaded(true);
       }

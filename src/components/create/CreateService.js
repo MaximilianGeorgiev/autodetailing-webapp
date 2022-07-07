@@ -174,13 +174,18 @@ export const CreateService = () => {
           uploadedPictures
         );
 
-        if (uploadSuccess)
-          navigate(`/services/show/${serviceId}`, {
-            state: {
-              success: "true",
-              message: "Service created successfully.",
-            },
-          });
+        if (uploadSuccess) {
+          // otherwise navigation happens before files are physically uploaded.
+          setTimeout(() => {
+            navigate(`/services/show/${serviceId}`, {
+              state: {
+                success: "true",
+                message: "Service created successfully.",
+              },
+            });
+          }, 150);
+        }
+          
         else {
           // display errors
         }
